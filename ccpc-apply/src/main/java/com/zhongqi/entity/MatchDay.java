@@ -20,6 +20,9 @@ public class MatchDay {
     @Column(name = "dayInfoDetail")
     private String dayInfoDetail;
 
+    @Column(name = "status")
+    private Integer status;
+
     public Integer getId() {
         return id;
     }
@@ -42,5 +45,13 @@ public class MatchDay {
 
     public void setDayInfoDetail(String dayInfoDetail) {
         this.dayInfoDetail = dayInfoDetail;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

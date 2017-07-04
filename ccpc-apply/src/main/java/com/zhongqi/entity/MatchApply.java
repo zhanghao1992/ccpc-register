@@ -1,22 +1,32 @@
 package com.zhongqi.entity;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by songrenfei on 2017/7/3.
  */
+@Entity
+@Table(name = "MatchApply")
 public class MatchApply {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
+    @Column(name = "idNumber")
     private String idNumber;
 
+    @Column(name = "matchDayId")
     private Integer matchDayId;
 
+    @Column(name = "matchPlaceId")
     private Integer matchPlaceId;
 
+    @Column(name = "applyTime")
     private Date applyTime;
 
+    @Column(name = "status")
     private Integer status;
 
     public Integer getId() {
