@@ -1,11 +1,16 @@
 package com.zhongqi.service;
 
-import net.sf.json.JSONObject;
+import com.zhongqi.dto.PersonRatingRankInfo;
+import com.zhongqi.dto.ResponseRatingForQueryInfo;
 
 /**
  * Created by ningcs on 2017/7/4.
  */
 public interface MasterPointQueryService {
 //    public JSONObject getRefereeInfoList();
-    public JSONObject findMasterPointsRank(String realName, String idNumber);
+    public ResponseRatingForQueryInfo findMasterPointsRank(String idNumber);
+
+
+    //获得大师分信息
+    public PersonRatingRankInfo getPersonRatingRankInfo();
 }

@@ -678,4 +678,19 @@ public class BaseUtils {
 
     }
 
+//    /**
+//     * 循环取出100条数据
+//     * @ningcs
+//     *
+//     */
+//    public static List getHundredList(List list){
+//        int k = 0;
+//        for(int i = 0;i<list.size();i+=100){
+//            List  newlist = list.subList(i,i+99);
+//            k++;
+//        }
+//        return  newlist;
+//    }
+
+
 }

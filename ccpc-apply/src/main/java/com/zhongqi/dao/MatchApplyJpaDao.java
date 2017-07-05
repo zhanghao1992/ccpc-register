@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MatchApplyJpaDao extends JpaRepository<MatchApply,Integer> {
+    public MatchApply findByIdNumber(String idNumber);
 
 }

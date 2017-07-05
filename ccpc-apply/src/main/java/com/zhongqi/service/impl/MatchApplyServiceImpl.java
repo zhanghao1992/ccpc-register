@@ -1,21 +1,20 @@
 package com.zhongqi.service.impl;
 
-import com.zhongqi.dao.MatchApplySkuJpaDao;
-import com.zhongqi.dao.MatchDayJpaDao;
-import com.zhongqi.dao.MatchPlaceJpaDao;
-import com.zhongqi.entity.MatchApplySku;
-import com.zhongqi.entity.MatchDay;
-import com.zhongqi.entity.MatchPlace;
+import com.zhongqi.dao.*;
+import com.zhongqi.dto.PersonRatingRankInfo;
+import com.zhongqi.dto.ResponseRatingForQueryInfo;
+import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchApplySkuInfo;
 import com.zhongqi.service.MatchApplyService;
-import com.zhongqi.util.HttpRequestUtils;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by ningcs on 2017/7/4.
@@ -34,27 +33,28 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     @Autowired
     private MatchPlaceJpaDao matchPlaceJpaDao;
 
-//    @Override
-//    public JSONObject getRefereeInfoList() {
-//        JSONObject jsonObject=new JSONObject();
-//        jsonObject.element("page",1);
-//        jsonObject.element("page_size",10);
-//        JSONObject result = HttpRequestUtils.httpPost(url+"/Referee/getRefereeInfoList.do?&page=1&page_size=10",jsonObject,false);
-//        return result;
-//    }
+    @Autowired
+    private MatchApplyJpaDao matchApplyJpaDao;
+
+    @Autowired
+    private PersonRatingRankJpaDao personRatingRankJpaDao;
+
+    @Autowired
+    private RatingPersonLeverDetailJpaDao ratingPersonLeverDetailJpaDao;
 
 
     @Override
-    public JSONObject findMasterPointsRank(String realName, String idNumber) {
-        JSONObject jsonObject=new JSONObject();
-        String params="";
-        params="?"+"realName="+realName+"&&idNumber="+idNumber;
-        JSONObject result = HttpRequestUtils.httpPost(url+"/Referee/getRefereeInfoList.do"+params,jsonObject,false);
-        return result;
+    public ResponseRatingForQueryInfo findMasterPointsRank( String idNumber) {
+        PersonRatingRank personRatingRank =personRatingRankJpaDao.findByIdentityCardNumber(idNumber);
+        ResponseRatingForQueryInfo responseRatingForQueryInfo =new ResponseRatingForQueryInfo();
+        if (personRatingRank!=null){
+            responseRatingForQueryInfo.setRanking(personRatingRank.getGoldenRank());
+        }
+        return responseRatingForQueryInfo;
     }
 
     @Override
-    public MatchDay getMatchApplyDayList() {
+    public List<MatchDay> getMatchApplyDayList() {
 
         return matchDayJpaDao.findByStatus(MATCH_DAY_NORMAL);
     }
@@ -80,5 +80,41 @@ public class MatchApplyServiceImpl implements MatchApplyService {
         return list;
     }
 
+    @Override
+    public void applyMatch(Integer matchDayId, Integer  matchPlaceId, String idNumber) {
+        MatchApply matchApply =new MatchApply();
+        matchApply.setMatchPlaceId(matchPlaceId);
+        matchApply.setMatchDayId(matchDayId);
+        matchApply.setIdNumber(idNumber);
+        matchApply.setApplyTime(new Date());
+        matchApply.setStatus(MATCH_Apply_NORMAL);
+        matchApplyJpaDao.save(matchApply);
+    }
+
+    @Override
+    public String getStandardName(BigDecimal g, BigDecimal s, BigDecimal r) {
+        List<RatingPersonLeverDetail> personLeverCallList = ratingPersonLeverDetailJpaDao.findRatingPersonLeverDetailList();
+        Optional<RatingPersonLeverDetail> first = personLeverCallList.stream().filter(p -> (g.compareTo(p.getGolden()) != -1)
+                && (s.compareTo(p.getSilver()) != -1) && (r.compareTo(p.getHeart()) != -1)).findFirst();
+        RatingPersonLeverDetail info = null;
+        if (first.isPresent()) {
+            info = first.get();
+            return info.getLevelName();
+        }
+        return null;
+    }
+    @Override
+    public void addPersonRatingRankList(List<PersonRatingRank> list) {
+
+    }
+
+
+    //    String levelName="";
+//    levelName=this.getStandardName(personRatingRank.getGoldenPoint(),personRatingRank.getSilverPoint(),personRatingRank.getHeartPoint());
+//            if (levelName!=null && !"".equals(levelName.trim())){
+//        responseRatingForQueryInfo.setLevel_name(levelName);
+//    }
+
     private static Integer MATCH_DAY_NORMAL=1;
+    private static Integer MATCH_Apply_NORMAL=1;
 }
