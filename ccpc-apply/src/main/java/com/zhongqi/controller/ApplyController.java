@@ -1,8 +1,13 @@
 package com.zhongqi.controller;
 
 import com.zhongqi.dao.UserDao;
+import com.zhongqi.dto.ResponsePersonRatingRankCollection;
+import com.zhongqi.dto.ResponsePersonRatingRankInfo;
+import com.zhongqi.dto.ResponseRatingForQueryInfo;
+import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.entity.User;
 import com.zhongqi.model.UserModel;
+import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.service.MatchApplyService;
 import com.zhongqi.service.SMSService;
 import com.zhongqi.service.UserService;
@@ -36,19 +41,22 @@ public class ApplyController extends BaseController {
     @Value("${loginCheckMobileCode}")
     private String loginCheckMobileCode;
 
-//    @Autowired
+    //    @Autowired
     private SMSService smsService;
 
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    private MasterPointQueryService masterPointQueryService;
+
 
     //测试
     @RequestMapping(value = "/addUser", method = {RequestMethod.POST, RequestMethod.GET})
-    public void  addUser(){
-        List<User> list =new ArrayList<>();
+    public void addUser() {
+        List<User> list = new ArrayList<>();
 
-        for (int i =0;i<288 ;i++) {
+        for (int i = 0; i < 288; i++) {
             User user = new User();
             user.setMobile("" + i);
             user.setRealName("宁春笋");
@@ -57,21 +65,21 @@ public class ApplyController extends BaseController {
             list.add(user);
         }
 
-        List<User>  newlist =null;
-        Integer count =288/100;
-        Integer remain= 288%100;
-        Integer j =0;
+        List<User> newlist = null;
+        Integer count = 288 / 100;
+        Integer remain = 288 % 100;
+        Integer j = 0;
         long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
-        for(int i = 0;i<count;i++){
+        for (int i = 0; i < count; i++) {
 
-            newlist = list.subList(j,j+100);
-            j=j+100;
+            newlist = list.subList(j, j + 100);
+            j = j + 100;
 
             userDao.addUser(newlist);
         }
         long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
         System.out.println("批量添加100条数据运行时间： " + (endTime - startTime) + "ms");
-        newlist = list.subList(list.size()-remain,list.size());
+        newlist = list.subList(list.size() - remain, list.size());
         userDao.addUser(newlist);
     }
 
@@ -103,31 +111,31 @@ public class ApplyController extends BaseController {
      * 获取报名时间列表
      */
     @RequestMapping(value = "/getMatchApplyDayList", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseResult getMatchApplyDayList(){
-        return  new ResponseResult(ResponseResult.SUCCESS,"success",matchApplyService.getMatchApplyDayList());
+    public ResponseResult getMatchApplyDayList() {
+        return new ResponseResult(ResponseResult.SUCCESS, "success", matchApplyService.getMatchApplyDayList());
     }
 
     /**
      * 获取报名时间+地点的动态“库存”统计信息
      */
     @RequestMapping(value = "/getMatchApplySKU", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseResult getMatchApplySKU(Integer  matchDayId){
-        return  new ResponseResult(ResponseResult.SUCCESS,"success",matchApplyService.findByMatchDayId(matchDayId));
+    public ResponseResult getMatchApplySKU(Integer matchDayId) {
+        return new ResponseResult(ResponseResult.SUCCESS, "success", matchApplyService.findByMatchDayId(matchDayId));
     }
 
     /**
      * 报名参赛
      */
     @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseResult applyMatch(HttpServletRequest request, Integer matchDayId, Integer matchPlaceId,String idNumber){
+    public ResponseResult applyMatch(HttpServletRequest request, Integer matchDayId, Integer matchPlaceId, String idNumber) {
 //        UserModel user=(UserModel) request.getSession().getAttribute("user");
 //        String idNumber="";
 //        if(user!=null){
 //            idNumber=user.getIdNumber();
 //        }
-        if (matchDayId!=null &&  matchDayId!=0 &&  matchPlaceId!=null
-                && matchPlaceId!=0 &&idNumber!=null && "".equals(idNumber.trim())){
-            matchApplyService.applyMatch(matchDayId,matchPlaceId,idNumber);
+        if (matchDayId != null && matchDayId != 0 && matchPlaceId != null
+                && matchPlaceId != 0 && idNumber != null && "".equals(idNumber.trim())) {
+            matchApplyService.applyMatch(matchDayId, matchPlaceId, idNumber);
             return ResponseResult.successResult("报名成功");
         }
         return ResponseResult.errorResult("报名失败");
@@ -137,17 +145,78 @@ public class ApplyController extends BaseController {
      * 获取当前用户信息
      */
     @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseResult getCurrentUserInfo(HttpServletRequest request ,String realName,String idNumber,String mobile,String checkCode){
+    public ResponseResult getCurrentUserInfo(HttpServletRequest request, String realName, String idNumber, String mobile, String checkCode) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
         if ("true".equals(loginCheckMobileCode)) {
             result = smsService.checkMobileCode(mobile, checkCode);
         }
         if (result.getCode() == ResponseResult.SUCCESS) {
             UserModel userModel = userService.getCurrentUserInfo(realName, idNumber, mobile);
-            return new ResponseResult(ResponseResult.SUCCESS,"获取当前信息成功",userModel);
+            return new ResponseResult(ResponseResult.SUCCESS, "获取当前信息成功", userModel);
         }
         return ResponseResult.errorResult("获取失败");
 
     }
 
+
+    //测试
+
+    /**
+     * 获取报名时间列表
+     */
+    @RequestMapping(value = "/getratingRankInfoList", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseResult getratingRankInfoList() {
+
+        ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
+        Integer total = ratingRankInfoList.getTotal();
+        Integer page =0;
+        Integer count =total/1000 ;
+        if (count!=0){
+            count=count+1;
+        }
+        Integer page_size =1000;
+        for (int i=1 ;i<=count ;i++){
+            ResponsePersonRatingRankCollection ratingRankInfo = masterPointQueryService.getPersonRatingRankInfo(i, page_size);
+            List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos = ratingRankInfo.getList();
+            List<PersonRatingRank> personRatingRanks = new ArrayList<>();
+
+            for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo : responsePersonRatingRankInfos) {
+                PersonRatingRank ratingRank = this.setResponsePersonRatingRankInfo(responsePersonRatingRankInfo);
+                personRatingRanks.add(ratingRank);
+            }
+            if (!responsePersonRatingRankInfos.isEmpty()) {
+                matchApplyService.addPersonRatingRankList(personRatingRanks);
+            }
+        }
+        return null;
+    }
+
+    //测试
+
+    /**
+     * 获取报名时间列表
+     */
+    @RequestMapping(value = "/getRefereeList", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseRatingForQueryInfo getRefereeList() {
+        return masterPointQueryService.findMasterPointsRank(null);
+
+    }
+    private  PersonRatingRank setResponsePersonRatingRankInfo(ResponsePersonRatingRankInfo rankInfo){
+        PersonRatingRank ratingRank = new PersonRatingRank();
+        ratingRank.setId(rankInfo.getGoldenRank());
+        ratingRank.setIdentityCardNumber(rankInfo.getIdentityCardNumber());
+        ratingRank.setPlayerName(rankInfo.getPlayerName());
+        ratingRank.setGoldenPoint(rankInfo.getGoldenPoint());
+        ratingRank.setSilverPoint(rankInfo.getSilverPoint());
+        ratingRank.setHeartPoint(rankInfo.getHeartPoint());
+        ratingRank.setCreateDatetime(new Date(rankInfo.getCreateDatetime()));
+        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
+        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
+        ratingRank.setGoldenRank(rankInfo.getGoldenRank());
+        ratingRank.setSilverRank(rankInfo.getSilverRank());
+        ratingRank.setHeartRank(rankInfo.getHeartRank());
+        ratingRank.setGradeCode(rankInfo.getGradeCode());
+        return ratingRank;
+
+    }
 }

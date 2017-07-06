@@ -30,5 +30,8 @@ public interface MatchApplyService {
 
     //批量导入大师分信息
     public void addPersonRatingRankList(List<PersonRatingRank> list);
+//
+//    //批量导入裁判员信息 测试
+//    public void addRefereeList(List<Referee> list);
 
     }

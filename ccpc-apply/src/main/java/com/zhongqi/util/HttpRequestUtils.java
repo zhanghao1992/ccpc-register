@@ -28,9 +28,9 @@ public class HttpRequestUtils {
      * @param jsonParam 参数
      * @return
      */
-    public static JSONObject httpPost(String url, JSONObject jsonParam,boolean noNeedResponse) {
+    public static JSONObject httpPost(String url, JSONObject jsonParam) {
 
-        return httpPost(url, jsonParam, false);
+        return httpPostJSONObject(url, jsonParam, false);
     }
 
     /**
@@ -87,11 +87,12 @@ public class HttpRequestUtils {
      * @param noNeedResponse 不需要返回结果
      * @return
      */
-    public static JSONArray httpPostJSONArray(String url, JSONObject jsonParam, boolean noNeedResponse) {
+    public static String  httpPostJSONArray(String url, JSONObject jsonParam, boolean noNeedResponse) {
         //post请求返回结果
         DefaultHttpClient httpClient = new DefaultHttpClient();
         JSONArray jsonResult = null;
         HttpPost method = new HttpPost(url);
+        String str = "";
         try {
             if (null != jsonParam) {
                 //解决中文乱码问题
@@ -106,15 +107,17 @@ public class HttpRequestUtils {
             url = URLDecoder.decode(url, "UTF-8");
             /**请求发送成功，并得到响应**/
             if (result.getStatusLine().getStatusCode() == 200) {
-                String str = "";
+
                 try {
                     /**读取服务器返回过来的json字符串数据**/
                     str = EntityUtils.toString(result.getEntity());
                     if (noNeedResponse) {
                         return null;
                     }
-                    /**把json字符串转换成json对象**/
-                    jsonResult = JSONArray.fromObject(str);
+//                    /**把json字符串转换成json对象**/
+//                    jsonResult = JSONArray.fromObject(str);
+
+
                 } catch (Exception e) {
                     logger.error("post请求提交失败:" + url, e);
                 }
@@ -122,7 +125,7 @@ public class HttpRequestUtils {
         } catch (IOException e) {
             logger.error("post请求提交失败:" + url, e);
         }
-        return jsonResult;
+        return str;
     }
 
 
@@ -135,9 +138,10 @@ public class HttpRequestUtils {
      * @param url    路径
      * @return
      */
-    public static JSONObject httpGet(String url){
+    public static String  httpGet(String url){
         //get请求返回结果
         JSONObject jsonResult = null;
+        String strResult ="";
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             //发送get请求
@@ -147,9 +151,9 @@ public class HttpRequestUtils {
             /**请求发送成功，并得到响应**/
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 /**读取服务器返回过来的json字符串数据**/
-                String strResult = EntityUtils.toString(response.getEntity());
+               strResult = EntityUtils.toString(response.getEntity());
                 /**把json字符串转换成json对象**/
-                jsonResult = JSONObject.fromObject(strResult);
+//                jsonResult = JSONObject.fromObject(strResult);
                 url = URLDecoder.decode(url, "UTF-8");
             } else {
                 logger.error("get请求提交失败:" + url);
@@ -157,6 +161,6 @@ public class HttpRequestUtils {
         } catch (IOException e) {
             logger.error("get请求提交失败:" + url, e);
         }
-        return jsonResult;
+        return strResult;
     }
 }

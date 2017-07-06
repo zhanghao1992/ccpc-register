@@ -1,16 +1,13 @@
 package com.zhongqi.service.impl;
 
+import com.google.gson.Gson;
+import com.zhongqi.dto.ResponsePersonRatingRankCollection;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
-import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.util.HttpRequestUtils;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ningcs on 2017/7/4.
@@ -34,9 +31,11 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
     @Override
     public ResponseRatingForQueryInfo findMasterPointsRank( String idNumber) {
         JSONObject jsonObject=new JSONObject();
+        jsonObject.element("idNumber",idNumber);
         String params="";
         params="?"+"&&idNumber="+idNumber;
-        JSONObject result = HttpRequestUtils.httpPostJSONObject(url+"/Referee/getRefereeInfoList.do"+params,jsonObject,false);
+        //        http://dev202.rating.api.cc.cmsa.cn/rating/rank/list.do?page=1&&page_size=100
+        JSONObject result = HttpRequestUtils.httpPostJSONObject("http://172.21.122.113:18088/Referee/getRefereeInfoList.do",jsonObject,false);
         String ranking =result.get("ranking").toString();
         String level_name=result.get("level_name").toString();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =new ResponseRatingForQueryInfo();
@@ -46,14 +45,12 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
     }
 
     @Override
-    public List<PersonRatingRank> getPersonRatingRankInfo() {
+    public ResponsePersonRatingRankCollection getPersonRatingRankInfo(Integer page,Integer page_size) {
         String params="";
-        JSONArray result = HttpRequestUtils.httpPostJSONArray(url+"/Referee/getRefereeInfoList.do",null,false);
-        List<PersonRatingRank> list = new ArrayList<PersonRatingRank>();
-        for (int i=0;i<result.size();i++){
-            PersonRatingRank personRatingRank =(PersonRatingRank)result.get(i);
-            list.add(personRatingRank);
-        }
-        return list;
+        params ="?"+"page="+page+"&&page_size="+page_size;
+        String  str = HttpRequestUtils.httpGet(url+"/rating/rank/list.do"+params);
+        Gson gson = new Gson();
+        ResponsePersonRatingRankCollection responsePersonRatingRankCollection = gson.fromJson(str, ResponsePersonRatingRankCollection.class);
+        return responsePersonRatingRankCollection;
     }
 }

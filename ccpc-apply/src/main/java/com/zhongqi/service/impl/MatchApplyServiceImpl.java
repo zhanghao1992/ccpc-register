@@ -1,7 +1,6 @@
 package com.zhongqi.service.impl;
 
 import com.zhongqi.dao.*;
-import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchApplySkuInfo;
@@ -132,6 +131,26 @@ public class MatchApplyServiceImpl implements MatchApplyService {
 
     }
 
+//    @Override
+//    public void addRefereeList(List<Referee> list) {
+//        List<PersonRatingRank> newlist = null;
+//        Integer TotalPersonRatingRank = list.size();
+//        Integer count = TotalPersonRatingRank / 100;
+//        Integer remain = TotalPersonRatingRank % 100;
+//        Integer j = 0;
+//        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
+//        for (int i = 0; i < count; i++) {
+//            newlist = list.subList(j, j + 100);
+//            j = j + 100;
+//
+//            personRatingRankDao.addPersonRatingRankList(newlist);
+//        }
+//        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
+//        System.out.println("批量添加数据运行时间： " + (endTime - startTime) + "ms");
+//        newlist = list.subList(list.size() - remain, list.size());
+//        personRatingRankDao.addPersonRatingRankList(newlist);
+//
+//    }
 
     //    String levelName="";
 //    levelName=this.getStandardName(personRatingRank.getGoldenPoint(),personRatingRank.getSilverPoint(),personRatingRank.getHeartPoint());

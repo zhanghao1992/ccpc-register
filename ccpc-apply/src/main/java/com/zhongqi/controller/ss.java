@@ -1,9 +1,9 @@
 package com.zhongqi.controller;
 
+import com.zhongqi.entity.User;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ningcs on 2017/7/4.
@@ -36,20 +36,21 @@ public class ss {
 //        return true;
 //
 //    }
+//
+//        List list = new ArrayList() ;          //你的list
+//
+//        for (int i=0;i<210;i++){
+//            list.add(i);
+//
+//        }
+//        Map map = new HashMap();    //用map存起来新的分组后数据
+//        int k = 0;
+//        for(int i = 0;i<list.size();i+=100){
+//            List  newlist = list.subList(i,i+99);
+//            map.put(k, newlist);
+//            k++;
+//        }
 
-        List list = new ArrayList() ;          //你的list
-
-        for (int i=0;i<210;i++){
-            list.add(i);
-
-        }
-        Map map = new HashMap();    //用map存起来新的分组后数据
-        int k = 0;
-        for(int i = 0;i<list.size();i+=100){
-            List  newlist = list.subList(i,i+99);
-            map.put(k, newlist);
-            k++;
-        }
     }
 
 
