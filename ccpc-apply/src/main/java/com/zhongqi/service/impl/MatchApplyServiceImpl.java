@@ -5,7 +5,6 @@ import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchApplySkuInfo;
-import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.service.MatchApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,8 +42,7 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     @Autowired
     private RatingPersonLeverDetailJpaDao ratingPersonLeverDetailJpaDao;
 
-    @Autowired
-    private MasterPointQueryService masterPointQueryService;
+
 
     @Autowired
     private PersonRatingRankDao personRatingRankDao;
@@ -113,25 +111,24 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     }
     @Override
     public void addPersonRatingRankList(List<PersonRatingRank> list) {
-        List<PersonRatingRankInfo> personRatingRankInfoList =masterPointQueryService.getPersonRatingRankInfo();
-        if (!personRatingRankInfoList.isEmpty()) {
-            List<PersonRatingRank> newlist = null;
-            Integer TotalPersonRatingRank = personRatingRankInfoList.size();
-            Integer count = TotalPersonRatingRank / 100;
-            Integer remain = TotalPersonRatingRank % 100;
-            Integer j = 0;
-            long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
-            for (int i = 0; i < count; i++) {
 
-                newlist = list.subList(j, j + 100);
-                j = j + 100;
+        List<PersonRatingRank> newlist = null;
+        Integer TotalPersonRatingRank = list.size();
+        Integer count = TotalPersonRatingRank / 100;
+        Integer remain = TotalPersonRatingRank % 100;
+        Integer j = 0;
+        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
+        for (int i = 0; i < count; i++) {
+            newlist = list.subList(j, j + 100);
+            j = j + 100;
 
-                personRatingRankDao.addPersonRatingRankList(newlist);
-            }
-            long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
-            System.out.println("批量添加数据运行时间： " + (endTime - startTime) + "ms");
-            newlist = list.subList(list.size() - remain, list.size());
+            personRatingRankDao.addPersonRatingRankList(newlist);
         }
+        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
+        System.out.println("批量添加数据运行时间： " + (endTime - startTime) + "ms");
+        newlist = list.subList(list.size() - remain, list.size());
+        personRatingRankDao.addPersonRatingRankList(newlist);
+
 
     }
 

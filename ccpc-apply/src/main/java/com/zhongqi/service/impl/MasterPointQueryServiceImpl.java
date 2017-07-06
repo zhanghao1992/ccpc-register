@@ -1,13 +1,15 @@
 package com.zhongqi.service.impl;
 
-import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
+import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.util.HttpRequestUtils;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
         JSONObject jsonObject=new JSONObject();
         String params="";
         params="?"+"&&idNumber="+idNumber;
-        JSONObject result = HttpRequestUtils.httpPost(url+"/Referee/getRefereeInfoList.do"+params,jsonObject,false);
+        JSONObject result = HttpRequestUtils.httpPostJSONObject(url+"/Referee/getRefereeInfoList.do"+params,jsonObject,false);
         String ranking =result.get("ranking").toString();
         String level_name=result.get("level_name").toString();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =new ResponseRatingForQueryInfo();
@@ -44,9 +46,14 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
     }
 
     @Override
-    public List<PersonRatingRankInfo> getPersonRatingRankInfo() {
+    public List<PersonRatingRank> getPersonRatingRankInfo() {
         String params="";
-        JSONObject result = HttpRequestUtils.httpPost(url+"/Referee/getRefereeInfoList.do",null,false);
-        return null;
+        JSONArray result = HttpRequestUtils.httpPostJSONArray(url+"/Referee/getRefereeInfoList.do",null,false);
+        List<PersonRatingRank> list = new ArrayList<PersonRatingRank>();
+        for (int i=0;i<result.size();i++){
+            PersonRatingRank personRatingRank =(PersonRatingRank)result.get(i);
+            list.add(personRatingRank);
+        }
+        return list;
     }
 }

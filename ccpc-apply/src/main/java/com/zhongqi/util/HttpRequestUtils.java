@@ -1,5 +1,6 @@
 package com.zhongqi.util;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -27,7 +28,8 @@ public class HttpRequestUtils {
      * @param jsonParam 参数
      * @return
      */
-    public static JSONObject httpPost(String url, JSONObject jsonParam) {
+    public static JSONObject httpPost(String url, JSONObject jsonParam,boolean noNeedResponse) {
+
         return httpPost(url, jsonParam, false);
     }
 
@@ -39,17 +41,17 @@ public class HttpRequestUtils {
      * @param noNeedResponse 不需要返回结果
      * @return
      */
-    public static JSONObject httpPost(String url, JSONObject jsonParam, boolean noNeedResponse) {
+    public static JSONObject httpPostJSONObject(String url, JSONObject jsonParam, boolean noNeedResponse) {
         //post请求返回结果
         DefaultHttpClient httpClient = new DefaultHttpClient();
         JSONObject jsonResult = null;
-        HttpPost method =new HttpPost(url);
+        HttpPost method = new HttpPost(url);
         try {
             if (null != jsonParam) {
                 //解决中文乱码问题
                 StringEntity entity = new StringEntity(jsonParam.toString());
-                System.out.println("entity"+jsonParam.toString());
-                System.out.println("entity"+entity.toString());
+                System.out.println("entity" + jsonParam.toString());
+                System.out.println("entity" + entity.toString());
                 entity.setContentEncoding("UTF-8");
                 entity.setContentType("application/json");
                 method.setEntity(entity);
@@ -67,6 +69,52 @@ public class HttpRequestUtils {
                     }
                     /**把json字符串转换成json对象**/
                     jsonResult = JSONObject.fromObject(str);
+                } catch (Exception e) {
+                    logger.error("post请求提交失败:" + url, e);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("post请求提交失败:" + url, e);
+        }
+        return jsonResult;
+    }
+
+    /**
+     * post请求
+     *
+     * @param url            url地址
+     * @param jsonParam      参数
+     * @param noNeedResponse 不需要返回结果
+     * @return
+     */
+    public static JSONArray httpPostJSONArray(String url, JSONObject jsonParam, boolean noNeedResponse) {
+        //post请求返回结果
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        JSONArray jsonResult = null;
+        HttpPost method = new HttpPost(url);
+        try {
+            if (null != jsonParam) {
+                //解决中文乱码问题
+                StringEntity entity = new StringEntity(jsonParam.toString());
+                System.out.println("entity" + jsonParam.toString());
+                System.out.println("entity" + entity.toString());
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                method.setEntity(entity);
+            }
+            HttpResponse result = httpClient.execute(method);
+            url = URLDecoder.decode(url, "UTF-8");
+            /**请求发送成功，并得到响应**/
+            if (result.getStatusLine().getStatusCode() == 200) {
+                String str = "";
+                try {
+                    /**读取服务器返回过来的json字符串数据**/
+                    str = EntityUtils.toString(result.getEntity());
+                    if (noNeedResponse) {
+                        return null;
+                    }
+                    /**把json字符串转换成json对象**/
+                    jsonResult = JSONArray.fromObject(str);
                 } catch (Exception e) {
                     logger.error("post请求提交失败:" + url, e);
                 }

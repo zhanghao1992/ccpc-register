@@ -48,15 +48,14 @@ public class ApplyController extends BaseController {
     public void  addUser(){
         List<User> list =new ArrayList<>();
 
-        for (int i =0;i<288 ;i++){
-            User user =new User();
-            user.setMobile(""+i);
+        for (int i =0;i<288 ;i++) {
+            User user = new User();
+            user.setMobile("" + i);
             user.setRealName("宁春笋");
             user.setIdNumber("411381199401101711");
             user.setQueryTime(new Date());
             list.add(user);
         }
-
 
         List<User>  newlist =null;
         Integer count =288/100;
