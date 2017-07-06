@@ -47,19 +47,33 @@ public class ApplyController extends BaseController {
     @RequestMapping(value = "/addUser", method = {RequestMethod.POST, RequestMethod.GET})
     public void  addUser(){
         List<User> list =new ArrayList<>();
+
         for (int i =0;i<288 ;i++){
             User user =new User();
-            user.setMobile("18310456275");
+            user.setMobile(""+i);
             user.setRealName("宁春笋");
             user.setIdNumber("411381199401101711");
             user.setQueryTime(new Date());
             list.add(user);
         }
+
+
         List<User>  newlist =null;
-        for(int i = 0;i<list.size();i+=100){
-           newlist = list.subList(i,i+99);
+        Integer count =288/100;
+        Integer remain= 288%100;
+        Integer j =0;
+        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
+        for(int i = 0;i<count;i++){
+
+            newlist = list.subList(j,j+100);
+            j=j+100;
+
             userDao.addUser(newlist);
         }
+        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
+        System.out.println("批量添加100条数据运行时间： " + (endTime - startTime) + "ms");
+        newlist = list.subList(list.size()-remain,list.size());
+        userDao.addUser(newlist);
     }
 
 
@@ -89,6 +103,7 @@ public class ApplyController extends BaseController {
     /**
      * 获取报名时间列表
      */
+    @RequestMapping(value = "/getMatchApplyDayList", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getMatchApplyDayList(){
         return  new ResponseResult(ResponseResult.SUCCESS,"success",matchApplyService.getMatchApplyDayList());
     }
@@ -96,6 +111,7 @@ public class ApplyController extends BaseController {
     /**
      * 获取报名时间+地点的动态“库存”统计信息
      */
+    @RequestMapping(value = "/getMatchApplySKU", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getMatchApplySKU(Integer  matchDayId){
         return  new ResponseResult(ResponseResult.SUCCESS,"success",matchApplyService.findByMatchDayId(matchDayId));
     }
@@ -103,12 +119,13 @@ public class ApplyController extends BaseController {
     /**
      * 报名参赛
      */
-    public ResponseResult applyMatch(HttpServletRequest request, Integer matchDayId, Integer matchPlaceId){
-        UserModel user=(UserModel) request.getSession().getAttribute("user");
-        String idNumber="";
-        if(user!=null){
-            idNumber=user.getIdNumber();
-        }
+    @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseResult applyMatch(HttpServletRequest request, Integer matchDayId, Integer matchPlaceId,String idNumber){
+//        UserModel user=(UserModel) request.getSession().getAttribute("user");
+//        String idNumber="";
+//        if(user!=null){
+//            idNumber=user.getIdNumber();
+//        }
         if (matchDayId!=null &&  matchDayId!=0 &&  matchPlaceId!=null
                 && matchPlaceId!=0 &&idNumber!=null && "".equals(idNumber.trim())){
             matchApplyService.applyMatch(matchDayId,matchPlaceId,idNumber);
@@ -120,6 +137,7 @@ public class ApplyController extends BaseController {
     /**
      * 获取当前用户信息
      */
+    @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getCurrentUserInfo(HttpServletRequest request ,String realName,String idNumber,String mobile,String checkCode){
         ResponseResult result = ResponseResult.successResult("参数校验成功");
         if ("true".equals(loginCheckMobileCode)) {

@@ -38,12 +38,10 @@ public class ss {
 //    }
 
         List list = new ArrayList() ;          //你的list
-        for (int i=0;i<100;i++){
-            list.add(1);
-            list.add(2);
-            list.add(3);
-            list.add(4);
-            list.add(5);
+
+        for (int i=0;i<210;i++){
+            list.add(i);
+
         }
         Map map = new HashMap();    //用map存起来新的分组后数据
         int k = 0;

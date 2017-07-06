@@ -3,6 +3,8 @@ package com.zhongqi.service;
 import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 
+import java.util.List;
+
 /**
  * Created by ningcs on 2017/7/4.
  */
@@ -12,5 +14,5 @@ public interface MasterPointQueryService {
 
 
     //获得大师分信息
-    public PersonRatingRankInfo getPersonRatingRankInfo();
+    public List<PersonRatingRankInfo> getPersonRatingRankInfo();
 }

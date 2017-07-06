@@ -4,10 +4,11 @@ import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.util.HttpRequestUtils;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by ningcs on 2017/7/4.
@@ -43,7 +44,7 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
     }
 
     @Override
-    public PersonRatingRankInfo getPersonRatingRankInfo() {
+    public List<PersonRatingRankInfo> getPersonRatingRankInfo() {
         String params="";
         JSONObject result = HttpRequestUtils.httpPost(url+"/Referee/getRefereeInfoList.do",null,false);
         return null;

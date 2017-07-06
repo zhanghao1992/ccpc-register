@@ -23,6 +23,7 @@ public class PersonRatingRankDaoImpl  implements PersonRatingRankDao{
     @Override
     public int[] addPersonRatingRankList(List<PersonRatingRank> list) {
         Map<String,Object> params = new HashMap<String,Object>();
+        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
         String sql = "insert into PersonRatingRank(identityCardNumber,playerName,goldenPoint,silverPoint," +
                 "heartPoint,createDatetime,bindDateTime,goldenRank,silverRank,heartRank,gradeCode)" +
                 " value (:identityCardNumber,:playerName,:goldenPoint,:silverPoint," +
@@ -30,6 +31,8 @@ public class PersonRatingRankDaoImpl  implements PersonRatingRankDao{
 
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(list.toArray());
         int[] updateCounts = jdbcTemplate.batchUpdate(sql,batch);
+        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
+        System.out.println("批量添加100条数据运行时间： " + (endTime - startTime) + "ms");
         return updateCounts;
     }
 }
