@@ -8,6 +8,7 @@ import com.zhongqi.service.MatchApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -109,26 +110,11 @@ public class MatchApplyServiceImpl implements MatchApplyService {
         return null;
     }
     @Override
+    @Transactional
     public void addPersonRatingRankList(List<PersonRatingRank> list) {
-
         List<PersonRatingRank> newlist = null;
         Integer TotalPersonRatingRank = list.size();
-        Integer count = TotalPersonRatingRank / 100;
-        Integer remain = TotalPersonRatingRank % 100;
-        Integer j = 0;
-        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
-        for (int i = 0; i < count; i++) {
-            newlist = list.subList(j, j + 100);
-            j = j + 100;
-
-            personRatingRankDao.addPersonRatingRankList(newlist);
-        }
-        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
-        System.out.println("批量添加数据运行时间： " + (endTime - startTime) + "ms");
-        newlist = list.subList(list.size() - remain, list.size());
-        personRatingRankDao.addPersonRatingRankList(newlist);
-
-
+        personRatingRankDao.addPersonRatingRankList(list);
     }
 
     @Override

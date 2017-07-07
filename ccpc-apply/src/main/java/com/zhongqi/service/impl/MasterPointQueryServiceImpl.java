@@ -9,6 +9,8 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * Created by ningcs on 2017/7/4.
  */
@@ -32,10 +34,10 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
     public ResponseRatingForQueryInfo findMasterPointsRank( String idNumber) {
         JSONObject jsonObject=new JSONObject();
         jsonObject.element("idNumber",idNumber);
+        Long time =new Date().getTime();
         String params="";
-        params="?"+"&&idNumber="+idNumber;
-        //        http://dev202.rating.api.cc.cmsa.cn/rating/rank/list.do?page=1&&page_size=100
-        JSONObject result = HttpRequestUtils.httpPostJSONObject("http://172.21.122.113:18088/Referee/getRefereeInfoList.do",jsonObject,false);
+        params="?"+"player_id_number="+idNumber+"&&timestamp="+time;
+        JSONObject result = HttpRequestUtils.httpGetJsonObject("http://dev202.rating.api.cc.cmsa.cn/rating/by_identity_number.do"+params);
         String ranking =result.get("ranking").toString();
         String level_name=result.get("level_name").toString();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =new ResponseRatingForQueryInfo();

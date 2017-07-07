@@ -1,10 +1,6 @@
 package com.zhongqi.controller;
 
 import com.zhongqi.dao.PersonRatingRankJpaDao;
-import com.zhongqi.dto.ResponsePersonRatingRankCollection;
-import com.zhongqi.dto.ResponsePersonRatingRankInfo;
-import com.zhongqi.dto.ResponseRatingForQueryInfo;
-import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.entity.User;
 import com.zhongqi.model.UserModel;
 import com.zhongqi.service.MasterPointQueryService;
@@ -129,13 +125,8 @@ public class ApplyController extends BaseController {
      */
     @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult applyMatch(HttpServletRequest request, Integer matchDayId, Integer matchPlaceId, String idNumber) {
-//        UserModel user=(UserModel) request.getSession().getAttribute("user");
-//        String idNumber="";
-//        if(user!=null){
-//            idNumber=user.getIdNumber();
-//        }
         if (matchDayId != null && matchDayId != 0 && matchPlaceId != null
-                && matchPlaceId != 0 && idNumber != null && "".equals(idNumber.trim())) {
+                && matchPlaceId != 0 && idNumber != null && !"".equals(idNumber.trim())) {
             matchApplyService.applyMatch(matchDayId, matchPlaceId, idNumber);
             return ResponseResult.successResult("报名成功");
         }
@@ -159,69 +150,85 @@ public class ApplyController extends BaseController {
 
     }
 
-
-    //测试
-
-    /**
-     * 获取报名时间列表
-     */
-    @RequestMapping(value = "/getratingRankInfoList", method = {RequestMethod.POST, RequestMethod.GET})
-    public void getratingRankInfoList() {
-         Integer ss =matchApplyService.findByCountPersonRating();
-        ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
-        Integer total = ratingRankInfoList.getTotal();
-        Integer page =0;
-        Integer count =total/1000 ;
-        if (count!=0){
-            count=count+1;
-        }
-        Integer page_size =1000;
-
-        for (int i=1 ;i<=count ;i++){
-            ResponsePersonRatingRankCollection ratingRankInfo = masterPointQueryService.getPersonRatingRankInfo(i, page_size);
-            List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos = ratingRankInfo.getList();
-            List<PersonRatingRank> personRatingRanks = new ArrayList<>();
-            for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo : responsePersonRatingRankInfos) {
-                PersonRatingRank ratingRank1 =null;
-                ratingRank1 =personRatingRankJpaDao.findByIdentityCardNumber(responsePersonRatingRankInfo.getIdentityCardNumber());
-                if (ratingRank1 == null) {
-                    PersonRatingRank ratingRank = this.setResponsePersonRatingRankInfo(responsePersonRatingRankInfo);
-                    personRatingRanks.add(ratingRank);
-                }
-
-            }
-            if (!responsePersonRatingRankInfos.isEmpty()) {
-                matchApplyService.addPersonRatingRankList(personRatingRanks);
-            }
-        }
-    }
-
-    //测试
+    // TODO: 2017/7/7 通过userId获取用户的比赛信息
 
     /**
-     * 获取报名时间列表
+     * 获取当前用户信息
      */
-    @RequestMapping(value = "/getRefereeList", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseRatingForQueryInfo getRefereeList() {
-        return masterPointQueryService.findMasterPointsRank(null);
+    @RequestMapping(value = "/getCurrentUser", method = {RequestMethod.POST, RequestMethod.GET})
+    public ResponseResult getCurrentUser(HttpServletRequest request, String idNumber) {
+        ResponseResult result = ResponseResult.successResult("参数校验成功");
+        if (result.getCode() == ResponseResult.SUCCESS) {
+            UserModel userModel = userService.getCurrentUser(idNumber);
+            return new ResponseResult(ResponseResult.SUCCESS, "获取当前信息成功", userModel);
+        }
+        return ResponseResult.errorResult("获取失败");
 
     }
-    private  PersonRatingRank setResponsePersonRatingRankInfo(ResponsePersonRatingRankInfo rankInfo){
-        PersonRatingRank ratingRank = new PersonRatingRank();
-        ratingRank.setId(rankInfo.getGoldenRank());
-        ratingRank.setIdentityCardNumber(rankInfo.getIdentityCardNumber());
-        ratingRank.setPlayerName(rankInfo.getPlayerName());
-        ratingRank.setGoldenPoint(rankInfo.getGoldenPoint());
-        ratingRank.setSilverPoint(rankInfo.getSilverPoint());
-        ratingRank.setHeartPoint(rankInfo.getHeartPoint());
-        ratingRank.setCreateDatetime(new Date(rankInfo.getCreateDatetime()));
-        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
-        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
-        ratingRank.setGoldenRank(rankInfo.getGoldenRank());
-        ratingRank.setSilverRank(rankInfo.getSilverRank());
-        ratingRank.setHeartRank(rankInfo.getHeartRank());
-        ratingRank.setGradeCode(rankInfo.getGradeCode());
-        return ratingRank;
-
-    }
+//    //测试
+//
+//    /**
+//     * 获取报名时间列表
+//     */
+//    @RequestMapping(value = "/getratingRankInfoList", method = {RequestMethod.POST, RequestMethod.GET})
+//    public void getratingRankInfoList() {
+//
+//        ResponseRatingForQueryInfo responseRatingForQueryInfo =masterPointQueryService.findMasterPointsRank("330823196607155917");
+//        Integer ss =matchApplyService.findByCountPersonRating();
+//        ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
+//        Integer total = ratingRankInfoList.getTotal();
+//        Integer page =0;
+//        Integer count =total/1000 ;
+//        if (count!=0){
+//            count=count+1;
+//        }
+//        Integer page_size =1000;
+//
+//        for (int i=1 ;i<=count ;i++){
+//            ResponsePersonRatingRankCollection ratingRankInfo = masterPointQueryService.getPersonRatingRankInfo(i, page_size);
+//            List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos = ratingRankInfo.getList();
+//            List<PersonRatingRank> personRatingRanks = new ArrayList<>();
+//            for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo : responsePersonRatingRankInfos) {
+//                PersonRatingRank ratingRank1 =null;
+//                ratingRank1 =personRatingRankJpaDao.findByIdentityCardNumber(responsePersonRatingRankInfo.getIdentityCardNumber());
+//                if (ratingRank1 == null) {
+//                    PersonRatingRank ratingRank = this.setResponsePersonRatingRankInfo(responsePersonRatingRankInfo);
+//                    personRatingRanks.add(ratingRank);
+//                }
+//
+//            }
+//            if (!responsePersonRatingRankInfos.isEmpty()) {
+//                matchApplyService.addPersonRatingRankList(personRatingRanks);
+//            }
+//        }
+//    }
+//
+//    //测试
+//
+//    /**
+//     * 获取报名时间列表
+//     */
+//    @RequestMapping(value = "/getRefereeList", method = {RequestMethod.POST, RequestMethod.GET})
+//    public ResponseRatingForQueryInfo getRefereeList() {
+//        return masterPointQueryService.findMasterPointsRank(null);
+//
+//    }
+//    private  PersonRatingRank setResponsePersonRatingRankInfo(ResponsePersonRatingRankInfo rankInfo){
+//        PersonRatingRank ratingRank = new PersonRatingRank();
+//        ratingRank.setId(rankInfo.getGoldenRank());
+//        ratingRank.setIdentityCardNumber(rankInfo.getIdentityCardNumber());
+//        ratingRank.setPlayerName(rankInfo.getPlayerName());
+//        ratingRank.setGoldenPoint(rankInfo.getGoldenPoint());
+//        ratingRank.setSilverPoint(rankInfo.getSilverPoint());
+//        ratingRank.setHeartPoint(rankInfo.getHeartPoint());
+//        ratingRank.setCreateDatetime(new Date(rankInfo.getCreateDatetime()));
+//        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
+//        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
+//        ratingRank.setGoldenRank(rankInfo.getGoldenRank());
+//        ratingRank.setSilverRank(rankInfo.getSilverRank());
+//        ratingRank.setHeartRank(rankInfo.getHeartRank());
+//        ratingRank.setGradeCode(rankInfo.getGradeCode());
+//        return ratingRank;
+//
+//    }
 }

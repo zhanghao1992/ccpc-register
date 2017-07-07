@@ -79,11 +79,13 @@ public class UserServiceImpl implements UserService {
             if (matchApply!=null){
                 MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
                 if (matchDay!=null){
+                    userModel.setMatchDayId(matchApply.getMatchDayId());
                     userModel.setDayInfo(matchDay.getDayInfo());
                     userModel.setDayInfoDetail(matchDay.getDayInfoDetail());
                 }
                 MatchPlace matchPlace =matchPlaceJpaDao.findById(matchApply.getId());
                 if (matchPlace!=null){
+                    userModel.setMatchPlaceId(matchApply.getId());
                     userModel.setPlace(matchPlace.getPlace());
                     userModel.setPlaceDetail(matchPlace.getPlaceDetail());
                 }
@@ -91,6 +93,39 @@ public class UserServiceImpl implements UserService {
         }
         return userModel;
 
+    }
+
+
+    @Override
+    public UserModel getCurrentUser(String idNumber) {
+        UserModel userModel =null;
+        ResponseRatingForQueryInfo responseRatingForQueryInfo =null;
+//        if (BaseUtils.compareCurrentTime(cutOffDate)){
+//            responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
+//        }else{
+//            responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
+//        }
+//
+//        if (responseRatingForQueryInfo != null) {
+//            userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
+//            userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
+//        }
+        MatchApply matchApply =matchApplyJpaDao.findByIdNumber(idNumber);
+        if (matchApply!=null){
+            MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
+            if (matchDay!=null){
+                userModel.setMatchDayId(matchApply.getMatchDayId());
+                userModel.setDayInfo(matchDay.getDayInfo());
+                userModel.setDayInfoDetail(matchDay.getDayInfoDetail());
+            }
+            MatchPlace matchPlace =matchPlaceJpaDao.findById(matchApply.getId());
+            if (matchPlace!=null){
+                userModel.setMatchPlaceId(matchApply.getId());
+                userModel.setPlace(matchPlace.getPlace());
+                userModel.setPlaceDetail(matchPlace.getPlaceDetail());
+            }
+        }
+        return userModel;
     }
 
     @Override

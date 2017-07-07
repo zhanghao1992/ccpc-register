@@ -1,4 +1,4 @@
-package com.zhongqi;
+package com.zhongqi.task;
 
 import com.zhongqi.dao.PersonRatingRankJpaDao;
 import com.zhongqi.dto.ResponsePersonRatingRankCollection;
@@ -39,22 +39,22 @@ public class ScheduledTasks {
     @Autowired
     private MatchApplyService  matchApplyService;
 
-    @Scheduled(cron ="0 */1 * * * *")
+    @Scheduled(cron ="*/10 * * * * *")
     public void reportCurrentTime() throws InterruptedException {
         ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
         Integer currentCount =personRatingRankJpaDao.findByCountPersonRating();
         Integer total = ratingRankInfoList.getTotal();
-        if (currentCount!=total && currentCount <=total) {
+        if (currentCount!=total && currentCount <total) {
             Integer page = 0;
             Integer count = total / 1000;
             if (count != 0) {
                 count = count + 1;
             }
             Integer page_size = 1000;
-
-            for (int i = 0; i < count+1; i++) {
+            for (int i = 0; i < count; i++) {
                 ResponsePersonRatingRankCollection ratingRankInfo = masterPointQueryService.getPersonRatingRankInfo(i, page_size);
                 List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos = ratingRankInfo.getList();
+
                 List<PersonRatingRank> personRatingRanks = new ArrayList<>();
                 for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo : responsePersonRatingRankInfos) {
                     PersonRatingRank ratingRank1 = null;
@@ -69,9 +69,9 @@ public class ScheduledTasks {
                     matchApplyService.addPersonRatingRankList(personRatingRanks);
                 }
             }
-            System.out.println(String.format("---第%s次执行，当前时间为：%s", count0++, dateFormat.format(new Date())));
+            logger.info(String.format("---第%s次执行，当前时间为：%s", count0++, dateFormat.format(new Date())));
         }else {
-            System.out.println("大师分已经数据已经同步完成");
+            logger.info("大师分数据已经同步完成");
         }
 
     }
@@ -85,7 +85,6 @@ public class ScheduledTasks {
         ratingRank.setSilverPoint(rankInfo.getSilverPoint());
         ratingRank.setHeartPoint(rankInfo.getHeartPoint());
         ratingRank.setCreateDatetime(new Date(rankInfo.getCreateDatetime()));
-        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
         ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
         ratingRank.setGoldenRank(rankInfo.getGoldenRank());
         ratingRank.setSilverRank(rankInfo.getSilverRank());

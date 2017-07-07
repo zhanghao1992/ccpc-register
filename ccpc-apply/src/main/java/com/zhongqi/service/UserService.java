@@ -16,6 +16,11 @@ public interface UserService {
     public UserModel getCurrentUserInfo(String realName, String idNumber, String mobile);
 
     /**
+     * 获取当前用户信息
+     */
+    public UserModel getCurrentUser(String idNumber);
+
+    /**
      * 添加用户信息
      */
     public void addUser(String realName,String idNumber,String mobile);

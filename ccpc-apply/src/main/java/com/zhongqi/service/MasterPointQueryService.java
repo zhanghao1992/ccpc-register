@@ -7,10 +7,9 @@ import com.zhongqi.dto.ResponseRatingForQueryInfo;
  * Created by ningcs on 2017/7/4.
  */
 public interface MasterPointQueryService {
-//    public JSONObject getRefereeInfoList();
+    //获取个人大师分信息 ok
     public ResponseRatingForQueryInfo findMasterPointsRank(String idNumber);
 
-
-    //获得大师分信息
+    //获得大师分信息列表 ok
     public ResponsePersonRatingRankCollection getPersonRatingRankInfo(Integer page,Integer page_size);
 }

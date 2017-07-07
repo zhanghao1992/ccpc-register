@@ -32,7 +32,7 @@ public class PersonRatingRankDaoImpl  implements PersonRatingRankDao{
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(list.toArray());
         int[] updateCounts = jdbcTemplate.batchUpdate(sql,batch);
         long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
-        System.out.println("批量添加100条数据运行时间： " + (endTime - startTime) + "ms");
+        System.out.println("批量添加1000条数据运行时间： " + (endTime - startTime) + "ms");
         return updateCounts;
     }
 }

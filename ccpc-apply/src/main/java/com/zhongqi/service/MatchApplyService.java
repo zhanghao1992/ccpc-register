@@ -31,9 +31,10 @@ public interface MatchApplyService {
     //批量导入大师分信息
     public void addPersonRatingRankList(List<PersonRatingRank> list);
 
+    //通过身份证号获取大师分信息
     public PersonRatingRank findByIdentityCardNumber(String idNumber);
 
-    //计算数量
+    //计算大师分总人数
     public Integer findByCountPersonRating();
 
 
