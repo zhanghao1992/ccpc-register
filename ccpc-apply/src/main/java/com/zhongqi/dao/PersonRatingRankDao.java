@@ -10,4 +10,6 @@ import java.util.List;
 public interface PersonRatingRankDao {
     //批量导入大师分信息
     public int[] addPersonRatingRankList(List<PersonRatingRank> list );
+
+
 }

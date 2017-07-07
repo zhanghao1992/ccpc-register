@@ -1,9 +1,6 @@
 package com.zhongqi.service.impl;
 
-import com.zhongqi.dao.MatchApplyJpaDao;
-import com.zhongqi.dao.MatchDayJpaDao;
-import com.zhongqi.dao.MatchPlaceJpaDao;
-import com.zhongqi.dao.UserJpaDao;
+import com.zhongqi.dao.*;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.MatchApply;
 import com.zhongqi.entity.MatchDay;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ningcs on 2017/7/5.
@@ -46,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MatchApplyService matchApplyService;
+
+    @Autowired
+    UserDao userDao;
 
     @Override
     public UserModel getCurrentUserInfo(String realName,String idNumber,String mobile) {
@@ -110,5 +111,11 @@ public class UserServiceImpl implements UserService {
         user.setRealName(realName);
         user.setMobile(mobile);
         userJpaDao.save(user);
+    }
+
+    @Override
+    @Transactional
+    public int[] addUser(List<User> list) {
+        return userDao.addUser(list);
     }
 }

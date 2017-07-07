@@ -1,6 +1,9 @@
 package com.zhongqi.service;
 
+import com.zhongqi.entity.User;
 import com.zhongqi.model.UserModel;
+
+import java.util.List;
 
 /**
  * Created by ningcs on 2017/7/5.
@@ -21,4 +24,6 @@ public interface UserService {
      * 更新用户信息
      */
     public void updateUser(String realName,String idNumber,String mobile,Integer id);
+
+    public int[] addUser(List<User> list );
 }

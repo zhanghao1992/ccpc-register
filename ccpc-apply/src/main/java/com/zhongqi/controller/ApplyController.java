@@ -1,6 +1,6 @@
 package com.zhongqi.controller;
 
-import com.zhongqi.dao.UserDao;
+import com.zhongqi.dao.PersonRatingRankJpaDao;
 import com.zhongqi.dto.ResponsePersonRatingRankCollection;
 import com.zhongqi.dto.ResponsePersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
@@ -36,6 +36,9 @@ public class ApplyController extends BaseController {
     private MatchApplyService matchApplyService;
 
     @Autowired
+    private PersonRatingRankJpaDao personRatingRankJpaDao;
+
+    @Autowired
     private UserService userService;
 
     @Value("${loginCheckMobileCode}")
@@ -43,9 +46,6 @@ public class ApplyController extends BaseController {
 
     //    @Autowired
     private SMSService smsService;
-
-    @Autowired
-    UserDao userDao;
 
     @Autowired
     private MasterPointQueryService masterPointQueryService;
@@ -56,7 +56,7 @@ public class ApplyController extends BaseController {
     public void addUser() {
         List<User> list = new ArrayList<>();
 
-        for (int i = 0; i < 288; i++) {
+        for (int i = 0; i < 1000; i++) {
             User user = new User();
             user.setMobile("" + i);
             user.setRealName("宁春笋");
@@ -66,8 +66,8 @@ public class ApplyController extends BaseController {
         }
 
         List<User> newlist = null;
-        Integer count = 288 / 100;
-        Integer remain = 288 % 100;
+        Integer count = 1000 / 100;
+        Integer remain = 1000 % 100;
         Integer j = 0;
         long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
         for (int i = 0; i < count; i++) {
@@ -75,12 +75,13 @@ public class ApplyController extends BaseController {
             newlist = list.subList(j, j + 100);
             j = j + 100;
 
-            userDao.addUser(newlist);
+            userService.addUser(newlist);
         }
         long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
-        System.out.println("批量添加100条数据运行时间： " + (endTime - startTime) + "ms");
         newlist = list.subList(list.size() - remain, list.size());
-        userDao.addUser(newlist);
+        userService.addUser(newlist);
+        System.out.println("批量添加数据运行时间： " + (endTime - startTime) + "ms");
+
     }
 
 
@@ -165,8 +166,8 @@ public class ApplyController extends BaseController {
      * 获取报名时间列表
      */
     @RequestMapping(value = "/getratingRankInfoList", method = {RequestMethod.POST, RequestMethod.GET})
-    public ResponseResult getratingRankInfoList() {
-
+    public void getratingRankInfoList() {
+         Integer ss =matchApplyService.findByCountPersonRating();
         ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
         Integer total = ratingRankInfoList.getTotal();
         Integer page =0;
@@ -175,20 +176,24 @@ public class ApplyController extends BaseController {
             count=count+1;
         }
         Integer page_size =1000;
+
         for (int i=1 ;i<=count ;i++){
             ResponsePersonRatingRankCollection ratingRankInfo = masterPointQueryService.getPersonRatingRankInfo(i, page_size);
             List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos = ratingRankInfo.getList();
             List<PersonRatingRank> personRatingRanks = new ArrayList<>();
-
             for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo : responsePersonRatingRankInfos) {
-                PersonRatingRank ratingRank = this.setResponsePersonRatingRankInfo(responsePersonRatingRankInfo);
-                personRatingRanks.add(ratingRank);
+                PersonRatingRank ratingRank1 =null;
+                ratingRank1 =personRatingRankJpaDao.findByIdentityCardNumber(responsePersonRatingRankInfo.getIdentityCardNumber());
+                if (ratingRank1 == null) {
+                    PersonRatingRank ratingRank = this.setResponsePersonRatingRankInfo(responsePersonRatingRankInfo);
+                    personRatingRanks.add(ratingRank);
+                }
+
             }
             if (!responsePersonRatingRankInfos.isEmpty()) {
                 matchApplyService.addPersonRatingRankList(personRatingRanks);
             }
         }
-        return null;
     }
 
     //测试

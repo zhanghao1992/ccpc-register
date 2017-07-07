@@ -41,10 +41,10 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     @Autowired
     private RatingPersonLeverDetailJpaDao ratingPersonLeverDetailJpaDao;
 
-
-
     @Autowired
     private PersonRatingRankDao personRatingRankDao;
+
+
 
 
     @Override
@@ -131,32 +131,15 @@ public class MatchApplyServiceImpl implements MatchApplyService {
 
     }
 
-//    @Override
-//    public void addRefereeList(List<Referee> list) {
-//        List<PersonRatingRank> newlist = null;
-//        Integer TotalPersonRatingRank = list.size();
-//        Integer count = TotalPersonRatingRank / 100;
-//        Integer remain = TotalPersonRatingRank % 100;
-//        Integer j = 0;
-//        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
-//        for (int i = 0; i < count; i++) {
-//            newlist = list.subList(j, j + 100);
-//            j = j + 100;
-//
-//            personRatingRankDao.addPersonRatingRankList(newlist);
-//        }
-//        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
-//        System.out.println("批量添加数据运行时间： " + (endTime - startTime) + "ms");
-//        newlist = list.subList(list.size() - remain, list.size());
-//        personRatingRankDao.addPersonRatingRankList(newlist);
-//
-//    }
+    @Override
+    public PersonRatingRank findByIdentityCardNumber(String idNumber) {
+        return personRatingRankJpaDao.findByIdentityCardNumber(idNumber);
+    }
 
-    //    String levelName="";
-//    levelName=this.getStandardName(personRatingRank.getGoldenPoint(),personRatingRank.getSilverPoint(),personRatingRank.getHeartPoint());
-//            if (levelName!=null && !"".equals(levelName.trim())){
-//        responseRatingForQueryInfo.setLevel_name(levelName);
-//    }
+    @Override
+    public Integer findByCountPersonRating() {
+        return personRatingRankJpaDao.findByCountPersonRating();
+    }
 
     private static Integer MATCH_DAY_NORMAL=1;
     private static Integer MATCH_Apply_NORMAL=1;

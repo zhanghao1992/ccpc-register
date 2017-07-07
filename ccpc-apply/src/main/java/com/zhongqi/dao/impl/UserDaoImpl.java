@@ -23,11 +23,14 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int[] addUser(List<User> list) {
         Map<String,Object> params = new HashMap<String,Object>();
+        long startTime = System.currentTimeMillis();    // 获取开始时间 毫秒级
         String sql = "insert into User(realName,idNumber,mobile,queryTime)" +
                 " value (:realName,:idNumber,:mobile,:queryTime) ";
 
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(list.toArray());
         int[] updateCounts = jdbcTemplate.batchUpdate(sql,batch);
+        long endTime = System.currentTimeMillis();    // 获取结束时间 毫秒级
+        System.out.println("批量添加100条数据运行时间： " + (endTime - startTime) + "ms");
         return updateCounts;
     }
 }

@@ -1,13 +1,21 @@
 package com.zhongqi;
 
+import com.zhongqi.dao.PersonRatingRankJpaDao;
+import com.zhongqi.dto.ResponsePersonRatingRankCollection;
+import com.zhongqi.dto.ResponsePersonRatingRankInfo;
+import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.service.MatchApplyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jordan on 17/3/27.
@@ -26,31 +34,66 @@ public class ScheduledTasks {
     private MasterPointQueryService masterPointQueryService;
 
     @Autowired
+    private PersonRatingRankJpaDao personRatingRankJpaDao;
+
+    @Autowired
     private MatchApplyService  matchApplyService;
 
-//    @Scheduled(cron ="* 1 * * * *")
-//    public void reportCurrentTime() throws InterruptedException {
-//        ResponsePersonRatingRankCollection ratingRankInfo =masterPointQueryService.getPersonRatingRankInfo(1,200);
-//        Integer total =ratingRankInfo.getTotal();
-//        List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos =ratingRankInfo.getList();
-//        List<PersonRatingRank> personRatingRanks =new ArrayList<>();
-//
-//        for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo:responsePersonRatingRankInfos){
-//            PersonRatingRank ratingRank =new PersonRatingRank();
-//            try {
-//                BeanUtils.copyProperties(ratingRank,responsePersonRatingRankInfo);
-//                personRatingRanks.add(ratingRank);
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if (!responsePersonRatingRankInfos.isEmpty()){
-//            matchApplyService.addPersonRatingRankList(personRatingRanks);
-//        }
-//        System.out.println(String.format("---第%s次执行，当前时间为：%s", count0++, dateFormat.format(new Date())));
-//    }
+    @Scheduled(cron ="0 */1 * * * *")
+    public void reportCurrentTime() throws InterruptedException {
+        ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
+        Integer currentCount =personRatingRankJpaDao.findByCountPersonRating();
+        Integer total = ratingRankInfoList.getTotal();
+        if (currentCount!=total && currentCount <=total) {
+            Integer page = 0;
+            Integer count = total / 1000;
+            if (count != 0) {
+                count = count + 1;
+            }
+            Integer page_size = 1000;
+
+            for (int i = 0; i < count+1; i++) {
+                ResponsePersonRatingRankCollection ratingRankInfo = masterPointQueryService.getPersonRatingRankInfo(i, page_size);
+                List<ResponsePersonRatingRankInfo> responsePersonRatingRankInfos = ratingRankInfo.getList();
+                List<PersonRatingRank> personRatingRanks = new ArrayList<>();
+                for (ResponsePersonRatingRankInfo responsePersonRatingRankInfo : responsePersonRatingRankInfos) {
+                    PersonRatingRank ratingRank1 = null;
+                    ratingRank1 = personRatingRankJpaDao.findByIdentityCardNumber(responsePersonRatingRankInfo.getIdentityCardNumber());
+                    if (ratingRank1 == null) {
+                        PersonRatingRank ratingRank = this.setResponsePersonRatingRankInfo(responsePersonRatingRankInfo);
+                        personRatingRanks.add(ratingRank);
+                    }
+
+                }
+                if (!responsePersonRatingRankInfos.isEmpty()) {
+                    matchApplyService.addPersonRatingRankList(personRatingRanks);
+                }
+            }
+            System.out.println(String.format("---第%s次执行，当前时间为：%s", count0++, dateFormat.format(new Date())));
+        }else {
+            System.out.println("大师分已经数据已经同步完成");
+        }
+
+    }
+
+    private  PersonRatingRank setResponsePersonRatingRankInfo(ResponsePersonRatingRankInfo rankInfo){
+        PersonRatingRank ratingRank = new PersonRatingRank();
+        ratingRank.setId(rankInfo.getGoldenRank());
+        ratingRank.setIdentityCardNumber(rankInfo.getIdentityCardNumber());
+        ratingRank.setPlayerName(rankInfo.getPlayerName());
+        ratingRank.setGoldenPoint(rankInfo.getGoldenPoint());
+        ratingRank.setSilverPoint(rankInfo.getSilverPoint());
+        ratingRank.setHeartPoint(rankInfo.getHeartPoint());
+        ratingRank.setCreateDatetime(new Date(rankInfo.getCreateDatetime()));
+        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
+        ratingRank.setBindDateTime(new Date(rankInfo.getBindDateTime()));
+        ratingRank.setGoldenRank(rankInfo.getGoldenRank());
+        ratingRank.setSilverRank(rankInfo.getSilverRank());
+        ratingRank.setHeartRank(rankInfo.getHeartRank());
+        ratingRank.setGradeCode(rankInfo.getGradeCode());
+        return ratingRank;
+
+    }
 
 
 

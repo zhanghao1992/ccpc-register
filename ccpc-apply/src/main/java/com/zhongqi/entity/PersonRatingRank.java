@@ -146,7 +146,7 @@ public class PersonRatingRank {
         return this;
     }
     @Basic
-    @Column(name = "getGradeCode", nullable = true)
+    @Column(name = "GradeCode", nullable = true)
     public Integer getGradeCode() {
         return gradeCode;
     }
