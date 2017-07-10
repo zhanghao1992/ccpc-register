@@ -127,6 +127,11 @@ public class MatchApplyServiceImpl implements MatchApplyService {
         return personRatingRankJpaDao.findByCountPersonRating();
     }
 
+    @Override
+    public MatchApply findByIdNumber(String idNumber) {
+        return matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
+    }
+
     private static Integer MATCH_DAY_NORMAL=1;
     private static Integer MATCH_Apply_NORMAL=1;
 }

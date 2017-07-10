@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
                 userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
                 userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
             }
-            MatchApply matchApply =matchApplyJpaDao.findByIdNumber(idNumber);
+            MatchApply matchApply =matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
             if (matchApply!=null){
                 MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
                 if (matchDay!=null){
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel getCurrentUser(String idNumber) {
-        UserModel userModel =null;
+        UserModel userModel =new UserModel();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =null;
 //        if (BaseUtils.compareCurrentTime(cutOffDate)){
 //            responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 //            userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
 //            userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
 //        }
-        MatchApply matchApply =matchApplyJpaDao.findByIdNumber(idNumber);
+        MatchApply matchApply =matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
         if (matchApply!=null){
             MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
             if (matchDay!=null){
@@ -153,4 +153,6 @@ public class UserServiceImpl implements UserService {
     public int[] addUser(List<User> list) {
         return userDao.addUser(list);
     }
+
+    private static Integer MATCH_Apply_NORMAL=1;
 }

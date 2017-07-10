@@ -1,6 +1,7 @@
 package com.zhongqi.service;
 
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
+import com.zhongqi.entity.MatchApply;
 import com.zhongqi.entity.MatchDay;
 import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.model.MatchApplySkuInfo;
@@ -36,6 +37,9 @@ public interface MatchApplyService {
 
     //计算大师分总人数
     public Integer findByCountPersonRating();
+
+    //通过身份证号获取报名信息
+    public MatchApply findByIdNumber(String idNumber);
 
 
 
