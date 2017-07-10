@@ -175,14 +175,14 @@ public class ApplyController extends BaseController {
     public ResponseResult getCurrentUserInfo(HttpServletRequest request, String realName, String idNumber, String mobile, String checkCode) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
         // TODO: 2017/7/10 验证码注释掉
-        if ("false".equals(loginCheckMobileCode)) {
+        if ("true".equals(loginCheckMobileCode)) {
             result = smsService.checkMobileCode(mobile, checkCode);
         }
         if (result.getCode() == ResponseResult.SUCCESS) {
             UserModel userModel = userService.getCurrentUserInfo(realName, idNumber, mobile);
             return new ResponseResult(ResponseResult.SUCCESS, "获取当前信息成功", userModel);
         }
-        return ResponseResult.errorResult("获取失败");
+        return ResponseResult.errorResult("获取用户信息失败");
 
     }
 
