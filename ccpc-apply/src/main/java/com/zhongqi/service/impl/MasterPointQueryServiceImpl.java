@@ -37,7 +37,7 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
         Long time =new Date().getTime();
         String params="";
         params="?"+"player_id_number="+idNumber+"&&timestamp="+time;
-        JSONObject result = HttpRequestUtils.httpGetJsonObject("http://dev202.rating.api.cc.cmsa.cn/rating/by_identity_number.do"+params);
+        JSONObject result = HttpRequestUtils.httpGetJsonObject(url+"/rating/by_identity_number.do"+params);
         String ranking =result.get("ranking").toString();
         String level_name=result.get("level_name").toString();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =new ResponseRatingForQueryInfo();
