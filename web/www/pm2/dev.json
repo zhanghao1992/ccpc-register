@@ -1,0 +1,12 @@
+{
+  "name": "fun_chess_referee_www_dev",
+  "cwd": "/home/dev/services/fun_chess_referee_www_dev/",
+  "script": "./app.js",
+  "watch": true,
+  "ignore_watch": [
+    "upload",
+    "log",
+    "src/static",
+    "output/static"
+  ]
+}

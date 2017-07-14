@@ -1,0 +1,15 @@
+.addBtn, .closeBtn {
+    border-radius: 5px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 32px;
+    width: 110px;
+    height: 32px;
+    display: block;
+    background-color: #01C5B0;
+    margin: 5px;
+}
+.hide {
+    display: none;
+}
