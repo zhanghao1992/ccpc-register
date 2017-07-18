@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
             responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
         }
 
+
         if (responseRatingForQueryInfo != null) {
             userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
             userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
