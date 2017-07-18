@@ -39,7 +39,8 @@ public class ScheduledTasks {
     @Autowired
     private MatchApplyService  matchApplyService;
 
-    @Scheduled(cron ="*/10 * * * * *")
+//    @Scheduled(cron ="*/10 * * * * *")
+    @Scheduled(cron =" 0 30 12 * * ?")
     public void reportCurrentTime() throws InterruptedException {
         ResponsePersonRatingRankCollection ratingRankInfoList = masterPointQueryService.getPersonRatingRankInfo(1, 200);
         Integer currentCount =personRatingRankJpaDao.findByCountPersonRating();

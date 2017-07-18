@@ -31,4 +31,7 @@ public interface UserService {
     public void updateUser(String realName,String idNumber,String mobile,Integer id);
 
     public int[] addUser(List<User> list );
+
+    //通过userId获取用户信息
+    public User findByUserId(Integer userId);
 }

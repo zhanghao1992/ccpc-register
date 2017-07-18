@@ -5,6 +5,7 @@ import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchApplySkuInfo;
 import com.zhongqi.service.MatchApplyService;
+import com.zhongqi.util.BaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,12 @@ public class MatchApplyServiceImpl implements MatchApplyService {
 
     @Autowired
     private PersonRatingRankDao personRatingRankDao;
+
+    @Autowired
+    private CpSourceJpaDao cpSourceJpaDao;
+
+    @Autowired
+    private RelevanceUserJpaDao relevanceUserJpaDao;
 
 
 
@@ -130,6 +137,43 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     @Override
     public MatchApply findByIdNumber(String idNumber) {
         return matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
+    }
+
+
+    @Override
+    @Transactional
+    public void getCpSource(String  code) {
+        CpSource cpSource =new CpSource();
+        cpSource.setCode(code);
+        cpSource.setCreateDate(new Date());
+        cpSourceJpaDao.save(cpSource);
+    }
+
+    @Override
+    @Transactional
+    public RelevanceUser createRelevanceUserId(Integer userId) {
+        String userIdCode =BaseUtils.getTenRandomLetterAndNumber();
+        RelevanceUser relevanceUser1 =this.findByUserIdCode(userIdCode);
+        if (relevanceUser1 ==null){
+            RelevanceUser relevanceUser =new RelevanceUser();
+            relevanceUser.setUserId(userId);
+            relevanceUser.setUserIdCode(userIdCode);
+            relevanceUser.setCreateDate(new Date());
+            relevanceUserJpaDao.save(relevanceUser);
+            return relevanceUser;
+        }
+        return null;
+
+    }
+
+    @Override
+    public RelevanceUser findByUserIdCode(String userIdCode) {
+        return relevanceUserJpaDao.findByUserIdCode(userIdCode);
+    }
+
+    @Override
+    public RelevanceUser findByUserId(Integer userId) {
+        return relevanceUserJpaDao.findByUserId(userId);
     }
 
     private static Integer MATCH_DAY_NORMAL=1;
