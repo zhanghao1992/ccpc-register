@@ -1,0 +1,17 @@
+/* 清除浮动 */
+.clearfix {
+    *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+.clearfix:after {
+    clear: both;
+}
+body { background-color: #F5F5F5; font-size: 0.6rem; }
+a { text-decoration: none; }
+input { outline: none; }
+.hide { display: none !important; }
+.yahei { font-family: "Microsoft YaHei", "微软雅黑", "Microsoft JhengHei", "华文细黑", STHeiti, MingLiu; }

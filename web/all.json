@@ -1,0 +1,100 @@
+{
+  "apps": [
+    {
+      "name": "chess_member_web_www_dev",
+      "cwd": "/home/dev/services/chess_member_web_www_dev/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "chess_member_web_www",
+      "cwd": "/home/dev/services/chess_member_web_www/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "chess_member_web_admin_dev",
+      "cwd": "/home/dev/services/chess_member_web_admin_dev/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "chess_member_web_admin",
+      "cwd": "/home/dev/services/chess_member_web_admin/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "match_manager_web_www_dev",
+      "cwd": "/home/dev/services/match_manager_web_www_dev/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "match_manager_web_www_test",
+      "cwd": "/home/dev/services/match_manager_web_www/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "fun_chess_referee_www_dev",
+      "cwd": "/home/dev/services/fun_chess_referee_www_dev/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    },
+    {
+      "name": "fun_chess_referee_admin_dev",
+      "cwd": "/home/dev/services/fun_chess_referee_admin_dev/",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "upload",
+        "log",
+        "src/static",
+        "output/static"
+      ]
+    }
+  ]
+}
