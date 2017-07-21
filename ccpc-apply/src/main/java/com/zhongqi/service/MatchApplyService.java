@@ -1,9 +1,7 @@
 package com.zhongqi.service;
 
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
-import com.zhongqi.entity.MatchApply;
-import com.zhongqi.entity.MatchDay;
-import com.zhongqi.entity.PersonRatingRank;
+import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchApplySkuInfo;
 
 import java.math.BigDecimal;
@@ -40,6 +38,18 @@ public interface MatchApplyService {
 
     //通过身份证号获取报名信息
     public MatchApply findByIdNumber(String idNumber);
+
+    //添加厂商访问记录
+    public void getCpSource(String code);
+
+    //生成关联userIdCode
+    public RelevanceUser createRelevanceUserId(Integer userId);
+
+    //效验userIdCode
+    public RelevanceUser findByUserIdCode(String userIdCode);
+
+    //效验userId
+    public RelevanceUser findByUserId(Integer  userId);
 
 
 

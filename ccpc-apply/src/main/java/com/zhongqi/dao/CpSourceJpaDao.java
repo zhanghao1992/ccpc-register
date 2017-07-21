@@ -1,6 +1,6 @@
 package com.zhongqi.dao;
 
-import com.zhongqi.entity.User;
+import com.zhongqi.entity.CpSource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
  * Created by ningcs on 2017/7/4.
  */
 @Repository
-public interface UserJpaDao extends JpaRepository<User,Integer> {
-    public User findByIdNumber(String idNumber);
-    public User findById(Integer userId);
+public interface CpSourceJpaDao extends JpaRepository<CpSource,Integer> {
 }

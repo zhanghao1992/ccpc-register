@@ -100,16 +100,17 @@ public class UserServiceImpl implements UserService {
     public UserModel getCurrentUser(String idNumber) {
         UserModel userModel =new UserModel();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =null;
-//        if (BaseUtils.compareCurrentTime(cutOffDate)){
-//            responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
-//        }else{
-//            responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
-//        }
-//
-//        if (responseRatingForQueryInfo != null) {
-//            userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
-//            userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
-//        }
+        if (BaseUtils.compareCurrentTime(cutOffDate)){
+            responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
+        }else{
+            responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
+        }
+
+
+        if (responseRatingForQueryInfo != null) {
+            userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
+            userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
+        }
         MatchApply matchApply =matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
         if (matchApply!=null){
             MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
@@ -153,6 +154,13 @@ public class UserServiceImpl implements UserService {
     public int[] addUser(List<User> list) {
         return userDao.addUser(list);
     }
+
+
+    @Override
+    public User findByUserId(Integer userId) {
+        return userJpaDao.findById(userId);
+    }
+
 
     private static Integer MATCH_Apply_NORMAL=1;
 }
