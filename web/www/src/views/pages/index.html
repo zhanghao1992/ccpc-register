@@ -2,9 +2,10 @@
 
 {% block basestylescript %}
 {% include '../layout/template.html' %}
-{% include '../layout/list.html' %}
 {% include '../layout/toast.html' %}
 {% endblock %}
+
+<!--<meta http-equiv="refresh" content="0; url=''">-->
 
 {% block content %}
 
@@ -20,17 +21,20 @@
     <section class="desription">
         <div>
             <nav class="des-btns">
-                <a href=""></a>
+                <a id="getQualification" href="javascript:void(0);"></a>
                 <a href="javascript:void(0);"></a>
                 <a href="javascript:void(0);"></a>
             </nav>
         </div>
     </section>
-    
+
     <nav class="btns">
-        <a href="">分享</a>
-        <a href="">点我报名</a>
+        <a id="share" href="javascript:void(0);">分享</a>
+        <a id="signUp" href="javascript:void(0);">点我报名</a>
+        <!--<a class="qualification" href="javascript:void(0);">点我报名</a>-->
     </nav>
+
+    <form id="signUp-form"></form>
 </section>
 
 <script>
@@ -39,22 +43,27 @@ $('#div').on('tap', function (ev) {
         content: 'sdsadas',
         duration: 1000
     });
-    $.ajax({
-        url: '/setCache',
-        type: 'GET',
-        data: {},
-        dataType: 'json',
-        cache: false,
-        success: function (json) {
-            if (json.code == 0) {
-                console.log('设置缓存成功')
-            }
-        },
-        error: function () {
-
-        }
-    })
 })
-alert(0)
+
+
+$('#getQualification').tap(function () {
+    var date = new Date().getTime();
+    var minDate = new Date(2017,10,6,24,0,0).getTime();
+    var maxDate = new Date(2017,10,17,0,0,0).getTime();
+    if (minDate <= date  && date <= maxDate) {
+        window.location.href = '/QRcode';
+    }else {
+        return false;
+    }
+});
+
+$('.btns').tap(function () {
+    alert(1)
+    return false;
+});
+
+$('#signUp').click(function () {
+    alert(2)
+});
 </script>
 {% endblock %}

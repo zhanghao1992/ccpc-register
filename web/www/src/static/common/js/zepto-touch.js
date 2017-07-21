@@ -113,7 +113,7 @@
                 deltaX += Math.abs(touch.x1 - touch.x2)
                 deltaY += Math.abs(touch.y1 - touch.y2)
             })
-            .on('touchEnd MSPointerUp pointerup', function (e) {
+            .on('touchend MSPointerUp pointerup', function (e) {
                 if ((_isPointerType = isPointerEventType(e, 'up')) && !isPrimaryTouch(e)) {
                     return
                 }

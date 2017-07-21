@@ -1,0 +1,57 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+{% endblock %}
+
+{% block content %}
+
+<section class="singUpSuccessWrap">
+    <div class="info">
+        <div class="info-top">
+            <ul>
+                <li class="clearfix">
+                    <span></span>
+                    <p>参赛时间：2017年11月25日9：00到18：00</p>
+                </li>
+                <li class="clearfix">
+                    <span></span>
+                    <p>参赛地点：北京</p>
+                </li>
+                <li class="clearfix">
+                    <span></span>
+                    <p>详细地址：北京市东城区天坛东路80号</p>
+                </li>
+            </ul>
+        </div>
+        <div class="info-bott clearfix">
+            <img class="fl" src="/static/common/images/touxiang.png" alt="">
+            <ul class="fl">
+                <li>露露</li>
+                <li>露露</li>
+                <li>露露</li>
+            </ul>
+        </div>
+    </div>
+    <nav class="btns">
+        <a href="javascript:void(0);" id="back">返回</a>
+        <a href="javascript:void(0);" id="share">分享</a>
+    </nav>
+    <footer class="foot">
+        <p>
+            1.最多一次修改参赛时间、地点的机会，且打联系电话010-87559363
+        </p>
+        <p>
+            2.当前页面的大师分排名截至2017年11月6日24：00
+        </p>
+    </footer>
+</section>
+
+<script>
+$('#back').tap(function () {
+    window.history.back();
+})
+</script>
+{% endblock %}
