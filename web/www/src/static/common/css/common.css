@@ -1,17 +1,104 @@
-/* 清除浮动 */
 .clearfix {
-    *zoom: 1;
+  *zoom: 1;
 }
 .clearfix:before,
 .clearfix:after {
-    display: table;
-    content: "";
+  display: table;
+  content: "";
 }
 .clearfix:after {
-    clear: both;
+  clear: both;
 }
-body { background-color: #F5F5F5; font-size: 0.6rem; }
-a { text-decoration: none; }
-input { outline: none; }
-.hide { display: none !important; }
-.yahei { font-family: "Microsoft YaHei", "微软雅黑", "Microsoft JhengHei", "华文细黑", STHeiti, MingLiu; }
+.wrap {
+  font-size: 1rem;
+  width: 100%;
+  height: 133.95rem;
+  background: url("../images/wrap_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .top {
+  height: 27.3rem;
+  background: url("../images/top_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .starts {
+  height: 9.1rem;
+  background: url("../images/starts.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .bonus {
+  margin-top: 6.25rem;
+}
+.wrap .bonus div {
+  margin: 0 auto;
+  width: 22.6rem;
+  height: 4.25rem;
+  background: url("../images/bonus_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .trophy {
+  margin-top: 7.75rem;
+}
+.wrap .trophy div {
+  margin: 0 auto;
+  width: 28.9rem;
+  height: 29.8rem;
+  background: url("../images/trophy_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .desription {
+  margin-top: 4.5rem;
+}
+.wrap .desription div {
+  margin: 0 auto;
+  width: 28.95rem;
+  height: 32.25rem;
+  background: url("../images/desription_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .desription div .des-btns {
+  display: block;
+  width: 19.65rem;
+  margin-left: 8.25rem;
+  padding-top: 6rem;
+}
+.wrap .desription div .des-btns a {
+  display: block;
+  height: 7.55rem;
+}
+.wrap .desription div .des-btns a:nth-of-type(1) {
+  background: url("../images/des_btn1_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap .desription div .des-btns a:nth-of-type(2) {
+  background: url("../images/des_btn2_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+  padding-top: 1.2rem;
+}
+.wrap .desription div .des-btns a:nth-of-type(3) {
+  background: url("../images/des_btn3_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+  padding-top: 1.2rem;
+}
+.wrap .btns {
+  height: 6.5rem;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.wrap .btns a {
+  width: 13.3rem;
+  height: 4.1rem;
+  font-family: 微软雅黑;
+  color: #fff;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1c57ff;
+}

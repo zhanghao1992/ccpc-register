@@ -3,11 +3,58 @@
 {% block basestylescript %}
 {% include '../layout/template.html' %}
 {% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
 {% endblock %}
 
 {% block content %}
 
-<section class="content">
-    <div贾师傅</div>
+<section class="wrap">
+    <section class="top"></section>
+    <section class="starts"></section>
+    <section class="bonus">
+        <div></div>
+    </section>
+    <section class="trophy">
+        <div></div>
+    </section>
+    <section class="desription">
+        <div>
+            <nav class="des-btns">
+                <a href=""></a>
+                <a href="javascript:void(0);"></a>
+                <a href="javascript:void(0);"></a>
+            </nav>
+        </div>
+    </section>
+    
+    <nav class="btns">
+        <a href="">分享</a>
+        <a href="">点我报名</a>
+    </nav>
 </section>
+
+<script>
+$('#div').on('tap', function (ev) {
+    $('.content').toast({
+        content: 'sdsadas',
+        duration: 1000
+    });
+    $.ajax({
+        url: '/setCache',
+        type: 'GET',
+        data: {},
+        dataType: 'json',
+        cache: false,
+        success: function (json) {
+            if (json.code == 0) {
+                console.log('设置缓存成功')
+            }
+        },
+        error: function () {
+
+        }
+    })
+})
+alert(0)
+</script>
 {% endblock %}

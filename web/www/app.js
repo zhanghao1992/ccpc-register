@@ -2,6 +2,8 @@ var express = require('express');
 var session = require('express-session');
 var path = require('path');
 var swig = require('swig');
+var cache = require('memory-cache');
+
 
 var log4js = require('log4js');
 log4js.configure("./log4js.json");
@@ -19,8 +21,8 @@ global.userSessionList = {};
 var app = express();
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({type: 'application/json'}));
 
 app.engine('html', swig.renderFile);
 if (config.release) {
@@ -49,16 +51,15 @@ if (config.release) {
 } else {
     app.use('/static', express.static('src/static'));
 }
-app.use('/upload/file', express.static('upload/file',{setHeaders:function (res){
-    res.setHeader('Content-Disposition', 'attachment;')
-}}));
+app.use('/upload/file', express.static('upload/file', {
+    setHeaders: function (res) {
+        res.setHeader('Content-Disposition', 'attachment;')
+    }
+}));
 app.use('/upload', express.static('upload'));
 app.use('/', index);
 app.use('/common', common);
 app.use('/ueditor', ueditor);
-
-
-
 
 var server = app.listen(config.port, function () {
 
