@@ -4,7 +4,6 @@ var path = require('path');
 var swig = require('swig');
 var cache = require('memory-cache');
 
-
 var log4js = require('log4js');
 log4js.configure("./log4js.json");
 var logger = log4js.getLogger('logger');
@@ -60,6 +59,13 @@ app.use('/upload', express.static('upload'));
 app.use('/', index);
 app.use('/common', common);
 app.use('/ueditor', ueditor);
+
+app.use(function (req, res, next) {
+    res.status(404).send('404')
+});
+app.use(function (req, res, next) {
+    res.status(500).send('500')
+});
 
 var server = app.listen(config.port, function () {
 

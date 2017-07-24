@@ -69,4 +69,11 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 html {
     -ms-touch-action: none;
 }
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #8caedd;
+}
+input {
+    outline: none;
+}
+
 

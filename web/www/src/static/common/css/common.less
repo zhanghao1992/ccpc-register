@@ -2,6 +2,9 @@
 body {
   font-family: 微软雅黑;
 }
+.overflow {
+  overflow: hidden;
+}
 .clearfix {
   *zoom: 1
 }
@@ -151,8 +154,7 @@ body {
   .info-bott {
     width: 508/@rem;
     height: 162/@rem;
-    margin: 0 auto;
-    margin-top: 57 /@rem;
+    margin: 57 /@rem auto 0;
     background: url("../images/info_box_bg.png?__sprite");
     background-size: 100% 100%;
     border: 1px solid #ccd3e5;
@@ -200,6 +202,109 @@ body {
       font-size: 18/@rem;
       line-height: 36/@rem;
       color: #5c5c5c;
+    }
+  }
+}
+.my-alert {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 120%;
+  width: 100%;
+  background: rgba(0, 0, 0, .5);
+  .my-alert-content {
+    position: relative;
+    margin: 160/@rem auto 0;
+    width: 544/@rem;
+    box-sizing: border-box;
+    background: #fff;
+    padding: 46/@rem 60/@rem 28/@rem;
+    border-radius: 8/@rem;
+    .my-alert-close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 15/@rem 20/@rem;
+      width: 22/@rem;
+      height: 22/@rem;
+      background: url("../images/alert_close.png?__sprite") no-repeat center center;
+      background-size: 22/@rem 22/@rem;
+    }
+  }
+
+  .title {
+    height: 91/@rem;
+    background: url("../images/ccpc_title.png?__sprite") no-repeat 106/@rem 29/@rem;
+    background-size: 292/@rem 24/@rem;
+    .logo {
+      width: 69/@rem;
+      height: 52/@rem;
+      display: block;
+      background: url("../images/ccpc_logo.png?__sprite") no-repeat;
+      background-size: 100% 100%;
+    }
+  }
+
+  .form {
+    .form-group {
+      position: relative;
+      input {
+        width: 100%;
+        height: 64/@rem;
+        line-height: 64/@rem;
+        font-size: 22/@rem;
+        color: #3d60b8;
+        border: 1px solid #3d60b8;
+        border-radius: 6/@rem;
+        text-indent: 30/@rem;
+        box-sizing: border-box;
+      }
+      input:focus {
+        border-color: red;
+      }
+      #getCode {
+        background: url("../images/btn_bg.png?__sprite");
+        line-height: 64/@rem;
+        text-align: center;
+        color: #fff;
+      }
+      .getMess {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 159/@rem;
+        height: 64/@rem;
+        border-bottom-right-radius: 6/@rem;
+        border-top-right-radius: 6/@rem;
+      }
+      .error-message {
+        height: 40/@rem;
+        line-height: 40/@rem;
+        font-size: 16/@rem;
+        color: #3d60b8;
+      }
+      .danger-message {
+        height: auto;
+      }
+      .submit {
+        display: block;
+        text-align: center;
+        color: #fff;
+        font-size: 26/@rem;
+        width: 100%;
+        height: 64/@rem;
+        line-height: 64/@rem;
+        background: url("../images/btn_bg.png?__sprite");
+        border-radius: 6/@rem;
+      }
+      .warning-message {
+        padding-top: 10/@rem;
+        line-height: 26/@rem;
+        font-size: 16/@rem;
+        color: #c72a00;
+      }
+
     }
   }
 }

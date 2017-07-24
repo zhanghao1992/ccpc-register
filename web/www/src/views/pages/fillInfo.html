@@ -1,0 +1,206 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+<link rel="stylesheet" href="/static/common/css/fillInfo.css">
+{% endblock %}
+
+{% block content %}
+
+<section class="fillInfo-wrap">
+    <div class="fillInfo-wrap-top">
+        <span id="back" class="back">返回</span>
+        <div class="prompt">
+            <h3 class="clearfix">
+                <span class="address-icon"></span>
+                选择参赛时间、地点
+                <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
+            </h3>
+            <p>
+                温馨提示：请慎重选择参赛时间、地点、如果要修改请打联系电话 010-87559363且最多一次机会
+            </p>
+        </div>
+    </div>
+    <div class="fillInfo-wrap-bottom">
+        <div class="check-box">
+            <h3 class="clearfix">
+                <span class="address-icon"></span>
+                参赛时间
+            </h3>
+            <ul>
+                <li class="disabled">
+                    <span></span>
+                    <p>2017年11月25日</p>
+                </li>
+                <li class="active">
+                    <span></span>
+                    <p>2017年11月25日</p>
+                </li>
+                <li class="">
+                    <span></span>
+                    <p>2017年11月25日</p>
+                </li>
+                <li class="">
+                    <span></span>
+                    <p>2017年11月25日</p>
+                </li>
+            </ul>
+        </div>
+        <div class="check-box">
+            <h3 class="clearfix">
+                <span class="address-icon"></span>
+                参赛地点
+            </h3>
+            <ul>
+                <li class="disabled">
+                    <span></span>
+                    <p>北京（已报满）</p>
+                </li>
+                <li class="active">
+                    <span></span>
+                    <p>北京（已报满）</p>
+                </li>
+                <li class="">
+                    <span></span>
+                    <p>北京（已报满）</p>
+                </li>
+                <li class="">
+                    <span></span>
+                    <p>北京（已报满）</p>
+                </li>
+                <li class="">
+                    <span></span>
+                    <p>北京（已报满）</p>
+                </li>
+                <li class="">
+                    <span></span>
+                    <p>北京（已报满）</p>
+                </li>
+            </ul>
+        </div>
+
+        <a id="submit" class="submit" href="javascript:void (0)">提交</a>
+    </div>
+
+    <div id="agreement-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="agreement-close" class="my-alert-close"></span>
+            <h3>CCP锦标赛报名协议</h3>
+            <div class="text">
+                <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
+                    师分排名2200名禄禄二级牌手大师分排名2200
+                    2200名禄禄二级牌手大师分排名2200名禄禄二级
+                    牌手大师分排名2200名禄禄二级牌手大师分排名
+                    2200名禄禄二级牌手大师分排名2200名禄禄二级
+                    牌手大师分排名2200名禄禄二级牌手大师分排名
+                    2200名禄禄二级牌手大师分排名2200名
+                </p>
+            </div>
+            <a id="agree" class="submit" href="javascript:void (0)">同意报名协议</a>
+        </div>
+    </div>
+
+    <div id="info-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="info-close" class="my-alert-close"></span>
+            <h3>
+                <img src="/static/common/images/info_alert_title.png" alt="">
+            </h3>
+            <div>
+                <div class="info-alert-top clearfix">
+                    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+                    <ul class="fl">
+                        <li>露露</li>
+                        <li>露露</li>
+                        <li>露露</li>
+                    </ul>
+                </div>
+                <div class="info-alert-bott">
+                    <ul>
+                        <li class="clearfix">
+                            <span></span>
+                            <p>参赛时间：2017年11月25日9：00到18：00</p>
+                        </li>
+                        <li class="clearfix">
+                            <span></span>
+                            <p>参赛地点：北京</p>
+                        </li>
+                        <li class="clearfix">
+                            <span></span>
+                            <p>详细地址：北京市东城区天坛东路80号</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <nav class="btns">
+                <a href="javascript:void(0);" id="recheck">重选</a>
+                <a href="javascript:void(0);" id="confirm">确定</a>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<script>
+$('#back').tap(function () {
+    window.history.back();
+    return false;
+});
+$('.check-box li').tap(function () {
+    console.log($(this).parent('ul li'))
+    if ($(this).hasClass('disabled')) {
+        return false;
+    } else {
+        $(this).parent('ul').find('li').each(function (index, ele) {
+            if ($(ele).hasClass('active')) {
+                $(ele).removeClass('active');
+            }
+        })
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+        }
+    }
+    return false;
+});
+
+//点击提交
+$('#submit').tap(function () {
+    $('#agreement-alert').show();
+    $('body').addClass('overflow');
+});
+
+//关闭协议弹窗
+$('#agreement-close').tap(function () {
+//    $("#agreement-alert").anim({
+//        opacity: '0'
+//    }, 0.3, 'linear', function () {
+//        $("#agreement-alert").hide()
+//    }, 0);
+    $('#agreement-alert').hide();
+    $('body').removeClass('overflow');
+});
+
+//同意协议
+$('#agree').tap(function () {
+    $('#agreement-alert').hide();
+    $('#info-alert').show();
+});
+
+$('#info-close').tap(function () {
+    $('#info-alert').hide();
+});
+//重新填写报名信息
+$('#recheck').tap(function () {
+    $('#info-alert').hide();
+});
+
+
+$('#confirm').tap(function () {
+
+
+});
+</script>
+{% endblock %}

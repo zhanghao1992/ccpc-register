@@ -3,6 +3,7 @@
 {% block basestylescript %}
 {% include '../layout/template.html' %}
 {% include '../layout/toast.html' %}
+<script src="/static/common/js/checkId.js"></script>
 {% endblock %}
 
 <!--<meta http-equiv="refresh" content="0; url=''">-->
@@ -31,39 +32,209 @@
     <nav class="btns">
         <a id="share" href="javascript:void(0);">分享</a>
         <a id="signUp" href="javascript:void(0);">点我报名</a>
-        <!--<a class="qualification" href="javascript:void(0);">点我报名</a>-->
+        <!--<a id="checkQua" class="qualification" href="javascript:void(0);">查询资格</a>-->
     </nav>
 
-    <form id="signUp-form"></form>
+
+    <div id="signUp-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="signUp-close" class="my-alert-close"></span>
+            <h3 class="title">
+                <span class="logo"></span>
+            </h3>
+            <form id="signUp-form" class="form">
+                <div class="form-group">
+                    <input id="realName" type="text" name="" placeholder="请输入您的真实姓名">
+                    <p class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <input id="idNumber" type="number" name="" placeholder="请输入您的身份证号">
+                    <p class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <input id="phoneInput" type="tel" name="" placeholder="请输入您的手机号">
+                    <a id="getCode" class="getMess" href="javascript:void(0);">获取验证码</a>
+                    <p class="error-message danger-message">报名手机号与比赛时登录竞技软件手机号一致，不可更改</p>
+                </div>
+                <div class="form-group">
+                    <input id="code" type="text" name="" placeholder="请输入验证码">
+                    <p class="error-message"></p>
+                </div>
+
+                <div class="form-group">
+                    <input id="imgCode" type="text" name="" placeholder="请输入验证码">
+                    <script>
+                    document.write('<img class="getMess" data-src="/common/captcha" src="/common/captcha' + '?_=' + new Date().getTime() + '"">');
+                    </script>
+                    <!--<img class="getMess" src="" alt="">-->
+                    <p class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <a id="submit" class="submit" href="javascript:void(0);">点我报名</a>
+                    <a id="submit2" class="submit" href="javascript:void(0);">查询资格</a>
+                    <p class="warning-message">
+                        截至2017年11月6日24：00前大师分排名到全国排名前016名的选手才具有参赛资格
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>
 
-<script>
-$('#div').on('tap', function (ev) {
-    $('.content').toast({
-        content: 'sdsadas',
-        duration: 1000
-    });
-})
 
+<script>
 
 $('#getQualification').tap(function () {
     var date = new Date().getTime();
-    var minDate = new Date(2017,10,6,24,0,0).getTime();
-    var maxDate = new Date(2017,10,17,0,0,0).getTime();
-    if (minDate <= date  && date <= maxDate) {
+    var minDate = new Date(2017, 10, 6, 24, 0, 0).getTime();
+    var maxDate = new Date(2017, 10, 17, 0, 0, 0).getTime();
+    if (minDate <= date && date <= maxDate) {
         window.location.href = '/QRcode';
-    }else {
+    } else {
         return false;
     }
 });
 
-$('.btns').tap(function () {
-    alert(1)
+$('#signUp').tap(function () {
+    $('.btns').hide();
+    $('#signUp-alert').show();
+//    $('body').addClass('overflow');
+    $('#submit').show();
+    $('#submit2').hide();
     return false;
 });
 
-$('#signUp').click(function () {
-    alert(2)
+//$('#checkQua').tap(function () {
+//    $('.btns').hide();
+//    $('#signUp-alert').show();
+//    $('body').addClass('overflow');
+//    $('#submit').hide();
+//    $('#submit2').show();
+//    return false;
+//});
+
+$('.getMess').tap(function () {
+    $(this).prop('src', $(this).data('src') + '?_=' + new Date().getTime());
+    return false;
 });
+
+//获取短信验证码
+var djsN, djsT;
+$('#getCode').click(function () {
+    var _this = this;
+    if ($(_this).hasClass('disabled')) {
+        return false;
+    }
+    if (!/^1[0-9]{10}$/.test($('#phoneInput').val())) {
+        $('.form').toast({
+            content: '请输入正确的手机号！',
+            duration: 1000
+        });
+        return false;
+    }
+    $(_this).addClass('disabled');
+//    $.ajax({
+//        url: '/association/weiqi/sendMobileCode',
+//        data: {mobile: $('#phoneInput').val()},
+//        type: 'GET',
+//        dataType: 'json',
+//        cache: false,
+//        success: function (json) {
+//            if (json.code == 0) {
+//                dialogPackage.show('发送成功');
+//                (function (djsN, djsT) {
+//                    djsN = 60;
+//                    $(_this).html('60秒后重新发送');
+//                    djsT = setInterval(function () {
+//                        djsN--;
+//                        if (djsN <= 0) {
+//                            clearInterval(djsT);
+//                            $(_this).removeClass('disabled').html('获取验证码');
+//                        } else {
+//                            $(_this).html(djsN + '秒后重新发送');
+//                        }
+//                    }, 1000);
+//                })(djsN, djsT);
+//
+//            } else {
+//                $(_this).removeClass('disabled');
+//                $('.form').toast({
+//                    content: json.msg,
+//                    duration: 1000
+//                });
+//            }
+//        },
+//        error: function () {
+//            $(_this).removeClass('disabled');
+//        }
+//    });
+    return false;
+});
+
+$('#signUp-close').tap(function () {
+    $('#signUp-alert').hide();
+    $('.btns').show();
+    $('body').removeClass('overflow');
+})
+
+$('#submit').tap(function () {
+    checkForm();
+})
+</script>
+
+<script>
+function checkForm() {
+    if (!$('#realName').val()) {
+        $('.form').toast({
+            content: '请输入真实姓名！',
+            duration: 1000
+        });
+        return false;
+    }
+    if (!isIdcard($('#idNumber').val()) || !$('#idNumber').val()) {
+        $('.form').toast({
+            content: '请输入正确身份证号！',
+            duration: 1000
+        });
+        return false;
+    }
+    if (!/^1[0-9]{10}$/.test($('#phoneInput').val())) {
+        $('.form').toast({
+            content: '请输入正确的手机号！',
+            duration: 1000
+        });
+        return false;
+    }
+    if (!$('#code').val()) {
+        $('.form').toast({
+            content: '请输入短信验证码！',
+            duration: 1000
+        });
+        return false;
+    }
+    if (!$('#imgCode').val()) {
+        $('.form').toast({
+            content: '请输入短信验证码！',
+            duration: 1000
+        });
+        return false;
+    }
+    return true;
+}
+</script>
+
+<script>
+
+window.onload = function () {
+    var localHeight = $(".wrap").height();//获取可视宽度
+    $("input,textarea").focus(function () {
+        var keyboardHeight = localHeight - $(".wrap").height();//获取键盘的高度
+        var keyboardY = localHeight - keyboardHeight;
+        var addBottom = (parseInt($(this).position().top) + parseInt($(this).height()));//文本域的底部
+        var offset = addBottom - keyboardY;//计算上滑的距离
+        $(".signUp-alert").css('top','-'+offset+')');
+    });
+}
+
 </script>
 {% endblock %}

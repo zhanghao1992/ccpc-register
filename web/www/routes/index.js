@@ -2,6 +2,12 @@ var express = require('express');
 var router = express.Router();
 var page = require('../lib/page');
 var vService = require('../lib/vService');
+router.get('/form', function (req, res, next) {
+    req.session.zh = {
+        sex: 'male'
+    }
+    page.load(req, res, {path: 'pages/form', data: {user: {name: 'zhanghao', age: 25}}});
+});
 
 // 首页
 router.get('/index', function (req, res, next) {
@@ -9,6 +15,14 @@ router.get('/index', function (req, res, next) {
         sex: 'male'
     }
     page.load(req, res, {path: 'pages/index', data: {user: {name: 'zhanghao', age: 25}}});
+});
+
+//报名信息填写页面
+router.get('/fillInfo', function (req, res, next) {
+    req.session.zh = {
+        sex: 'male'
+    }
+    page.load(req, res, {path: 'pages/fillInfo', data: {user: {name: 'zhanghao', age: 25}}});
 });
 
 
@@ -19,8 +33,8 @@ router.get('/QRcode', function (req, res, next) {
 
 
 // 晋级成功首页
-router.get('/singUpSuccess', function (req, res) {
-    page.load(req, res, {path: 'pages/singUpSuccess'});
+router.get('/signUpSuccess', function (req, res) {
+    page.load(req, res, {path: 'pages/signUpSuccess'});
 });
 
 
