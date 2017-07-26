@@ -123,6 +123,16 @@
             </div>
         </div>
     </div>
+
+
+    <div id="share-alert" class="my-alert">
+        <div>
+            <div class="my-alert-content">
+                <span id="share-close" class="my-alert-close"></span>
+                <p>点击分享按钮进行分享</p>
+            </div>
+        </div>
+    </div>
 </section>
 
 
@@ -140,6 +150,8 @@ $('#getQualification').tap(function () {
 });
 
 $('#signUp').tap(function () {
+    myScroll.destroy();
+    myScroll = null;
     $('.fixed-btns').hide();
     $('#signUp-alert').show();
     $('#wrapper').addClass('overflow');
@@ -216,6 +228,7 @@ $('#getCode').click(function () {
 });
 
 $('#signUp-close').tap(function () {
+    myScroll = new IScroll('#wrapper');
     $('#signUp-alert').hide();
     $('.fixed-btns').show();
     $('body').removeClass('overflow');
@@ -223,6 +236,8 @@ $('#signUp-close').tap(function () {
 
 $('#submit').tap(function () {
     checkForm();
+
+    window.location.href = '/personData'
 })
 </script>
 
@@ -268,16 +283,13 @@ function checkForm() {
 </script>
 
 <script>
-
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(loaded, 200);
+}, false);
+var myScroll,myScroll2;
 function loaded() {
-    var myScroll = new IScroll('#wrapper', {
-//        scrollbars: true
-    });
-    console.log(myScroll)
-    var myScroll2 = new IScroll('#scrollAlert', {
-        preventDefault: false,
-        mouseWheel: false
-    });
+    myScroll = new IScroll('#wrapper');
+    myScroll2 = new IScroll('#scrollAlert');
 }
 
 //获取可视宽度
@@ -310,6 +322,34 @@ $('#signUp-alert').swipe(function (ev) {
     return false;
 });
 
+//点击分享按钮
+$('#share').tap(function () {
+    $('.fixed-btns').hide();
+    $('#share-alert').show();
+    $('#wrapper').addClass('overflow');
+    window.location.hash = 'shareQRcode';
+    return false;
+});
+
+$('#share-close').tap(function () {
+    $('#share-alert').hide();
+    $('.fixed-btns').show();
+    $('#wrapper').removeClass('overflow');
+});
+
+//点击资格赛按钮
+$('#getQualification').tap(function () {
+    window.location.href = '/QRcode'
+});
+
+//分享页面跳转
+var hash = window.location.href.split('#')[1];
+switch (hash) {
+    case 'shareQRcode':
+        window.location.href = '/QRcode';
+        break;
+
+}
 
 </script>
 {% endblock %}

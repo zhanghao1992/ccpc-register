@@ -8,45 +8,56 @@
 
 {% block content %}
 
-<section class="singUpSuccessWrap">
-    <div class="info">
-        <div class="info-top">
-            <ul>
-                <li class="clearfix">
-                    <span></span>
-                    <p>参赛时间：2017年11月25日9：00到18：00</p>
-                </li>
-                <li class="clearfix">
-                    <span></span>
-                    <p>参赛地点：北京</p>
-                </li>
-                <li class="clearfix">
-                    <span></span>
-                    <p>详细地址：北京市东城区天坛东路80号</p>
-                </li>
-            </ul>
+<section id="wrapper">
+    <section class="singUpSuccessWrap">
+        <div class="info">
+            <div class="info-top">
+                <ul>
+                    <li class="clearfix">
+                        <span></span>
+                        <p>参赛时间：2017年11月25日9：00到18：00</p>
+                    </li>
+                    <li class="clearfix">
+                        <span></span>
+                        <p>参赛地点：北京</p>
+                    </li>
+                    <li class="clearfix">
+                        <span></span>
+                        <p>详细地址：北京市东城区天坛东路80号</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="info-bott clearfix">
+                <img class="fl" src="/static/common/images/touxiang.png" alt="">
+                <ul class="fl">
+                    <li>露露</li>
+                    <li>露露</li>
+                    <li>露露</li>
+                </ul>
+            </div>
         </div>
-        <div class="info-bott clearfix">
-            <img class="fl" src="/static/common/images/touxiang.png" alt="">
-            <ul class="fl">
-                <li>露露</li>
-                <li>露露</li>
-                <li>露露</li>
-            </ul>
+        <nav class="btns clearfix">
+            <a href="javascript:void(0);" id="back">返回</a>
+            <a href="javascript:void(0);" id="share">分享</a>
+        </nav>
+        <footer class="foot">
+            <p>
+                1.最多一次修改参赛时间、地点的机会，且打联系电话010-87559363
+            </p>
+            <p>
+                2.当前页面的大师分排名截至2017年11月6日24：00
+            </p>
+        </footer>
+    </section>
+
+    <div id="share-alert" class="my-alert">
+            <div>
+                <div class="my-alert-content">
+                    <span id="share-close" class="my-alert-close"></span>
+                    <p>点击分享按钮进行分享</p>
+                </div>
+            </div>
         </div>
-    </div>
-    <nav class="btns">
-        <a href="javascript:void(0);" id="back">返回</a>
-        <a href="javascript:void(0);" id="share">分享</a>
-    </nav>
-    <footer class="foot">
-        <p>
-            1.最多一次修改参赛时间、地点的机会，且打联系电话010-87559363
-        </p>
-        <p>
-            2.当前页面的大师分排名截至2017年11月6日24：00
-        </p>
-    </footer>
 </section>
 
 <script>
@@ -54,4 +65,42 @@ $('#back').tap(function () {
     window.history.back();
 })
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(loaded, 200);
+}, false);
+var myScroll;
+function loaded() {
+    myScroll = new IScroll('#wrapper');
+}
+
+//点击分享按钮
+$('#share').tap(function () {
+    $('.fixed-btns').hide();
+    $('#share-alert').show();
+    $('#wrapper').addClass('overflow');
+    window.location.hash = 'shareQRcode';
+    return false;
+});
+
+$('#share-close').tap(function () {
+    $('#share-alert').hide();
+    $('.fixed-btns').show();
+    $('#wrapper').removeClass('overflow');
+});
+
+
+
+//分享页面跳转
+var hash = window.location.href.split('#')[1];
+switch (hash) {
+    case 'shareQRcode':
+        window.location.href = '/QRcode';
+        break;
+
+}
+
+</script>
+
 {% endblock %}

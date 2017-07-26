@@ -1,0 +1,94 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+<link rel="stylesheet" href="/static/common/css/personData.css">
+{% endblock %}
+
+{% block content %}
+
+<div id="wrapper">
+    <section class="person-wrap">
+        <header>
+            <span id="back" class="back">返回</span>
+            <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
+        </header>
+        <div class="content">
+            <div class="content-top clearfix">
+                <img class="fl" src="/static/common/images/touxiang.png" alt="">
+                <ul class="fl">
+                    <li>露露</li>
+                    <li>露露</li>
+                    <li>露露</li>
+                </ul>
+            </div>
+
+            <div class="encourage">
+                <img src="/static/common/images/encourage.png" alt="">
+            </div>
+
+            <div class="content-bott clearfix">
+                <h3>全国大师分排名</h3>
+                <p>
+                    截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
+                </p>
+                <div>
+                    <figure>
+                        <figcaption>全国大师分排名</figcaption>
+                        <img src="" alt="">
+                    </figure>
+                </div>
+            </div>
+
+            <nav class="btns clearfix">
+                <a href="javascript:void(0);" id="share">分享</a>
+                <a href="javascript:void(0);" id="">去参赛</a>
+            </nav>
+        </div>
+
+    </section>
+    <div id="share-alert" class="my-alert">
+            <div>
+                <div class="my-alert-content">
+                    <span id="share-close" class="my-alert-close"></span>
+                    <p>点击分享按钮进行分享</p>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+<script>
+$('#back').tap(function () {
+    window.history.back();
+    return false;
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(loaded, 200);
+}, false);
+var myScroll;
+
+function loaded() {
+    myScroll = new IScroll('#wrapper');
+}
+
+
+//点击分享按钮
+$('#share').tap(function () {
+    $('#share-alert').show();
+    $('#wrapper').addClass('overflow');
+    window.location.hash = '';
+    return false;
+});
+
+$('#share-close').tap(function () {
+    $('#share-alert').hide();
+    $('#wrapper').removeClass('overflow');
+    return false;
+});
+
+</script>
+{% endblock %}

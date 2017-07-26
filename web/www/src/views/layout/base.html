@@ -27,6 +27,7 @@
 <script src="/static/common/js/fx.js"></script>
 <script src="/static/common/js/set-rem.js"></script>
 <script src="/static/common/js/iscroll.js"></script>
+<script src="/static/common/js/fastclick.js"></script>
 <!--<script src="/static/common/js/zepto-touch.js"></script>-->
 
 <!--pc端-->
@@ -61,13 +62,13 @@
 
 
 <script>
+//$(function() {
+//   FastClick.attach(document.body);
+//});
 document.addEventListener('touchmove', function (e) {
     e.preventDefault();
 }, false);
 
-document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(loaded, 200);
-}, false);
 </script>
 </body>
 </html>

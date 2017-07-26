@@ -9,80 +9,78 @@
 
 {% block content %}
 
-<section class="fillInfo-wrap">
-    <div class="fillInfo-wrap-top">
-        <span id="back" class="back">返回</span>
-        <div class="prompt">
-            <h3 class="clearfix">
-                <span class="address-icon"></span>
-                选择参赛时间、地点
-                <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
-            </h3>
-            <p>
-                温馨提示：请慎重选择参赛时间、地点、如果要修改请打联系电话 010-87559363且最多一次机会
-            </p>
+<div id="wrapper">
+    <section class="fillInfo-wrap">
+        <div class="fillInfo-wrap-top">
+            <span id="back" class="back">返回</span>
+            <div class="prompt">
+                <h3 class="clearfix">
+                    <span class="address-icon"></span>
+                    选择参赛时间、地点
+                    <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
+                </h3>
+                <p>
+                    温馨提示：请慎重选择参赛时间、地点、如果要修改请打联系电话 010-87559363且最多一次机会
+                </p>
+            </div>
         </div>
-    </div>
-    <div class="fillInfo-wrap-bottom">
-        <div class="check-box">
-            <h3 class="clearfix">
-                <span class="address-icon"></span>
-                参赛时间
-            </h3>
-            <ul>
-                <li class="disabled">
-                    <span></span>
-                    <p>2017年11月25日</p>
-                </li>
-                <li class="active">
-                    <span></span>
-                    <p>2017年11月25日</p>
-                </li>
-                <li class="">
-                    <span></span>
-                    <p>2017年11月25日</p>
-                </li>
-                <li class="">
-                    <span></span>
-                    <p>2017年11月25日</p>
-                </li>
-            </ul>
-        </div>
-        <div class="check-box">
-            <h3 class="clearfix">
-                <span class="address-icon"></span>
-                参赛地点
-            </h3>
-            <ul>
-                <li class="disabled">
-                    <span></span>
-                    <p>北京（已报满）</p>
-                </li>
-                <li class="active">
-                    <span></span>
-                    <p>北京（已报满）</p>
-                </li>
-                <li class="">
-                    <span></span>
-                    <p>北京（已报满）</p>
-                </li>
-                <li class="">
-                    <span></span>
-                    <p>北京（已报满）</p>
-                </li>
-                <li class="">
-                    <span></span>
-                    <p>北京（已报满）</p>
-                </li>
-                <li class="">
-                    <span></span>
-                    <p>北京（已报满）</p>
-                </li>
-            </ul>
-        </div>
+        <div class="fillInfo-wrap-bottom">
+            <div class="check-box">
+                <h3 class="clearfix">
+                    <span class="address-icon"></span>
+                    参赛时间
+                </h3>
+                <ul class="clearfix">
+                    <li class="disabled">
+                        <span></span>
+                        <p>2017年11月25日</p>
+                    </li>
+                    <li class="active">
+                        <span></span>
+                        <p>2017年11月26日</p>
+                    </li>
+                    <li class="">
+                        <span></span>
+                        <p>2017年12月9日</p>
+                    </li>
+                    <li class="">
+                        <span></span>
+                        <p>2017年12月10日</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="check-box">
+                <h3 class="clearfix">
+                    <span class="address-icon"></span>
+                    参赛地点
+                </h3>
+                <ul class="clearfix">
+                    <li class="disabled">
+                        <span></span>
+                        <p>北京（已报满）</p>
+                    </li>
+                    <li class="active">
+                        <span></span>
+                        <p>北京（已报满）</p>
+                    </li>
+                    <li class="">
+                        <span></span>
+                        <p>北京（已报满）</p>
+                    </li>
+                    <li class="">
+                        <span></span>
+                        <p>北京（已报满）</p>
+                    </li>
+                    <li class="">
+                        <span></span>
+                        <p>北京（已报满）</p>
+                    </li>
+                </ul>
+            </div>
 
-        <a id="submit" class="submit" href="javascript:void (0)">提交</a>
-    </div>
+            <a id="submit" class="submit" href="javascript:void (0)">提交</a>
+        </div>
+    </section>
 
     <div id="agreement-alert" class="my-alert">
         <div class="my-alert-content">
@@ -134,13 +132,13 @@
                     </ul>
                 </div>
             </div>
-            <nav class="btns">
+            <nav class="btns clearfix">
                 <a href="javascript:void(0);" id="recheck">重选</a>
                 <a href="javascript:void(0);" id="confirm">确定</a>
             </nav>
         </div>
     </div>
-</section>
+</div>
 
 <script>
 $('#back').tap(function () {
@@ -202,5 +200,14 @@ $('#confirm').tap(function () {
 
 
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(loaded, 200);
+}, false);
+var myScroll;
+
+function loaded() {
+    myScroll = new IScroll('#wrapper');
+}
 </script>
 {% endblock %}

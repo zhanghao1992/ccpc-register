@@ -47,6 +47,11 @@ router.get('/signUpSuccess', function (req, res) {
 });
 
 
+// 个人资格查询结果
+router.get('/personData', function (req, res) {
+    page.load(req, res, {path: 'pages/personData'});
+});
+
 
 
 

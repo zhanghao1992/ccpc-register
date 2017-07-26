@@ -1,0 +1,94 @@
+.person-wrap {
+  background: url("../images/person_wrap_bg.png?__sprite") no-repeat;
+  background-size: 100% auto;
+  padding: 0 1.45rem 1rem;
+}
+.person-wrap header {
+  padding-top: 1.7rem;
+}
+.person-wrap header .back {
+  line-height: 3.7rem;
+  background: url("../images/back_bg.png?__sprite") no-repeat 0 0.75rem;
+  display: inline-block;
+  background-size: 1.2rem 2rem;
+  padding-left: 1.7rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+.person-wrap header img {
+  width: 3.5rem;
+  margin: 0.3rem 0.8rem 0 0;
+}
+.person-wrap .content {
+  padding: 1.5rem 2rem 0;
+  background: #fff;
+  border-radius: 0.3rem;
+}
+.person-wrap .content .content-top {
+  width: 25.4rem;
+  height: 8.1rem;
+  background: url("../images/info_box_bg.png?__sprite");
+  background-size: 100% 100%;
+  border: 1px solid #ccd3e5;
+  border-radius: 0.4rem;
+}
+.person-wrap .content .content-top img {
+  width: 5.35rem;
+  height: 5.35rem;
+  border-radius: 50%;
+  margin: 1.35rem 1.75rem;
+}
+.person-wrap .content .content-top ul {
+  width: 11.25rem;
+  font-size: 1.1rem;
+  line-height: 1.75rem;
+  color: #000000;
+  padding-left: 1.75rem;
+  margin-top: 1.4rem;
+}
+.person-wrap .content .encourage {
+  padding: 2rem 0 3rem;
+  text-align: center;
+}
+.person-wrap .content .encourage img {
+  width: 24.15rem;
+}
+.person-wrap .content .content-bott {
+  width: 25.4rem;
+  background: url("../images/info_box_bg.png?__sprite");
+  background-size: 100% 100%;
+  border: 1px solid #ccd3e5;
+  border-radius: 0.4rem;
+}
+.person-wrap .content .content-bott h3 {
+  padding-top: 0.55rem;
+  line-height: 3rem;
+  font-size: 1.2rem;
+  color: #000;
+  text-align: center;
+}
+.person-wrap .content .content-bott p {
+  line-height: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 0 3rem;
+}
+.person-wrap .content .btns {
+  margin-top: 3.9rem;
+  padding-bottom: 2rem;
+}
+.person-wrap .content .btns a {
+  float: left;
+  width: 8rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  text-align: center;
+  background: url("../images/btn_bg.png?__sprite");
+  background-size: 100% 100%;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 0.3rem;
+}
+.person-wrap .content .btns a:nth-of-type(1) {
+  margin: 0 5rem 0 2rem;
+}

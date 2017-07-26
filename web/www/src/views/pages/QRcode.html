@@ -34,8 +34,6 @@
                 </nav>
             </div>
         </section>
-
-
     </section>
 
 </section>
@@ -47,18 +45,14 @@
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(loaded, 200);
+}, false);
+var myScroll;
 
 function loaded() {
-    var myScroll = new IScroll('#wrapper', {
-//        scrollbars: true
-    });
-    console.log(myScroll)
-    var myScroll2 = new IScroll('#scrollAlert', {
-        preventDefault: false,
-        mouseWheel: false
-    });
+    myScroll = new IScroll('#wrapper');
 }
-
 
 
 </script>
