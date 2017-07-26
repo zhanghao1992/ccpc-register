@@ -1,9 +1,6 @@
 body {
   font-family: 微软雅黑;
 }
-.overflow {
-  overflow: hidden;
-}
 .clearfix {
   *zoom: 1;
 }
@@ -14,6 +11,19 @@ body {
 }
 .clearfix:after {
   clear: both;
+}
+#wrapper {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #aaa;
+  overflow: auto;
+}
+.overflow {
+  overflow: hidden;
 }
 .wrap {
   font-size: 1rem;
@@ -33,7 +43,54 @@ body {
   background-size: 100% 100%;
 }
 .wrap .bonus {
-  margin-top: 6.25rem;
+  margin-top: 3.5rem;
+}
+.wrap .noResult {
+  text-align: center;
+}
+.wrap .noResult div {
+  display: inline-block;
+}
+.wrap .noResult img {
+  width: 28.95rem;
+  height: 16.4rem;
+}
+.wrap .data {
+  width: 28.95rem;
+  margin: 2.9rem auto 0;
+  padding-bottom: 1rem;
+  background: url("../images/share_data_bg.png?__sprite");
+}
+.wrap .data .data-top {
+  text-align: center;
+}
+.wrap .data .data-top img {
+  width: 27.3rem;
+  height: 9.85rem;
+}
+.wrap .data .data-botto {
+  width: 27.3rem;
+  margin: 3.5rem auto 0;
+  background: url("../images/share_data_inner_bg.png?__sprite");
+  box-sizing: border-box;
+  padding: 2rem 0 2.15rem 3rem;
+}
+.wrap .data .data-botto img {
+  width: 5.55rem;
+  height: 5.65rem;
+  border-radius: 50%;
+}
+.wrap .data .data-botto ul {
+  margin-left: 3.4rem;
+  line-height: 1.9rem;
+  color: #fff;
+  font-size: 1.2rem;
+}
+.wrap .data .promot {
+  margin-top: 2.9rem;
+  height: 0.9rem;
+  background: url("../images/share_promot.png") no-repeat center center;
+  background-size: 20.45rem 0.9rem;
 }
 .wrap .bonus div {
   margin: 0 auto;
@@ -54,6 +111,25 @@ body {
 }
 .wrap .desription {
   margin-top: 4.5rem;
+}
+.wrap .qr-code {
+  text-align: center;
+}
+.wrap .qr-code div {
+  display: inline-block;
+  padding: 0.5rem;
+  background: #fff;
+  margin: 2.85rem auto 0;
+}
+.wrap .qr-code img {
+  width: 11.2rem;
+  height: 11.2rem;
+}
+.wrap .qr-code .qr-title {
+  margin-top: 1rem;
+  height: 1.2rem;
+  background: url("../images/qr_title.png?__sprite") no-repeat center center;
+  background-size: 13.75rem 1.2rem;
 }
 .wrap .desription div {
   margin: 0 auto;
@@ -86,27 +162,28 @@ body {
   background-size: 100% 100%;
   padding-top: 1.2rem;
 }
-.wrap .btns {
+.wrap .desription div .des-btns #noClick {
+  background: url("../images/des_btn1_h_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.fixed-btns {
   height: 6.5rem;
   width: 100%;
   background: rgba(0, 0, 0, 0.8);
   position: fixed;
   bottom: 0;
   left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  z-index: 999;
 }
-.wrap .btns a {
+.fixed-btns a {
+  float: left;
   width: 13.3rem;
   height: 4.1rem;
   color: #fff;
   font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+  line-height: 4.1rem;
   background: #1c57ff;
+  margin: 1.35rem;
 }
 .singUpSuccessWrap {
   font-size: 1rem;
@@ -204,13 +281,14 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  height: 120%;
+  height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
 }
 .my-alert .my-alert-content {
-  position: relative;
-  margin: 8rem auto 0;
+  position: fixed;
+  top: 8rem;
+  left: 2.35rem;
   width: 27.2rem;
   box-sizing: border-box;
   background: #fff;

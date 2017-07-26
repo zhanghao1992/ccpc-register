@@ -53,7 +53,7 @@
 
     function isPointerEventType(e, type) {
         return (e.type == 'pointer' + type ||
-        e.type.toLowerCase() == 'mspointer' + type)
+            e.type.toLowerCase() == 'mspointer' + type)
     }
 
     $(document).ready(function () {
@@ -74,7 +74,8 @@
                 }
             })
             .on('touchstart MSPointerDown pointerdown', function (e) {
-                if ((_isPointerType = isPointerEventType(e, 'down')) && !isPrimaryTouch(e)) {
+                if ((_isPointerType = isPointerEventType(e, 'down')) &&
+                    !isPrimaryTouch(e)) {
                     return
                 }
                 firstTouch = _isPointerType ? e : e.touches[0]
@@ -102,7 +103,8 @@
                 }
             })
             .on('touchmove MSPointerMove pointermove', function (e) {
-                if ((_isPointerType = isPointerEventType(e, 'move')) && !isPrimaryTouch(e)) {
+                if ((_isPointerType = isPointerEventType(e, 'move')) &&
+                    !isPrimaryTouch(e)) {
                     return
                 }
                 firstTouch = _isPointerType ? e : e.touches[0]
@@ -114,7 +116,8 @@
                 deltaY += Math.abs(touch.y1 - touch.y2)
             })
             .on('touchend MSPointerUp pointerup', function (e) {
-                if ((_isPointerType = isPointerEventType(e, 'up')) && !isPrimaryTouch(e)) {
+                if ((_isPointerType = isPointerEventType(e, 'up')) &&
+                    !isPrimaryTouch(e)) {
                     return
                 }
                 cancelLongTap()
@@ -184,8 +187,7 @@
         $(window).on('scroll', cancelAll)
     })
 
-    ;
-    ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
+    ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
         'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function (eventName) {
         $.fn[eventName] = function (callback) {
             return this.on(eventName, callback)

@@ -28,13 +28,35 @@ router.get('/fillInfo', function (req, res, next) {
 
 // 二维码分享页面
 router.get('/QRcode', function (req, res, next) {
-    page.load(req, res, {path: 'pages/QRcode', data: {xxx: 'xxxxx'}});
+    page.load(req, res, {path: 'pages/index', data: {QRcode: true}});
 });
 
+// 输入身份证没数据页面
+router.get('/noResult', function (req, res, next) {
+    page.load(req, res, {path: 'pages/index', data: {noResult: true}});
+});
+
+// 个人有数据分享页面
+router.get('/shareDtata', function (req, res, next) {
+    page.load(req, res, {path: 'pages/index', data: {shareDtata: true}});
+});
 
 // 晋级成功首页
 router.get('/signUpSuccess', function (req, res) {
     page.load(req, res, {path: 'pages/signUpSuccess'});
+});
+
+
+
+
+
+
+//demo
+router.get('/demo', function (req, res, next) {
+    req.session.zh = {
+        sex: 'male'
+    }
+    page.load(req, res, {path: 'pages/demo', data: {user: {name: 'zhanghao', age: 25}}});
 });
 
 

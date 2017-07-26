@@ -2,9 +2,6 @@
 body {
   font-family: 微软雅黑;
 }
-.overflow {
-  overflow: hidden;
-}
 .clearfix {
   *zoom: 1
 }
@@ -15,6 +12,19 @@ body {
 }
 .clearfix:after {
   clear: both;
+}
+#wrapper {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #aaa;
+  overflow: auto;
+}
+.overflow {
+  overflow: hidden;
 }
 .wrap {
   font-size: 20/@rem;
@@ -33,7 +43,54 @@ body {
     background-size: 100% 100%;
   }
   .bonus {
-    margin-top: 125/@rem;
+    margin-top: 70/@rem;
+  }
+  .noResult {
+    text-align: center;
+    div {
+      display: inline-block;
+    }
+    img {
+      width: 579/@rem;
+      height: 328/@rem;
+    }
+  }
+  .data {
+    width: 579/@rem;
+    margin: 58/@rem auto 0;
+    padding-bottom: 20/@rem;
+    background: url("../images/share_data_bg.png?__sprite");
+    .data-top {
+      text-align: center;
+      img {
+        width: 546/@rem;
+        height: 197/@rem;
+      }
+    }
+    .data-botto {
+      width: 546/@rem;
+      margin:70/@rem auto 0;
+      background: url("../images/share_data_inner_bg.png?__sprite");
+      box-sizing: border-box;
+      padding: 40/@rem 0 43/@rem 60/@rem;
+      img {
+        width: 111/@rem;
+        height: 113/@rem;
+        border-radius: 50%;
+      }
+      ul {
+        margin-left: 68/@rem;
+        line-height: 38/@rem;
+        color: #fff;
+        font-size: 24/@rem;
+      }
+    }
+    .promot {
+      margin-top: 58/@rem;
+      height: 18/@rem;
+      background: url("../images/share_promot.png") no-repeat center center;
+      background-size: 409/@rem 18/@rem;
+    }
   }
   .bonus div {
     margin: 0 auto;
@@ -55,7 +112,25 @@ body {
   .desription {
     margin-top: 90/@rem;
   }
-
+  .qr-code {
+    text-align: center;
+    div {
+      display: inline-block;
+      padding: 10/@rem;
+      background: #fff;
+      margin: 57/@rem auto 0;
+    }
+    img {
+      width: 224/@rem;
+      height: 224/@rem;
+    }
+    .qr-title {
+      margin-top: 20/@rem;
+      height: 24/@rem;
+      background: url("../images/qr_title.png?__sprite") no-repeat center center;
+      background-size: 275/@rem 24/@rem;
+    }
+  }
   .desription div {
     margin: 0 auto;
     width: 579/@rem;
@@ -89,29 +164,30 @@ body {
         background-size: 100% 100%;
         padding-top: 24/@rem;
       }
+      #noClick {
+        background: url("../images/des_btn1_h_bg.png?__sprite") no-repeat;
+        background-size: 100% 100%;
+      }
     }
   }
-  .btns {
-    height: 130/@rem;
-    width: 100%;
-    background: rgba(0, 0, 0, .8);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    z-index: 999;
-    a {
-      width: 266/@rem;
-      height: 82/@rem;
-      color: #fff;
-      font-size: 25/@rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #1c57ff;
-    }
+}
+.fixed-btns {
+  height: 130/@rem;
+  width: 100%;
+  background: rgba(0, 0, 0, .8);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  a {
+    float: left;
+    width: 266/@rem;
+    height: 82/@rem;
+    color: #fff;
+    font-size: 25/@rem;
+    text-align: center;
+    line-height: 82/@rem;
+    background: #1c57ff;
+    margin: 27/@rem;
   }
 }
 .singUpSuccessWrap {
@@ -210,12 +286,13 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  height: 120%;
+  height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, .5);
   .my-alert-content {
-    position: relative;
-    margin: 160/@rem auto 0;
+    position: fixed;
+    top: 160/@rem;
+    left: 47/@rem;
     width: 544/@rem;
     box-sizing: border-box;
     background: #fff;
