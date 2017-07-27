@@ -287,7 +287,7 @@ body {
   background: rgba(0, 0, 0, 0.5);
 }
 .my-alert .my-alert-content {
-  position: fixed;
+  position: absolute;
   top: 8rem;
   left: 2.35rem;
   width: 27.2rem;
@@ -329,7 +329,7 @@ body {
   color: #3d60b8;
   border: 1px solid #3d60b8;
   border-radius: 0.3rem;
-  text-indent: 1.5rem;
+  padding-left: 1.5rem;
   box-sizing: border-box;
 }
 .my-alert .form .form-group input:focus {

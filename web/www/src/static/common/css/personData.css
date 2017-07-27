@@ -1,6 +1,6 @@
 .person-wrap {
   background: url("../images/person_wrap_bg.png?__sprite") no-repeat;
-  background-size: 100% auto;
+  background-size: 100% 100%;
   padding: 0 1.45rem 1rem;
 }
 .person-wrap header {
@@ -53,6 +53,13 @@
 .person-wrap .content .encourage img {
   width: 24.15rem;
 }
+.person-wrap .content .sorry {
+  padding: 7rem 0 9rem;
+  text-align: center;
+}
+.person-wrap .content .sorry img {
+  width: 18.05rem;
+}
 .person-wrap .content .content-bott {
   width: 25.4rem;
   background: url("../images/info_box_bg.png?__sprite");
@@ -73,6 +80,64 @@
   font-size: 0.9rem;
   padding: 0 3rem;
 }
+.person-wrap .content .content-bott .fig-box .fig-item {
+  float: left;
+  width: 10.85rem;
+}
+.person-wrap .content .content-bott .fig-box .fig-item .title {
+  font-size: 1.1rem;
+  line-height: 3rem;
+  color: #000;
+  text-align: center;
+}
+.person-wrap .content .content-bott .fig-box .fig-item .pnormal {
+  width: 10.85rem;
+  height: 6.6rem;
+  background: url("../images/person_state_bg.png?__sprite") no-repeat;
+  background-size: 10.85rem 6.6rem;
+  line-height: 6.6rem;
+  color: #fff;
+  font-size: 1.3rem;
+  text-align: center;
+  padding: 0;
+}
+.person-wrap .content .content-bott .fig-box .fig-item .before2016-active {
+  width: 10.85rem;
+  height: 7.75rem;
+  background: url("../images/before2016_active.png?__sprite") no-repeat;
+  background-size: 10.85rem 7.75rem;
+}
+.person-wrap .content .content-bott .fig-box .fig-item .after2016-active {
+  width: 10.85rem;
+  height: 7.75rem;
+  background: url("../images/after2016_active.png?__sprite") no-repeat;
+  background-size: 10.85rem 7.75rem;
+}
+.person-wrap .content .content-bott .fig-box .fig-item:nth-of-type(1) {
+  margin-left: 0.85rem;
+  margin-right: 1.75rem;
+}
+.person-wrap .content .content-bott .progress-bar {
+  margin: 1.9rem auto 1.3rem;
+  width: 24.2rem;
+  height: 0.5rem;
+  background: url("../images/progress_bar_bg.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+  position: relative;
+}
+.person-wrap .content .content-bott .progress-bar span {
+  position: absolute;
+  left: 17.5rem;
+  top: -0.4rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: url("../images/progrss_pot.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+.person-wrap .content .content-bott .progress-bar .pot {
+  left: 5rem;
+}
 .person-wrap .content .btns {
   margin-top: 3.9rem;
   padding-bottom: 2rem;
@@ -91,4 +156,156 @@
 }
 .person-wrap .content .btns a:nth-of-type(1) {
   margin: 0 5rem 0 2rem;
+}
+.person-wrap .content .agreement {
+  display: block;
+  font-size: 0.9rem;
+  color: #1548bb;
+  text-align: center;
+  line-height: 1.5rem;
+}
+.person-wrap .content .warning {
+  font-size: 1rem;
+  color: #000;
+  text-align: center;
+  line-height: 2rem;
+  padding-bottom: 1rem;
+}
+.my-alert .my-alert-content {
+  padding: 2.3rem 1.05rem 1.4rem;
+}
+.my-alert .my-alert-content h3 {
+  font-size: 1.1rem;
+  color: #000;
+  text-align: center;
+  line-height: 3rem;
+}
+.my-alert .my-alert-content .text {
+  background: #f0f4fe;
+  padding: 1.5rem 1.35rem 1.4rem;
+  border-radius: 0.3rem;
+}
+.my-alert .my-alert-content .text p {
+  line-height: 1.7rem;
+  color: #000;
+}
+.my-alert .my-alert-content .submit {
+  display: block;
+  text-align: center;
+  color: #fff;
+  font-size: 1.2rem;
+  width: 20.9rem;
+  margin: 1.9rem auto 0;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  background: url("../images/btn_bg.png?__sprite");
+  border-radius: 0.3rem;
+}
+.my-alert .my-alert-content .my-alert-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0.75rem 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: url("../images/alert_close.png?__sprite") no-repeat center center;
+  background-size: 1.1rem 1.1rem;
+}
+#info-alert h3 {
+  text-align: left;
+  padding-left: 1.3rem;
+}
+#info-alert h3 img {
+  width: 9.95rem;
+  height: 1.2rem;
+}
+#info-alert .info-alert-top {
+  width: 22.1rem;
+  height: 8.1rem;
+  margin: 0.5rem auto 0;
+  background: url("../images/info_box_bg.png?__sprite");
+  background-size: 100% 100%;
+  border: 1px solid #ccd3e5;
+  border-radius: 0.4rem;
+}
+#info-alert .info-alert-top img {
+  width: 5.35rem;
+  height: 5.35rem;
+  border-radius: 50%;
+  margin: 1.35rem 1.75rem;
+}
+#info-alert .info-alert-top ul {
+  width: 11.25rem;
+  font-size: 1.1rem;
+  line-height: 1.75rem;
+  color: #000000;
+  padding-left: 1.75rem;
+  margin-top: 1.4rem;
+}
+#info-alert .info-alert-bott {
+  width: 22.1rem;
+  margin: 2.5rem auto 0;
+}
+#info-alert .info-alert-bott li {
+  font-size: 1rem;
+  line-height: 2.1rem;
+}
+#info-alert .info-alert-bott li:nth-of-type(1) span {
+  background: url("../images/date_icon.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+#info-alert .info-alert-bott li:nth-of-type(2) span,
+#info-alert .info-alert-bott li:nth-of-type(3) span {
+  background: url("../images/address_icon.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
+#info-alert .info-alert-bott span {
+  float: left;
+  width: 0.75rem;
+  height: 0.85rem;
+  margin-top: 0.65rem;
+  margin-right: 0.6rem;
+}
+#info-alert .info-alert-bott p {
+  color: #000;
+  float: left;
+}
+#info-alert .btns {
+  margin-top: 2rem;
+}
+#info-alert .btns a {
+  float: left;
+  width: 8rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  text-align: center;
+  background: url("../images/btn_bg.png?__sprite");
+  background-size: 100% 100%;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 0.3rem;
+}
+#info-alert .btns a:nth-of-type(1) {
+  margin: 0 6rem 0 1rem;
+}
+#back-alert .my-alert-content p {
+  padding-left: 1.5rem;
+}
+#back-alert .btns {
+  margin-top: 2rem;
+}
+#back-alert .btns a {
+  float: left;
+  width: 8rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  text-align: center;
+  background: url("../images/btn_bg.png?__sprite");
+  background-size: 100% 100%;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 0.3rem;
+}
+#back-alert .btns a:nth-of-type(1) {
+  margin: 0 6rem 0 1rem;
 }

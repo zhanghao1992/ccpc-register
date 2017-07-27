@@ -61,6 +61,13 @@
   padding-left: 0.9rem;
   border-bottom: 0.1rem solid #f2f2f2;
 }
+.fillInfo-wrap .fillInfo-wrap-bottom .check-box h3 .date-icon {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.85rem;
+  background: url("../images/date_icon.png?__sprite") no-repeat;
+  background-size: 100% 100%;
+}
 .fillInfo-wrap .fillInfo-wrap-bottom .check-box h3 .address-icon {
   display: inline-block;
   width: 0.65rem;
@@ -241,5 +248,26 @@
   border-radius: 0.3rem;
 }
 #info-alert .btns a:nth-of-type(1) {
+  margin: 0 6rem 0 1rem;
+}
+#back-alert .my-alert-content p {
+  padding-left: 1.5rem;
+}
+#back-alert .btns {
+  margin-top: 2rem;
+}
+#back-alert .btns a {
+  float: left;
+  width: 8rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  text-align: center;
+  background: url("../images/btn_bg.png?__sprite");
+  background-size: 100% 100%;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 0.3rem;
+}
+#back-alert .btns a:nth-of-type(1) {
   margin: 0 6rem 0 1rem;
 }

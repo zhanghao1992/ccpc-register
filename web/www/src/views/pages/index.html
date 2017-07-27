@@ -79,48 +79,46 @@
     {% endif %}
 
     <div id="signUp-alert" class="my-alert">
-        <div id="scrollAlert">
-            <div class="my-alert-content">
-                <span id="signUp-close" class="my-alert-close"></span>
-                <h3 class="title">
-                    <span class="logo"></span>
-                </h3>
-                <form id="signUp-form" class="form">
-                    <div class="form-group">
-                        <input id="realName" type="text" name="" placeholder="请输入您的真实姓名">
-                        <p class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <input id="idNumber" type="number" name="" placeholder="请输入您的身份证号">
-                        <p class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <input id="phoneInput" type="tel" name="" placeholder="请输入您的手机号">
-                        <a id="getCode" class="getMess" href="javascript:void(0);">获取验证码</a>
-                        <p class="error-message danger-message">报名手机号与比赛时登录竞技软件手机号一致，不可更改</p>
-                    </div>
-                    <div class="form-group">
-                        <input id="code" type="text" name="" placeholder="请输入验证码">
-                        <p class="error-message"></p>
-                    </div>
+        <div class="my-alert-content">
+            <span id="signUp-close" class="my-alert-close"></span>
+            <h3 class="title">
+                <span class="logo"></span>
+            </h3>
+            <form id="signUp-form" class="form">
+                <div class="form-group">
+                    <input id="realName" type="text" name="" placeholder="请输入您的真实姓名">
+                    <p class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <input id="idNumber" type="number" name="" placeholder="请输入您的身份证号">
+                    <p class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <input id="phoneInput" type="tel" name="" placeholder="请输入您的手机号">
+                    <a id="getCode" class="getMess" href="javascript:void(0);">获取验证码</a>
+                    <p class="error-message danger-message">报名手机号与比赛时登录竞技软件手机号一致，不可更改</p>
+                </div>
+                <div class="form-group">
+                    <input id="code" type="text" name="" placeholder="请输入验证码">
+                    <p class="error-message"></p>
+                </div>
 
-                    <div class="form-group">
-                        <input id="imgCode" type="text" name="" placeholder="请输入验证码">
-                        <script>
-                        document.write('<img class="getMess" data-src="/common/captcha" src="/common/captcha' + '?_=' + new Date().getTime() + '"">');
-                        </script>
-                        <!--<img class="getMess" src="" alt="">-->
-                        <p class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <a id="submit" class="submit" href="javascript:void(0);">点我报名</a>
-                        <a id="submit2" class="submit" href="javascript:void(0);">查询资格</a>
-                        <p class="warning-message">
-                            截至2017年11月6日24：00前大师分排名到全国排名前016名的选手才具有参赛资格
-                        </p>
-                    </div>
-                </form>
-            </div>
+                <div class="form-group">
+                    <input id="imgCode" type="text" name="" placeholder="请输入验证码">
+                    <script>
+                    document.write('<img class="getMess" data-src="/common/captcha" src="/common/captcha' + '?_=' + new Date().getTime() + '"">');
+                    </script>
+                    <!--<img class="getMess" src="" alt="">-->
+                    <p class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <a id="submit" class="submit" href="javascript:void(0);">点我报名</a>
+                    <a id="submit2" class="submit" href="javascript:void(0);">查询资格</a>
+                    <p class="warning-message">
+                        截至2017年11月6日24：00前大师分排名到全国排名前016名的选手才具有参赛资格
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -228,11 +226,13 @@ $('#getCode').click(function () {
 });
 
 $('#signUp-close').tap(function () {
-    myScroll = new IScroll('#wrapper');
+    myScroll = new IScroll('#wrapper',{
+//        scrollbars: true
+    });
     $('#signUp-alert').hide();
     $('.fixed-btns').show();
     $('body').removeClass('overflow');
-})
+});
 
 $('#submit').tap(function () {
     checkForm();
@@ -286,41 +286,38 @@ function checkForm() {
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(loaded, 200);
 }, false);
-var myScroll,myScroll2;
+var myScroll;
+
 function loaded() {
     myScroll = new IScroll('#wrapper');
-    myScroll2 = new IScroll('#scrollAlert');
 }
 
 //获取可视宽度
 
-//$("input").focus(function () {
-//    var localHeight = $(window).height();
-//    var addBottom, offset;
-//    addBottom = (parseInt($(this).offset().top) + parseInt($(this).height()));    //文本域的底部
-//
-//    $(window).resize(function () {
-//        offset = addBottom - $(window).height();//计算上滑的距离
-//
-////        alert($('.my-alert-content').offset().top)
-//        var scrollH = parseInt($('.my-alert-content').offset().top) - offset;
-////        alert(scrollH)
-//        if (offset > 0) {
-//            $('.my-alert-content').css({
-//                'marginTop': scrollH
-//            });
-//        }else {
-//            $('.my-alert-content').css({
-//                'margin': '8rem auto 0'
-//            });
-//        }
-//    })
-//});
+$('.my-alert-content')[0].ontouchstart = function (ev) {
+    console.log($('#signUp-form')[0].offsetTop)
 
-$('#signUp-alert').swipe(function (ev) {
-    ev.preventDefault();
-    return false;
-});
+    var startY = ev.targetTouches[0].clientY - $('.my-alert-content')[0].offsetTop;
+    console.log(startY)
+    document.ontouchmove = function (ev) {
+        console.log($('#signUp-form')[0].offsetTop)
+        var endY = ev.targetTouches[0].clientY;
+
+        $('.my-alert-content').css({
+            'top': endY - startY
+        });
+
+        document.ontouchend = function () {
+            document.ontouchmove = function () {
+            }
+            document.ontouchend = function () {
+            }
+        }
+
+        return false;
+    }
+
+}
 
 //点击分享按钮
 $('#share').tap(function () {

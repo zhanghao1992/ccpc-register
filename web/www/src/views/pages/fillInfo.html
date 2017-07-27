@@ -27,7 +27,7 @@
         <div class="fillInfo-wrap-bottom">
             <div class="check-box">
                 <h3 class="clearfix">
-                    <span class="address-icon"></span>
+                    <span class="date-icon"></span>
                     参赛时间
                 </h3>
                 <ul class="clearfix">
@@ -138,13 +138,36 @@
             </nav>
         </div>
     </div>
+
+    <div id="back-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="back-close" class="my-alert-close"></span>
+            <p>确定退出？</p>
+            <nav class="btns clearfix">
+                <a href="javascript:void(0);" id="yes">是</a>
+                <a href="javascript:void(0);" id="no">否</a>
+            </nav>
+        </div>
+    </div>
+
 </div>
 
 <script>
 $('#back').tap(function () {
-    window.history.back();
+    $('#back-alert').show();
+    $('#yes').tap(function () {
+        $('#back-alert').hide();
+        window.location.href = '/index';
+    });
+    $('#no').tap(function () {
+        $('#back-alert').hide();
+    });
+    $('#back-close').tap(function () {
+        $('#back-alert').hide();
+    });
     return false;
 });
+
 $('.check-box li').tap(function () {
     console.log($(this).parent('ul li'))
     if ($(this).hasClass('disabled')) {
@@ -167,7 +190,6 @@ $('.check-box li').tap(function () {
 //点击提交
 $('#submit').tap(function () {
     $('#agreement-alert').show();
-    $('body').addClass('overflow');
 });
 
 //关闭协议弹窗
@@ -178,7 +200,6 @@ $('#agreement-close').tap(function () {
 //        $("#agreement-alert").hide()
 //    }, 0);
     $('#agreement-alert').hide();
-    $('body').removeClass('overflow');
 });
 
 //同意协议
