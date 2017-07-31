@@ -30,52 +30,14 @@
                     <span class="date-icon"></span>
                     参赛时间
                 </h3>
-                <ul class="clearfix">
-                    <li class="disabled">
-                        <span></span>
-                        <p>2017年11月25日</p>
-                    </li>
-                    <li class="active">
-                        <span></span>
-                        <p>2017年11月26日</p>
-                    </li>
-                    <li class="">
-                        <span></span>
-                        <p>2017年12月9日</p>
-                    </li>
-                    <li class="">
-                        <span></span>
-                        <p>2017年12月10日</p>
-                    </li>
-                </ul>
+                <ul id="dayList" class="clearfix"></ul>
             </div>
             <div class="check-box">
                 <h3 class="clearfix">
                     <span class="address-icon"></span>
                     参赛地点
                 </h3>
-                <ul class="clearfix">
-                    <li class="disabled">
-                        <span></span>
-                        <p>北京（已报满）</p>
-                    </li>
-                    <li class="active">
-                        <span></span>
-                        <p>北京（已报满）</p>
-                    </li>
-                    <li class="">
-                        <span></span>
-                        <p>北京（已报满）</p>
-                    </li>
-                    <li class="">
-                        <span></span>
-                        <p>北京（已报满）</p>
-                    </li>
-                    <li class="">
-                        <span></span>
-                        <p>北京（已报满）</p>
-                    </li>
-                </ul>
+                <ul id="addressList" class="clearfix"></ul>
             </div>
 
             <a id="submit" class="submit" href="javascript:void (0)">提交</a>
@@ -110,25 +72,16 @@
                 <div class="info-alert-top clearfix">
                     <img class="fl" src="/static/common/images/touxiang.png" alt="">
                     <ul class="fl">
-                        <li>露露</li>
-                        <li>露露</li>
-                        <li>露露</li>
+                        <li>{{info.realName}}</li>
+                        <li>{{info.levelCode}}</li>
+                        <li>大师分排名{{info.masterPointRank}}名</li>
                     </ul>
                 </div>
                 <div class="info-alert-bott">
                     <ul>
-                        <li class="clearfix">
-                            <span></span>
-                            <p>参赛时间：2017年11月25日9：00到18：00</p>
-                        </li>
-                        <li class="clearfix">
-                            <span></span>
-                            <p>参赛地点：北京</p>
-                        </li>
-                        <li class="clearfix">
-                            <span></span>
-                            <p>详细地址：北京市东城区天坛东路80号</p>
-                        </li>
+                        <li class="clearfix"><span></span><p></p></li>
+                        <li class="clearfix"><span></span><p></p></li>
+                        <li class="clearfix"><span></span><p></p></li>
                     </ul>
                 </div>
             </div>
@@ -153,11 +106,36 @@
 </div>
 
 <script>
+//返回退出
 $('#back').tap(function () {
     $('#back-alert').show();
     $('#yes').tap(function () {
         $('#back-alert').hide();
-        window.location.href = '/index';
+        $.ajax({
+            url: '/api/backOut',
+            type: 'GET',
+            data: $('#signUp-form').serialize(),
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+                if (json.code == 0) {
+                    window.location.href = '/index?cpId=' + util.getQueryString('cpId');
+                } else {
+                    $('.fillInfo-wrap').toast({
+                        content: json.msg,
+                        duration: 1000
+                    });
+                    return false;
+                }
+            },
+            error: function () {
+                $('.fillInfo-wrap').toast({
+                    content: '出错',
+                    duration: 1000
+                });
+                return false;
+            }
+        });
     });
     $('#no').tap(function () {
         $('#back-alert').hide();
@@ -168,7 +146,126 @@ $('#back').tap(function () {
     return false;
 });
 
-$('.check-box li').tap(function () {
+var dayLiist, addressList, dayInfo, addrssInfo, dayId, placeId;
+//获取时间列表
+var matchDayId = 0;
+$.ajax({
+    url: '/api/getMatchApplyDayList',
+    type: 'GET',
+    data: {},
+    dataType: 'json',
+    cache: false,
+    success: function (json) {
+        if (json.code == 0) {
+            dayLiist = json.response.list;
+            $('#dayList').html(baidu.template('dayListTmpl', {data: json}));
+            $('.check-box').eq(0).find('li').eq(json.response.listCount).addClass('active');
+            $('.check-box').eq(0).find('li').each(function (k, v) {
+                if ($(v).hasClass('active')) {
+                    matchDayId = $(v).data('id');
+                }
+            });
+            $.ajax({
+                url: '/api/getMatchApplySKU',
+                type: 'GET',
+                data: {
+                    matchDayId: matchDayId
+                },
+                dataType: 'json',
+                cache: false,
+                success: function (json) {
+                    addressList = json.response.list;
+                    if (json.code == 0) {
+                        $('#addressList').html(baidu.template('addressListTmpl', {data: json}));
+                        $('.check-box').eq(1).find('li').eq(json.response.listCount).addClass('active');
+                    } else {
+                        $('.fillInfo-wrap').toast({
+                            content: json.msg,
+                            duration: 1000
+                        });
+                        return false;
+                    }
+                },
+                error: function () {
+                    $('.fillInfo-wrap').toast({
+                        content: '出错',
+                        duration: 1000
+                    });
+                    return false;
+                }
+            });
+        } else {
+            $('.fillInfo-wrap').toast({
+                content: json.msg,
+                duration: 1000
+            });
+            return false;
+        }
+    },
+    error: function () {
+        $('.fillInfo-wrap').toast({
+            content: '出错',
+            duration: 1000
+        });
+        return false;
+    }
+});
+
+//时间选择切换
+$('.check-box').eq(0).delegate('li', 'tap', function () {
+    var _this = this;
+    console.log($(this).parent('ul li'))
+    if ($(this).hasClass('disabled')) {
+        return false;
+    } else {
+        $(this).parent('ul').find('li').each(function (index, ele) {
+            if ($(ele).hasClass('active')) {
+                $(ele).removeClass('active');
+            }
+        })
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+
+            //获取地点列表
+            $.ajax({
+                url: '/api/getMatchApplySKU',
+                type: 'GET',
+                data: {
+                    matchDayId: $(_this).data('id')
+                },
+                dataType: 'json',
+                cache: false,
+                success: function (json) {
+                    addressList = json.response;
+                    if (json.code == 0) {
+                        $('#addressList').html(baidu.template('addressListTmpl', {data: json}));
+                        $('.check-box').eq(1).find('li').eq(json.response.listCount).addClass('active');
+                    } else {
+                        $('.fillInfo-wrap').toast({
+                            content: json.msg,
+                            duration: 1000
+                        });
+                        return false;
+                    }
+                },
+                error: function () {
+                    $('.fillInfo-wrap').toast({
+                        content: '出错',
+                        duration: 1000
+                    });
+                    return false;
+                }
+            });
+
+        }
+    }
+    return false;
+});
+
+//地点选择
+$('.check-box').eq(1).delegate('li', 'tap', function () {
     console.log($(this).parent('ul li'))
     if ($(this).hasClass('disabled')) {
         return false;
@@ -190,6 +287,21 @@ $('.check-box li').tap(function () {
 //点击提交
 $('#submit').tap(function () {
     $('#agreement-alert').show();
+    $('.check-box').eq(0).find('li').each(function (k, v) {
+        if ($(v).hasClass('active')) {
+            dayId = $(v).data('id');
+        }
+    })
+    $('.check-box').eq(1).find('li').each(function (k, v) {
+        if ($(v).hasClass('active')) {
+            placeId = $(v).data('id');
+        }
+    })
+    dayInfo = dayLiist[dayId - 1];
+    addrssInfo = addressList[dayId - 1];
+    $('.info-alert-bott li').eq(0).find('p').html('参赛时间：' + dayInfo.dayInfDetail);
+    $('.info-alert-bott li').eq(1).find('p').html('参赛地点：' + addrssInfo.place);
+    $('.info-alert-bott li').eq(2).find('p').html('详细地址：' + addrssInfo.placeDetail);
 });
 
 //关闭协议弹窗
@@ -216,9 +328,44 @@ $('#recheck').tap(function () {
     $('#info-alert').hide();
 });
 
-
+//点击确定
 $('#confirm').tap(function () {
-
+    var _this = this;
+    if ($(_this).hasClass('disabled')) {
+        return false;
+    }
+    $(_this).addClass('disabled');
+    $.ajax({
+        url: '/api/applyMatch',
+        type: 'GET',
+        data: {
+            cpId: util.getQueryString('cpId'),
+            matchDayId: dayId,
+            matchPlaceId: placeId,
+            idNumber: util.getQueryString('idNumber')
+        },
+        dataType: 'json',
+        cache: false,
+        success: function (json) {
+            if (json.code == 0) {
+                window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + util.getQueryString('idNumber');
+            } else {
+                $('.fillInfo-wrap').toast({
+                    content: json.msg,
+                    duration: 1000
+                });
+                return false;
+            }
+        },
+        error: function () {
+            $('.fillInfo-wrap').toast({
+                content: '出错',
+                duration: 1000
+            });
+            $(_this).removeClass('disabled');
+            return false;
+        }
+    });
 
 });
 
@@ -231,4 +378,45 @@ function loaded() {
     myScroll = new IScroll('#wrapper');
 }
 </script>
+
+
+<script id="addressListTmpl" type="text/html">
+<% $.each(data.response.list, function(k, v){ %>
+
+<% if(v.remainPlayers !== 0){ %>
+<li class="" data-id="<%=v.matchPlaceId%>">
+    <span></span>
+    <p><%=v.place%>(剩<%=v.remainPlayers%>个名额)</p>
+</li>
+<% }else{ %>
+<li class="disabled" data-id="<%=v.id%>">
+    <span></span>
+    <p><%=v.place%>(已报满)</p>
+</li>
+<% } %>
+
+<% }); %>
+
+</script>
+
+
+<script id="dayListTmpl" type="text/html">
+<% $.each(data.response.list, function(k, v){ %>
+
+<% if(!v.checkPeople){ %>
+<li class="" data-id="<%=v.id%>">
+    <span></span>
+    <p><%=v.dayInfo%></p>
+</li>
+<% }else{ %>
+<li class="disabled" data-id="<%=v.id%>">
+    <span></span>
+    <p><%=v.dayInfo%></p>
+</li>
+<% } %>
+
+<% }); %>
+
+</script>
+
 {% endblock %}

@@ -1,7 +1,6 @@
 module.exports = {
     expirationTime: 60,
     check: function (req, s) {
-
         if (!req.session.captcha || !req.session.captcha.value) {
             return {code: 1, msg: '无验证码'}
         }

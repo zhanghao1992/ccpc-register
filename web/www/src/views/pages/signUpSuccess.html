@@ -10,31 +10,8 @@
 
 <section id="wrapper">
     <section class="singUpSuccessWrap">
-        <div class="info">
-            <div class="info-top">
-                <ul>
-                    <li class="clearfix">
-                        <span></span>
-                        <p>参赛时间：2017年11月25日9：00到18：00</p>
-                    </li>
-                    <li class="clearfix">
-                        <span></span>
-                        <p>参赛地点：北京</p>
-                    </li>
-                    <li class="clearfix">
-                        <span></span>
-                        <p>详细地址：北京市东城区天坛东路80号</p>
-                    </li>
-                </ul>
-            </div>
-            <div class="info-bott clearfix">
-                <img class="fl" src="/static/common/images/touxiang.png" alt="">
-                <ul class="fl">
-                    <li>露露</li>
-                    <li>露露</li>
-                    <li>露露</li>
-                </ul>
-            </div>
+        <div id="info" class="info">
+
         </div>
         <nav class="btns clearfix">
             <a href="javascript:void(0);" id="back">返回</a>
@@ -51,13 +28,13 @@
     </section>
 
     <div id="share-alert" class="my-alert">
-            <div>
-                <div class="my-alert-content">
-                    <span id="share-close" class="my-alert-close"></span>
-                    <p>点击分享按钮进行分享</p>
-                </div>
+        <div>
+            <div class="my-alert-content">
+                <span id="share-close" class="my-alert-close"></span>
+                <p>点击分享按钮进行分享</p>
             </div>
         </div>
+    </div>
 </section>
 
 <script>
@@ -71,15 +48,23 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(loaded, 200);
 }, false);
 var myScroll;
+
 function loaded() {
     myScroll = new IScroll('#wrapper');
 }
 
+//分享页面跳转
+var hash = window.location.href.split('#')[1];
+switch (hash) {
+    case 'shareQRcode':
+        window.location.href = '/QRcode';
+        break;
+
+}
 //点击分享按钮
 $('#share').tap(function () {
     $('.fixed-btns').hide();
     $('#share-alert').show();
-    $('#wrapper').addClass('overflow');
     window.location.hash = 'shareQRcode';
     return false;
 });
@@ -87,10 +72,7 @@ $('#share').tap(function () {
 $('#share-close').tap(function () {
     $('#share-alert').hide();
     $('.fixed-btns').show();
-    $('#wrapper').removeClass('overflow');
 });
-
-
 
 //分享页面跳转
 var hash = window.location.href.split('#')[1];
@@ -101,6 +83,64 @@ switch (hash) {
 
 }
 
+$.ajax({
+    url: '/api/getCurrentUserMatchApply',
+    type: 'GET',
+    data: {
+        cpId: util.getQueryString('cpId'),
+        idNumber: util.getQueryString('idNumber')
+    },
+    dataType: 'json',
+    cache: false,
+    success: function (json) {
+        if (json.code == 0) {
+            $('#info').html(baidu.template('infoTmpl', {data: json}));
+        } else {
+            $('.fillInfo-wrap').toast({
+                content: json.msg,
+                duration: 1000
+            });
+            return false;
+        }
+    },
+    error: function () {
+        $('.fillInfo-wrap').toast({
+            content: '出错',
+            duration: 1000
+        });
+        $(_this).removeClass('disabled');
+        return false;
+    }
+});
+
+
 </script>
 
+
+<script id="infoTmpl" type="text/html">
+<div class="info-top">
+    <ul>
+        <li class="clearfix">
+            <span></span>
+            <p>参赛时间：<%=data.response.dayInfoDetail%></p>
+        </li>
+        <li class="clearfix">
+            <span></span>
+            <p>参赛地点：<%=data.response.place%></p>
+        </li>
+        <li class="clearfix">
+            <span></span>
+            <p>详细地址：<%=data.response.placeDetail%></p>
+        </li>
+    </ul>
+</div>
+<div class="info-bott clearfix">
+    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+    <ul class="fl">
+        <li><%=data.response.realName%></li>
+        <li><%=data.response.levelCode%></li>
+        <li>全国排名<%=data.response.masterPointRank%>名</li>
+    </ul>
+</div>
+</script>
 {% endblock %}

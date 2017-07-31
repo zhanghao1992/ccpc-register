@@ -25,6 +25,8 @@ module.exports = {
 //        console.log(req.session);
 //        console.log('load session');
 
+        // console.log('00000')
+        // console.log(req.session.user)
         if (req.session.user) {
             option.data.userInfo = req.session.user;
         }

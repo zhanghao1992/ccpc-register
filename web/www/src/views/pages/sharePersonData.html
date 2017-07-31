@@ -16,71 +16,7 @@
             <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
         </header>
         <div class="content">
-            <div id="info">
-
-                <div class="content-top clearfix">
-                    <img class="fl" src="/static/common/images/touxiang.png" alt="">
-                    <ul class="fl">
-                        <li>{{info.realName}}</li>
-                        <li>{{info.levelCode}}</li>
-                        <li>大师分排名{{info.masterPointRank}}名</li>
-                    </ul>
-                </div>
-
-                {% if info.masterPointRank <= 2016 %}
-                <div class="encourage">
-                    <img src="/static/common/images/encourage.png" alt="">
-                </div>
-
-                {% else %}
-                <div class="sorry">
-                    <img src="/static/common/images/sorry.png" alt="">
-                </div>
-                {% endif %}
-
-                <div class="content-bott clearfix">
-                    <h3>全国大师分排名</h3>
-                    <p>
-                        截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
-                    </p>
-
-                    {% if info.masterPointRank <= 2016 %}
-                    <div class="fig-box clearfix">
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="before2016-active pnormal goEnter"></p>
-                        </div>
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="pnormal">2016名后</p>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="fig-box clearfix">
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="pnormal">2016名前</p>
-                        </div>
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="goEnter after2016-active"></p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if info.masterPointRank <= 2016 %}
-                    <div class="progress-bar">
-                        <span class="pot"></span>
-                    </div>
-                    {% else %}
-
-                    <div class="progress-bar">
-                        <span class=""></span>
-                    </div>
-                    {% endif %}
-                </div>
-
-            </div>
+            <div id="info"></div>
 
             <nav class="btns clearfix">
                 <a href="javascript:void(0);" id="share">分享</a>
@@ -143,15 +79,14 @@ function loaded() {
 
 //分享页面跳转
 var hash = window.location.href.split('#')[1];
+var userIdCode = util.getQueryString('userIdCode') || '{{info.userId}}';
+console.log(userIdCode)
 switch (hash) {
     case 'sharePersonData':
-        window.location.href = '/sharePersonData?cpId='+util.getQueryString('cpId')+'&userIdCode={{info.userId}}';
+        window.location.href = '/sharePersonData?cpId=' + util.getQueryString('cpId') + '&userIdCode=' + userIdCode;
         break;
 
 }
-setTimeout(function () {
-    window.location.hash = 'sharePersonData';
-},500);
 
 $('#back').tap(function () {
     $('#back-alert').show();
@@ -192,10 +127,45 @@ $('#back').tap(function () {
     return false;
 });
 
+//获取个人信息
+$.ajax({
+    url: '/api/getRelevanceUserId',
+    type: 'GET',
+    data: {
+        cpId: util.getQueryString('cpId'),
+        userIdCode: util.getQueryString('userIdCode')
+    },
+    dataType: 'json',
+    cache: false,
+    success: function (json) {
+        if (json.code == 0) {
+            if (json.response.masterPointRank <= 2016) {
+                $('#info').html(baidu.template('infoTempl', {data: json}));
+            } else {
+                $('#info').html(baidu.template('infoTempl2', {data: json}));
+            }
+            loaded();
+        } else {
+            $('.person-wrap').toast({
+                content: json.msg,
+                duration: 1000
+            });
+            return false;
+        }
+    },
+    error: function () {
+        $('.person-wrap').toast({
+            content: '出错',
+            duration: 1000
+        });
+        return false;
+    }
+});
 
 //点击分享按钮
 $('#share').tap(function () {
     $('#share-alert').show();
+    window.location.hash = 'sharePersonData';
     return false;
 });
 
@@ -218,4 +188,75 @@ $('.person-wrap').delegate('.goEnter', 'tap', function () {
 })
 </script>
 
+<script id="infoTempl" type="text/html">
+<div class="content-top clearfix">
+    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+    <ul class="fl">
+        <li><%=data.response.realName%></li>
+        <li><%=data.response.levelCode%></li>
+        <li>大师分排名<%=data.response.masterPointRank%>名</li>
+    </ul>
+</div>
+
+<div class="encourage">
+    <img src="/static/common/images/encourage.png" alt="">
+</div>
+<div class="content-bott clearfix">
+    <h3>全国大师分排名</h3>
+    <p>
+        截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
+    </p>
+
+    <div class="fig-box clearfix">
+        <div class="fig-item">
+            <h3 class="title">全国大师分排名</h3>
+            <p class="before2016-active pnormal goEnter"></p>
+        </div>
+        <div class="fig-item">
+            <h3 class="title">全国大师分排名</h3>
+            <p class="pnormal">2016名后</p>
+        </div>
+    </div>
+
+    <div class="progress-bar">
+        <span class="pot"></span>
+    </div>
+</div>
+</script>
+
+<script id="infoTempl2" type="text/html">
+<div class="content-top clearfix">
+    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+    <ul class="fl">
+        <li><%=data.response.realName%></li>
+        <li><%=data.response.levelCode%></li>
+        <li>大师分排名<%=data.response.masterPointRank%>名</li>
+    </ul>
+</div>
+
+<div class="sorry">
+    <img src="/static/common/images/sorry.png" alt="">
+</div>
+
+<div class="content-bott clearfix">
+    <h3>全国大师分排名</h3>
+    <p>
+        截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
+    </p>
+    <div class="fig-box clearfix">
+        <div class="fig-item">
+            <h3 class="title">全国大师分排名</h3>
+            <p class="pnormal">2016名前</p>
+        </div>
+        <div class="fig-item">
+            <h3 class="title">全国大师分排名</h3>
+            <p class="goEnter after2016-active"></p>
+        </div>
+    </div>
+
+    <div class="progress-bar">
+        <span class=""></span>
+    </div>
+</div>
+</script>
 {% endblock %}

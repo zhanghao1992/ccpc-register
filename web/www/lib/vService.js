@@ -66,7 +66,7 @@ module.exports = {
         } else if (req.baseUrl.indexOf('/xiangqi') == 0){
             return 'http://172.21.120.241:8082';
         }*/
-        return 'http://172.21.120.206:18088';
+        return 'http://172.21.122.138:7071';
     },
     requestGo: function (req, res, option, callback) {
         //使用request模块发送请求
@@ -157,10 +157,9 @@ module.exports = {
                         req.body[i] = option.addParams[i];
                     }
                 }
-                console.log('vpost');
-                console.log(req.query);
-                console.log(req.body);
-                console.log('vpost');
+                // console.log('vpost');
+                // console.log(req.session.user);
+                // console.log('vpost');
                 request.post({
                         headers: {
                             'Authorization': me.getUserId(req)

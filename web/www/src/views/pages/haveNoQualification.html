@@ -10,7 +10,7 @@
 {% block content %}
 
 <div id="wrapper">
-    <section class="person-wrap">
+    <section class="person-wrap" style="height: 100%;">
         <header>
             <span id="back" class="back">返回</span>
             <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
@@ -27,58 +27,11 @@
                     </ul>
                 </div>
 
-                {% if info.masterPointRank <= 2016 %}
-                <div class="encourage">
-                    <img src="/static/common/images/encourage.png" alt="">
-                </div>
 
-                {% else %}
                 <div class="sorry">
                     <img src="/static/common/images/sorry.png" alt="">
                 </div>
-                {% endif %}
 
-                <div class="content-bott clearfix">
-                    <h3>全国大师分排名</h3>
-                    <p>
-                        截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
-                    </p>
-
-                    {% if info.masterPointRank <= 2016 %}
-                    <div class="fig-box clearfix">
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="before2016-active pnormal goEnter"></p>
-                        </div>
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="pnormal">2016名后</p>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="fig-box clearfix">
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="pnormal">2016名前</p>
-                        </div>
-                        <div class="fig-item">
-                            <h3 class="title">全国大师分排名</h3>
-                            <p class="goEnter after2016-active"></p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if info.masterPointRank <= 2016 %}
-                    <div class="progress-bar">
-                        <span class="pot"></span>
-                    </div>
-                    {% else %}
-
-                    <div class="progress-bar">
-                        <span class=""></span>
-                    </div>
-                    {% endif %}
-                </div>
 
             </div>
 
@@ -144,14 +97,14 @@ function loaded() {
 //分享页面跳转
 var hash = window.location.href.split('#')[1];
 switch (hash) {
-    case 'sharePersonData':
-        window.location.href = '/sharePersonData?cpId='+util.getQueryString('cpId')+'&userIdCode={{info.userId}}';
+    case 'shareQRcode':
+        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
         break;
 
 }
-setTimeout(function () {
-    window.location.hash = 'sharePersonData';
-},500);
+//setTimeout(function () {
+//    window.location.hash = 'sharePersonData';
+//},500);
 
 $('#back').tap(function () {
     $('#back-alert').show();
@@ -191,7 +144,6 @@ $('#back').tap(function () {
     });
     return false;
 });
-
 
 //点击分享按钮
 $('#share').tap(function () {

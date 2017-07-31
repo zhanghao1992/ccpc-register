@@ -331,6 +331,7 @@ body {
   border-radius: 0.3rem;
   padding-left: 1.5rem;
   box-sizing: border-box;
+  background: #f0f4fe;
 }
 .my-alert .form .form-group input:focus {
   border-color: red;
@@ -349,6 +350,9 @@ body {
   height: 3.2rem;
   border-bottom-right-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
+  border: 1px solid #3d60b8;
+  box-sizing: border-box;
+  border-left: none;
 }
 .my-alert .form .form-group .error-message {
   height: 2rem;

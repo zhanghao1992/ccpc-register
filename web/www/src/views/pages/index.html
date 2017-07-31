@@ -85,26 +85,27 @@
                 <span class="logo"></span>
             </h3>
             <form id="signUp-form" class="form">
+                <input name="cpId" value="{{cpId}}" type="hidden">
                 <div class="form-group">
-                    <input id="realName" type="text" name="" placeholder="请输入您的真实姓名">
+                    <input id="realName" type="text" name="realName" value="陈亚" placeholder="请输入您的真实姓名">
                     <p class="error-message"></p>
                 </div>
                 <div class="form-group">
-                    <input id="idNumber" type="number" name="" placeholder="请输入您的身份证号">
+                    <input id="idNumber" type="number" name="idNumber" value="310108196312261637" placeholder="请输入您的身份证号">
                     <p class="error-message"></p>
                 </div>
                 <div class="form-group">
-                    <input id="phoneInput" type="tel" name="" placeholder="请输入您的手机号">
+                    <input id="phoneInput" type="tel" name="mobile" value="18310456275" placeholder="请输入您的手机号">
                     <a id="getCode" class="getMess" href="javascript:void(0);">获取验证码</a>
                     <p class="error-message danger-message">报名手机号与比赛时登录竞技软件手机号一致，不可更改</p>
                 </div>
                 <div class="form-group">
-                    <input id="code" type="text" name="" placeholder="请输入验证码">
+                    <input id="code" type="text" name="checkCode" value="" placeholder="请输入验证码">
                     <p class="error-message"></p>
                 </div>
 
                 <div class="form-group">
-                    <input id="imgCode" type="text" name="" placeholder="请输入验证码">
+                    <input id="imgCode" type="text" name="captcha" placeholder="请输入验证码">
                     <script>
                     document.write('<img class="getMess" data-src="/common/captcha" src="/common/captcha' + '?_=' + new Date().getTime() + '"">');
                     </script>
@@ -135,11 +136,26 @@
 
 
 <script>
+//验证码点击切换
+$('.getMess').tap(function () {
+    $(this).prop('src', $(this).data('src') + '?_=' + new Date().getTime());
+    return false;
+});
 
+//var date = new Date().getTime();
+//var minDate = new Date(2017, 10, 6, 24, 0, 0).getTime();
+//var maxDate = new Date(2017, 10, 17, 0, 0, 0).getTime();
+//if (minDate <= date && date <= maxDate) {
+//    $('#signUp').show();
+//    $('#signcheckQuaUp').hide();
+//} else {
+//    $('#signUp').hide();
+//    $('#signcheckQuaUp').show();
+//}
 $('#getQualification').tap(function () {
-    var date = new Date().getTime();
-    var minDate = new Date(2017, 10, 6, 24, 0, 0).getTime();
-    var maxDate = new Date(2017, 10, 17, 0, 0, 0).getTime();
+    date = new Date().getTime();
+    minDate = new Date(2017, 10, 6, 24, 0, 0).getTime();
+    maxDate = new Date(2017, 10, 17, 0, 0, 0).getTime();
     if (minDate <= date && date <= maxDate) {
         window.location.href = '/QRcode';
     } else {
@@ -152,24 +168,104 @@ $('#signUp').tap(function () {
     myScroll = null;
     $('.fixed-btns').hide();
     $('#signUp-alert').show();
-    $('#wrapper').addClass('overflow');
     $('#submit').show();
     $('#submit2').hide();
     return false;
 });
+$('#submit').tap(function () {
+    var _this = this;
+    if ($(_this).hasClass('disabled')) {
+        return false;
+    }
+    $(_this).addClass('disabled');
+    if (checkForm()) {
+        $.ajax({
+            url: '/api/getQualification',
+            type: 'POST',
+            data: $('#signUp-form').serialize(),
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+                if (json.code == 0) {
+                    if (!json.response.masterPointRank || json.response.masterPointRank === 0) {
+                        window.location.href = '/noResult';
+                    } else if (json.response.masterPointRank <= 2016) {
+                        window.location.href = '/fillInfo?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
+                    }else {
+                        window.location.href = '/haveNoQualification?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
+                    }
+                } else {
+                    $('.form').toast({
+                        content: json.msg,
+                        duration: 1000
+                    });
+                    $(_this).removeClass('disabled');
+                    return false;
+                }
+            },
+            error: function () {
+                $('.form').toast({
+                    content: '出错',
+                    duration: 1000
+                });
+                return false;
+            }
+        });
+    } else {
+        return false;
+    }
+});
 
-//$('#checkQua').tap(function () {
-//    $('.btns').hide();
-//    $('#signUp-alert').show();
-//    $('body').addClass('overflow');
-//    $('#submit').hide();
-//    $('#submit2').show();
-//    return false;
-//});
-
-$('.getMess').tap(function () {
-    $(this).prop('src', $(this).data('src') + '?_=' + new Date().getTime());
+$('#checkQua').tap(function () {
+    myScroll.destroy();
+    myScroll = null;
+    $('.fixed-btns').hide();
+    $('.btns').hide();
+    $('#signUp-alert').show();
+    $('#submit').hide();
+    $('#submit2').show();
     return false;
+});
+$('#submit2').tap(function () {
+    var _this = this;
+    if ($(_this).hasClass('disabled')) {
+        return false;
+    }
+    $(_this).addClass('disabled');
+    if (checkForm()) {
+        $.ajax({
+            url: '/api/getQualification',
+            type: 'POST',
+            data: $('#signUp-form').serialize(),
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+                if (json.code == 0) {
+                    if (json.response.masterPointRank) {
+                        window.location.href = '/noResult';
+                    } else {
+                        window.location.href = '/fillInfo?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
+                    }
+                } else {
+                    $('.form').toast({
+                        content: json.msg,
+                        duration: 1000
+                    });
+                    return false;
+                }
+            },
+            error: function () {
+                $('.form').toast({
+                    content: '出错',
+                    duration: 1000
+                });
+                $(_this).removeClass('disabled');
+                return false;
+            }
+        });
+    } else {
+        return false;
+    }
 });
 
 //获取短信验证码
@@ -187,46 +283,49 @@ $('#getCode').click(function () {
         return false;
     }
     $(_this).addClass('disabled');
-//    $.ajax({
-//        url: '/association/weiqi/sendMobileCode',
-//        data: {mobile: $('#phoneInput').val()},
-//        type: 'GET',
-//        dataType: 'json',
-//        cache: false,
-//        success: function (json) {
-//            if (json.code == 0) {
-//                dialogPackage.show('发送成功');
-//                (function (djsN, djsT) {
-//                    djsN = 60;
-//                    $(_this).html('60秒后重新发送');
-//                    djsT = setInterval(function () {
-//                        djsN--;
-//                        if (djsN <= 0) {
-//                            clearInterval(djsT);
-//                            $(_this).removeClass('disabled').html('获取验证码');
-//                        } else {
-//                            $(_this).html(djsN + '秒后重新发送');
-//                        }
-//                    }, 1000);
-//                })(djsN, djsT);
-//
-//            } else {
-//                $(_this).removeClass('disabled');
-//                $('.form').toast({
-//                    content: json.msg,
-//                    duration: 1000
-//                });
-//            }
-//        },
-//        error: function () {
-//            $(_this).removeClass('disabled');
-//        }
-//    });
+    $.ajax({
+        url: '/api/sendMobileCode',
+        data: {mobile: $('#phoneInput').val()},
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (json) {
+            if (json.code == 0) {
+                $('.form').toast({
+                    content: '发送成功！',
+                    duration: 1000
+                });
+                (function (djsN, djsT) {
+                    djsN = 60;
+                    $(_this).html('60秒后重新发送');
+                    djsT = setInterval(function () {
+                        djsN--;
+                        if (djsN <= 0) {
+                            clearInterval(djsT);
+                            $(_this).removeClass('disabled').html('获取验证码');
+                        } else {
+                            $(_this).html(djsN + '秒后重新发送');
+                        }
+                    }, 1000);
+                })(djsN, djsT);
+
+            } else {
+                $(_this).removeClass('disabled');
+                $('.form').toast({
+                    content: json.msg,
+                    duration: 1000
+                });
+            }
+        },
+        error: function () {
+            $(_this).removeClass('disabled');
+        }
+    });
     return false;
 });
 
 $('#signUp-close').tap(function () {
-    myScroll = new IScroll('#wrapper',{
+    myScroll = new IScroll('#wrapper', {
 //        scrollbars: true
     });
     $('#signUp-alert').hide();
@@ -234,11 +333,7 @@ $('#signUp-close').tap(function () {
     $('body').removeClass('overflow');
 });
 
-$('#submit').tap(function () {
-    checkForm();
 
-    window.location.href = '/personData'
-})
 </script>
 
 <script>
@@ -264,20 +359,20 @@ function checkForm() {
         });
         return false;
     }
-    if (!$('#code').val()) {
-        $('.form').toast({
-            content: '请输入短信验证码！',
-            duration: 1000
-        });
-        return false;
-    }
-    if (!$('#imgCode').val()) {
-        $('.form').toast({
-            content: '请输入短信验证码！',
-            duration: 1000
-        });
-        return false;
-    }
+//    if (!$('#code').val()) {
+//        $('.form').toast({
+//            content: '请输入短信验证码！',
+//            duration: 1000
+//        });
+//        return false;
+//    }
+//    if (!$('#imgCode').val()) {
+//        $('.form').toast({
+//            content: '请输入图形验证码！',
+//            duration: 1000
+//        });
+//        return false;
+//    }
     return true;
 }
 </script>
@@ -295,27 +390,29 @@ function loaded() {
 //获取可视宽度
 
 $('.my-alert-content')[0].ontouchstart = function (ev) {
-    console.log($('#signUp-form')[0].offsetTop)
-
     var startY = ev.targetTouches[0].clientY - $('.my-alert-content')[0].offsetTop;
-    console.log(startY)
+//    console.log(startY)
     document.ontouchmove = function (ev) {
-        console.log($('#signUp-form')[0].offsetTop)
         var endY = ev.targetTouches[0].clientY;
-
         $('.my-alert-content').css({
             'top': endY - startY
         });
-
         document.ontouchend = function () {
             document.ontouchmove = function () {
             }
             document.ontouchend = function () {
             }
         }
-
         return false;
     }
+}
+
+//分享页面跳转
+var hash = window.location.href.split('#')[1];
+switch (hash) {
+    case 'shareQRcode':
+        window.location.href = '/QRcode';
+        break;
 
 }
 
@@ -339,14 +436,6 @@ $('#getQualification').tap(function () {
     window.location.href = '/QRcode'
 });
 
-//分享页面跳转
-var hash = window.location.href.split('#')[1];
-switch (hash) {
-    case 'shareQRcode':
-        window.location.href = '/QRcode';
-        break;
-
-}
 
 </script>
 {% endblock %}

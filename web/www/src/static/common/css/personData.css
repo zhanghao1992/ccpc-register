@@ -1,7 +1,7 @@
 .person-wrap {
   background: url("../images/person_wrap_bg.png?__sprite") no-repeat;
   background-size: 100% 100%;
-  padding: 0 1.45rem 1rem;
+  padding: 0 1.45rem 3rem;
 }
 .person-wrap header {
   padding-top: 1.7rem;
