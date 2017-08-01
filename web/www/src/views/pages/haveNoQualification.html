@@ -19,7 +19,7 @@
             <div id="info">
 
                 <div class="content-top clearfix">
-                    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+                    <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
                     <ul class="fl">
                         <li>{{info.realName}}</li>
                         <li>{{info.levelCode}}</li>
@@ -85,6 +85,7 @@
 </div>
 
 <script>
+getBadgeImg('#badge','{{info.levelCode}}');
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(loaded, 200);
 }, false);

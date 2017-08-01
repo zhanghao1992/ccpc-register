@@ -19,10 +19,10 @@
             <div id="info">
 
                 <div class="content-top clearfix">
-                    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+                    <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
                     <ul class="fl">
                         <li>{{info.realName}}</li>
-                        <li>{{info.levelCode}}</li>
+                        <li>{{info.levelName}}</li>
                         <li>大师分排名{{info.masterPointRank}}名</li>
                     </ul>
                 </div>
@@ -149,9 +149,6 @@ switch (hash) {
         break;
 
 }
-setTimeout(function () {
-    window.location.hash = 'sharePersonData';
-},500);
 
 $('#back').tap(function () {
     $('#back-alert').show();
@@ -196,6 +193,7 @@ $('#back').tap(function () {
 //点击分享按钮
 $('#share').tap(function () {
     $('#share-alert').show();
+    window.location.hash = 'sharePersonData';
     return false;
 });
 
@@ -216,6 +214,8 @@ $('#agreement-close').tap(function () {
 $('.person-wrap').delegate('.goEnter', 'tap', function () {
     window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
 })
+
+getBadgeImg('#badge','{{info.levelCode}}');
 </script>
 
 {% endblock %}

@@ -61,6 +61,11 @@ router.get('/demo', function (req, res, next) {
     page.load(req, res, {path: 'pages/demo', data: {user: {name: 'zhanghao', age: 25}}});
 });
 
+//demo
+router.get('/simulationCp', function (req, res, next) {
+    page.load(req, res, {path: 'pages/simulationCp'});
+});
+
 
 
 

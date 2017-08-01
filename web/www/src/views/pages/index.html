@@ -9,15 +9,13 @@
 <!--<meta http-equiv="refresh" content="0; url=''">-->
 
 {% block content %}
-
 <section id="wrapper">
     <section class="wrap">
         <section class="top"></section>
-
         {% if QRcode %}
         <section class="qr-code">
             <div>
-                <img src="/static/common/images/qr_code.png" alt="">
+                <img id="qrcode" src="/static/common/images/qr_code.png" alt="">
             </div>
             <p class="qr-title"></p>
         </section>
@@ -74,7 +72,7 @@
     <nav class="fixed-btns">
         <a id="share" href="javascript:void(0);">分享</a>
         <a id="signUp" href="javascript:void(0);">点我报名</a>
-        <!--<a id="checkQua" class="qualification" href="javascript:void(0);">查询资格</a>-->
+        <a id="checkQua" class="qualification" href="javascript:void(0);">查询资格</a>
     </nav>
     {% endif %}
 
@@ -156,16 +154,18 @@ $('#getQualification').tap(function () {
     date = new Date().getTime();
     minDate = new Date(2017, 10, 6, 24, 0, 0).getTime();
     maxDate = new Date(2017, 10, 17, 0, 0, 0).getTime();
-    if (minDate <= date && date <= maxDate) {
-        window.location.href = '/QRcode';
-    } else {
-        return false;
-    }
+//    if (minDate <= date && date <= maxDate) {
+        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+//    } else {
+//        return false;
+//    }
 });
-
 $('#signUp').tap(function () {
-    myScroll.destroy();
-    myScroll = null;
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
+
     $('.fixed-btns').hide();
     $('#signUp-alert').show();
     $('#submit').show();
@@ -189,9 +189,14 @@ $('#submit').tap(function () {
                 if (json.code == 0) {
                     if (!json.response.masterPointRank || json.response.masterPointRank === 0) {
                         window.location.href = '/noResult';
-                    } else if (json.response.masterPointRank <= 2016) {
-                        window.location.href = '/fillInfo?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
-                    }else {
+                    } else if (json.response.masterPointRank >= 1 || json.response.masterPointRank <= 2016) {
+                        //
+                        if (json.response.matchPlaceId && json.response.matchDayId) {
+                            window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + json.response.idNumber;
+                        } else {
+                            window.location.href = '/fillInfo?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
+                        }
+                    } else {
                         window.location.href = '/haveNoQualification?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
                     }
                 } else {
@@ -215,10 +220,11 @@ $('#submit').tap(function () {
         return false;
     }
 });
-
 $('#checkQua').tap(function () {
-    myScroll.destroy();
-    myScroll = null;
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('.fixed-btns').hide();
     $('.btns').hide();
     $('#signUp-alert').show();
@@ -241,10 +247,10 @@ $('#submit2').tap(function () {
             cache: false,
             success: function (json) {
                 if (json.code == 0) {
-                    if (json.response.masterPointRank) {
+                    if (!json.response.masterPointRank || json.response.masterPointRank === 0) {
                         window.location.href = '/noResult';
                     } else {
-                        window.location.href = '/fillInfo?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
+                        window.location.href = '/personData?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
                     }
                 } else {
                     $('.form').toast({
@@ -338,7 +344,7 @@ $('#signUp-close').tap(function () {
 
 <script>
 function checkForm() {
-    if (!$('#realName').val()) {
+    if (!$('#realName').val() || /^[\u4e00-\u9fa5-\d a-zA-Z]$/.test($('#realName').val())) {
         $('.form').toast({
             content: '请输入真实姓名！',
             duration: 1000
@@ -431,11 +437,16 @@ $('#share-close').tap(function () {
     $('#wrapper').removeClass('overflow');
 });
 
-//点击资格赛按钮
-$('#getQualification').tap(function () {
-    window.location.href = '/QRcode'
-});
 
+
+console.log(cpList)
+console.log('szx')
+var cpId = util.getQueryString('cpId');
+$.each(cpList, function (k,v) {
+    if(v.cpId =cpId){
+        $('#qrcode').prop('src', v.QRsrc);
+    }
+});
 
 </script>
 {% endblock %}

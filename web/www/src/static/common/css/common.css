@@ -380,3 +380,27 @@ body {
   font-size: 0.8rem;
   color: #c72a00;
 }
+#back-alert .my-alert-content {
+  padding: 2.3rem 1.05rem 1.4rem;
+}
+#back-alert .my-alert-content p {
+  padding-left: 1.5rem;
+}
+#back-alert .btns {
+  margin-top: 2rem;
+}
+#back-alert .btns a {
+  float: left;
+  width: 8rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  text-align: center;
+  background: url("../images/btn_bg.png?__sprite");
+  background-size: 100% 100%;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 0.3rem;
+}
+#back-alert .btns a:nth-of-type(1) {
+  margin: 0 6rem 0 1rem;
+}

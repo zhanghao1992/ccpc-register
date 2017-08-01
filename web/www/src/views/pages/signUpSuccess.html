@@ -35,32 +35,67 @@
             </div>
         </div>
     </div>
+
+    <div id="back-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="back-close" class="my-alert-close"></span>
+            <p>确定退出？</p>
+            <nav class="btns clearfix">
+                <a href="javascript:void(0);" id="yes">是</a>
+                <a href="javascript:void(0);" id="no">否</a>
+            </nav>
+        </div>
+    </div>
 </section>
 
 <script>
-$('#back').tap(function () {
-    window.history.back();
-})
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(loaded, 200);
-}, false);
 var myScroll;
 
 function loaded() {
     myScroll = new IScroll('#wrapper');
 }
 
-//分享页面跳转
-var hash = window.location.href.split('#')[1];
-switch (hash) {
-    case 'shareQRcode':
-        window.location.href = '/QRcode';
-        break;
+//返回退出
+$('#back').tap(function () {
+    $('#back-alert').show();
+    return false;
+});
+$('#yes').tap(function () {
+    $('#back-alert').hide();
+    $.ajax({
+        url: '/api/backOut',
+        type: 'GET',
+        data: $('#signUp-form').serialize(),
+        dataType: 'json',
+        cache: false,
+        success: function (json) {
+            if (json.code == 0) {
+                window.location.href = '/index?cpId=' + util.getQueryString('cpId');
+            } else {
+                $('.fillInfo-wrap').toast({
+                    content: json.msg,
+                    duration: 1000
+                });
+                return false;
+            }
+        },
+        error: function () {
+            $('.fillInfo-wrap').toast({
+                content: '出错',
+                duration: 1000
+            });
+            return false;
+        }
+    });
+    return false;
+});
+$('#no').tap(function () {
+    $('#back-alert').hide();
+});
+$('#back-close').tap(function () {
+    $('#back-alert').hide();
+});
 
-}
 //点击分享按钮
 $('#share').tap(function () {
     $('.fixed-btns').hide();
@@ -95,6 +130,8 @@ $.ajax({
     success: function (json) {
         if (json.code == 0) {
             $('#info').html(baidu.template('infoTmpl', {data: json}));
+            getBadgeImg('#badge', json.response.levelCode);
+            loaded();
         } else {
             $('.fillInfo-wrap').toast({
                 content: json.msg,
@@ -130,12 +167,18 @@ $.ajax({
         </li>
         <li class="clearfix">
             <span></span>
-            <p>详细地址：<%=data.response.placeDetail%></p>
+            <p>详细地址：
+                <% if (data.response.placeDetail) { %>
+                <%=data.response.placeDetail%>
+                <% }else{ %>
+                待定
+                <% }%>
+            </p>
         </li>
     </ul>
 </div>
 <div class="info-bott clearfix">
-    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+    <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
     <ul class="fl">
         <li><%=data.response.realName%></li>
         <li><%=data.response.levelCode%></li>

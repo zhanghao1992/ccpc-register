@@ -144,6 +144,7 @@ $.ajax({
             } else {
                 $('#info').html(baidu.template('infoTempl2', {data: json}));
             }
+            getBadgeImg('#badge', json.response.levelCode);
             loaded();
         } else {
             $('.person-wrap').toast({
@@ -190,7 +191,7 @@ $('.person-wrap').delegate('.goEnter', 'tap', function () {
 
 <script id="infoTempl" type="text/html">
 <div class="content-top clearfix">
-    <img class="fl" src="/static/common/images/touxiang.png" alt="">
+    <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
     <ul class="fl">
         <li><%=data.response.realName%></li>
         <li><%=data.response.levelCode%></li>
