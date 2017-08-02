@@ -113,7 +113,7 @@ $('#share-close').tap(function () {
 var hash = window.location.href.split('#')[1];
 switch (hash) {
     case 'shareQRcode':
-        window.location.href = '/QRcode';
+        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
         break;
 
 }
@@ -181,7 +181,7 @@ $.ajax({
     <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
     <ul class="fl">
         <li><%=data.response.realName%></li>
-        <li><%=data.response.levelCode%></li>
+        <li><%=data.response.levelName%></li>
         <li>全国排名<%=data.response.masterPointRank%>名</li>
     </ul>
 </div>

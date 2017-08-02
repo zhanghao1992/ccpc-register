@@ -28,9 +28,10 @@ body {
 .wrap {
   font-size: 1rem;
   width: 100%;
-  height: 133.95rem;
+  padding-bottom: 12rem;
   background: url("../images/wrap_bg.png?__sprite") no-repeat;
   background-size: 100% 100%;
+  position: relative;
 }
 .wrap .top {
   height: 27.3rem;
@@ -89,8 +90,9 @@ body {
 .wrap .data .promot {
   margin-top: 2.9rem;
   height: 0.9rem;
-  background: url("../images/share_promot.png") no-repeat center center;
-  background-size: 20.45rem 0.9rem;
+  text-align: center;
+  line-height: 0.9rem;
+  color: #f6e04e;
 }
 .wrap .bonus div {
   margin: 0 auto;
@@ -167,7 +169,6 @@ body {
   background-size: 100% 100%;
 }
 .fixed-btns {
-  height: 6.5rem;
   width: 100%;
   background: rgba(0, 0, 0, 0.8);
   position: fixed;
@@ -184,6 +185,25 @@ body {
   line-height: 4.1rem;
   background: #1c57ff;
   margin: 1.35rem;
+}
+.meto {
+  position: absolute;
+  left: 0;
+  bottom: 5rem;
+  width: 100%;
+}
+.meto a {
+  display: block;
+  margin: 0 auto;
+  width: 13rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  text-align: center;
+  background: url("../images/btn_bg.png?__sprite");
+  background-size: 100% 100%;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 0.3rem;
 }
 .singUpSuccessWrap {
   font-size: 1rem;
@@ -323,13 +343,11 @@ body {
 }
 .my-alert .form .form-group input {
   width: 100%;
-  height: 3.2rem;
-  line-height: 3.2rem;
+  padding: 0.8rem 0 0.8rem 1.5rem;
   font-size: 1.1rem;
   color: #3d60b8;
   border: 1px solid #3d60b8;
   border-radius: 0.3rem;
-  padding-left: 1.5rem;
   box-sizing: border-box;
   background: #f0f4fe;
 }
@@ -344,13 +362,12 @@ body {
 }
 .my-alert .form .form-group .getMess {
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 1px;
+  top: 1px;
   width: 7.95rem;
   height: 3.2rem;
   border-bottom-right-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
-  border: 1px solid #3d60b8;
   box-sizing: border-box;
   border-left: none;
 }

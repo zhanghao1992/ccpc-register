@@ -77,7 +77,7 @@ var badgesList = [
     {
         levelName: '无等级牌手',
         gradeCode: 116,
-        badgeSrc: ''
+        badgeSrc: '/static/common/images/badges/wups.png'
     }
 ];
 var cpList = [

@@ -21,9 +21,9 @@
                 <div class="content-top clearfix">
                     <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
                     <ul class="fl">
-                        <li>{{info.realName}}</li>
-                        <li>{{info.levelName}}</li>
-                        <li>大师分排名{{info.masterPointRank}}名</li>
+                        <li>{{userInfo.realName}}</li>
+                        <li>{{userInfo.levelName}}</li>
+                        <li>大师分排名{{userInfo.masterPointRank}}名</li>
                     </ul>
                 </div>
 
@@ -145,7 +145,7 @@ function loaded() {
 var hash = window.location.href.split('#')[1];
 switch (hash) {
     case 'sharePersonData':
-        window.location.href = '/sharePersonData?cpId='+util.getQueryString('cpId')+'&userIdCode={{info.userId}}';
+        window.location.href = '/sharePersonData?cpId='+util.getQueryString('cpId')+'&userIdCode={{userInfo.userId}}';
         break;
 
 }
@@ -215,7 +215,7 @@ $('.person-wrap').delegate('.goEnter', 'tap', function () {
     window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
 })
 
-getBadgeImg('#badge','{{info.levelCode}}');
+getBadgeImg('#badge','{{userInfo.levelCode}}');
 </script>
 
 {% endblock %}

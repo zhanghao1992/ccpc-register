@@ -1,76 +1,75 @@
 var session = require('./session');
+var cpList = [
+    {
+        cpName: '北京联众互动网络股份有限公司',
+        QRsrc: '/static/common/images/QRcodes/lzaz.png',
+        cpId: 'e44ab68b1c7bb15fc7e014103'
+    },
+    {
+        cpName: '腾讯科技（深圳）有限公司',
+        QRsrc: '/static/common/images/QRcodes/tx.jpg',
+        cpId: '584a419472284b39590f88105'
+    },
+    {
+        cpName: '北京新浪互联信息服务有限公司',
+        QRsrc: '/static/common/images/QRcodes/xlaz.png',
+        cpId: '944f8f964634dc2bca99e8109'
+    },
+    {
+        cpName: '深圳市玩呗娱乐科技有限公司',
+        QRsrc: '/static/common/images/QRcodes/wb.png',
+        cpId: '2640d6ab6fcfcd89a41d49123'
+    },
+    {
+        cpName: '深圳市东方博雅科技有限公司',
+        QRsrc: '/static/common/images/QRcodes/by.jpg',
+        cpId: '5d45b39efdf5004b0fe5a8127'
+    },
+    {
+        cpName: '深圳市银溪数码技术有限公司',
+        QRsrc: '/static/common/images/QRcodes/yx.jpg',
+        cpId: '7e4e50b1166357a640ce03129'
+    },
+    {
+        cpName: '吉林风雷网络科技股份有限公司',
+        QRsrc: '/static/common/images/QRcodes/flewm.png',
+        cpId: '6a45529cedc5561cf8a215131'
+    },
+    {
+        cpName: '深圳维京人网络科技有限公司',
+        QRsrc: '/static/common/images/QRcodes/qp.png',
+        cpId: '344a218f47dcb9489cce69135'
+    }
+];
+
 module.exports = {
     load: function (req, res, option) {
-//        console.log('+++++');
-//        console.log(req.session.user);
-//        console.log('+++++');
+
+       // console.log('+++++');
+       // console.log(req.session.user);
+       // console.log('+++++');
         if (!option.data) {
             option.data = {};
         }
-        var associationLevel;
-        if (req.session.user && req.session.user && req.session.user.type == 'association' && req.session.user.level) {
-            associationLevel = req.session.user.level;
-        }
-        session.check(req);
-        if (!req.session.user && associationLevel) {
-            if (associationLevel == 1) {
-                res.redirect('/association/weiqi/login');
-            } else if (associationLevel == 2) {
-                res.redirect('/association/weiqi/locallogin');
+
+        //厂商cpId是否合法
+
+        console.log('11100')
+        var isCp = false;
+        cpList.forEach(function (k, index) {
+            if (k.cpId == req.query.cpId) {
+                isCp = true;
             }
+        })
+        if (!isCp) {
+            res.redirect('/errorCp');
             return false;
         }
-//        console.log('load session');
-//        console.log(req.sessionID);
-//        console.log(req.session);
-//        console.log('load session');
 
-        // console.log('00000')
-        // console.log(req.session.user)
+
         if (req.session.user) {
             option.data.userInfo = req.session.user;
         }
-
-        if (option.auth == undefined) {
-            res.render(option.path, option.data);
-        } else {
-            if (req.session.user) {
-                if (option.auth.type == 'org' || option.auth.type == 'player') {
-                    if (req.session.user.type == option.auth.type) {
-                        res.render(option.path, option.data);
-                    } else {
-                        res.redirect('/');
-                    }
-                } else if (option.auth.type == 'association') {
-                    if (req.session.user.limits[option.auth.limit]) {
-                        res.render(option.path, option.data);
-                    } else {
-                        res.send('无权访问');
-                    }
-
-//                    var i;
-//                    var find = false;
-//                    for (i in req.session.user.limits) {
-//                        if (req.session.user.limits[i] == option.auth.limit) {
-//                            find = true;
-//                        }
-//                    }
-//                    if (find) {
-//                        res.render(option.path, option.data);
-//                    } else {
-//                        res.send('无权访问');
-//                    }
-
-                }
-
-            } else {
-                if (option.auth.type == 'org' || option.auth.type == 'player') {
-                    res.redirect('/');
-                } else if (option.auth.type == 'association') {
-                    res.redirect('/association/weiqi/login');
-                }
-
-            }
-        }
+        res.render(option.path, option.data);
     }
 };

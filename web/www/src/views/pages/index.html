@@ -15,7 +15,7 @@
         {% if QRcode %}
         <section class="qr-code">
             <div>
-                <img id="qrcode" src="/static/common/images/qr_code.png" alt="">
+                <img id="qrcode" src="" alt="">
             </div>
             <p class="qr-title"></p>
         </section>
@@ -25,21 +25,8 @@
                 <img src="/static/common/images/no_result_bg.png" alt="">
             </div>
         </section>
-        {% elseif shareDtata %}
-        <section class="data">
-            <div class="data-top">
-                <img src="/static/common/images/share_data_top_bg.png" alt="">
-            </div>
-            <div class="data-botto clearfix">
-                <img class="fl" src="/static/common/images/touxiang.png" alt="">
-                <ul class="fl">
-                    <li>xxxx</li>
-                    <li>xxxx</li>
-                    <li>xxxx</li>
-                </ul>
-            </div>
-            <p class="promot"></p>
-        </section>
+        {% elseif shareData %}
+        <section id="data" class="data"></section>
         {% else %}
         <section class="starts"></section>
         {% endif %}
@@ -63,10 +50,17 @@
             </div>
         </section>
 
+        {% if shareData%}
+        <div class="meto">
+            <a href="javascript:void (0)">我也要参赛</a>
+        </div>
+        {% endif %}
 
     </section>
 
     {% if QRcode %}
+
+    {% elseif shareData %}
 
     {% else %}
     <nav class="fixed-btns">
@@ -155,7 +149,7 @@ $('#getQualification').tap(function () {
     minDate = new Date(2017, 10, 6, 24, 0, 0).getTime();
     maxDate = new Date(2017, 10, 17, 0, 0, 0).getTime();
 //    if (minDate <= date && date <= maxDate) {
-        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
 //    } else {
 //        return false;
 //    }
@@ -177,8 +171,8 @@ $('#submit').tap(function () {
     if ($(_this).hasClass('disabled')) {
         return false;
     }
-    $(_this).addClass('disabled');
     if (checkForm()) {
+        $(_this).addClass('disabled');
         $.ajax({
             url: '/api/getQualification',
             type: 'POST',
@@ -186,10 +180,11 @@ $('#submit').tap(function () {
             dataType: 'json',
             cache: false,
             success: function (json) {
+                $(_this).removeClass('disabled');
                 if (json.code == 0) {
                     if (!json.response.masterPointRank || json.response.masterPointRank === 0) {
                         window.location.href = '/noResult';
-                    } else if (json.response.masterPointRank >= 1 || json.response.masterPointRank <= 2016) {
+                    } else if (json.response.masterPointRank >= 1 && json.response.masterPointRank <= 2016) {
                         //
                         if (json.response.matchPlaceId && json.response.matchDayId) {
                             window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + json.response.idNumber;
@@ -237,8 +232,8 @@ $('#submit2').tap(function () {
     if ($(_this).hasClass('disabled')) {
         return false;
     }
-    $(_this).addClass('disabled');
     if (checkForm()) {
+        $(_this).addClass('disabled');
         $.ajax({
             url: '/api/getQualification',
             type: 'POST',
@@ -246,9 +241,10 @@ $('#submit2').tap(function () {
             dataType: 'json',
             cache: false,
             success: function (json) {
+                $(_this).removeClass('disabled');
                 if (json.code == 0) {
                     if (!json.response.masterPointRank || json.response.masterPointRank === 0) {
-                        window.location.href = '/noResult';
+                        window.location.href = '/noResult?&cpId=' + util.getQueryString('cpId');
                     } else {
                         window.location.href = '/personData?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
                     }
@@ -417,7 +413,7 @@ $('.my-alert-content')[0].ontouchstart = function (ev) {
 var hash = window.location.href.split('#')[1];
 switch (hash) {
     case 'shareQRcode':
-        window.location.href = '/QRcode';
+        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
         break;
 
 }
@@ -436,17 +432,89 @@ $('#share-close').tap(function () {
     $('.fixed-btns').show();
     $('#wrapper').removeClass('overflow');
 });
-
-
-
-console.log(cpList)
-console.log('szx')
+</script>
+{% if QRcode %}
+<script>
 var cpId = util.getQueryString('cpId');
-$.each(cpList, function (k,v) {
-    if(v.cpId =cpId){
+var isCp = false;
+$.each(cpList, function (k, v) {
+    if (v.cpId == cpId) {
+        console.log(v)
         $('#qrcode').prop('src', v.QRsrc);
+        isCp = true;
     }
 });
+if (!isCp) {
+    $('.qr-code').toast({
+        content: '厂商不合法',
+        duration: 1000
+    });
+}
+
+</script>
+{% endif %}
+
+<!--个人资格查询结果分享页-->
+{% if shareData %}
+<script>
+//获取个人信息
+$.ajax({
+    url: '/api/getRelevanceUserId',
+    type: 'GET',
+    data: {
+        cpId: util.getQueryString('cpId'),
+        userIdCode: util.getQueryString('userIdCode')
+    },
+    dataType: 'json',
+    cache: false,
+    success: function (json) {
+        if (json.code == 0) {
+            $('#data').html(baidu.template('infoTempl', {data: json}));
+            getBadgeImg('#badge', json.response.levelCode);
+            if (myScroll) {
+                loaded();
+            }
+
+        } else {
+            $('.person-wrap').toast({
+                content: json.msg,
+                duration: 1000
+            });
+            return false;
+        }
+    },
+    error: function () {
+        $('.person-wrap').toast({
+            content: '出错',
+            duration: 1000
+        });
+        return false;
+    }
+});
+$('.meto a').tap(function () {
+    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+})
+</script>
+{% endif %}
+
+
+<script id="infoTempl" type="text/html">
+<div class="data-top">
+    <img src="/static/common/images/share_data_top_bg.png" alt="">
+</div>
+<div class="data-botto clearfix">
+    <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
+    <ul class="fl">
+        <li><%=data.response.realName%></li>
+        <li><%=data.response.levelName%></li>
+        <li>大师分排名<%=data.response.masterPointRank%>名</li>
+    </ul>
+</div>
+<% if (data.response.masterPointRank > 0 && data.response.masterPointRank < 2016) { %>
+<p class="promot">您目前全国大师分排名已到前2016名，请继续保持！</p>
+<% }else{ %>
+<p class="promot">您目前全国大师分排名没到前2016名，请继续努力！</p>
+<% } %>
 
 </script>
 {% endblock %}

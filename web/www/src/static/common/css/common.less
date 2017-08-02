@@ -29,9 +29,11 @@ body {
 .wrap {
   font-size: 20/@rem;
   width: 100%;
-  height: 2679/@rem;
+  width: 100%;
+  padding-bottom: 240/@rem;
   background: url("../images/wrap_bg.png?__sprite") no-repeat;
   background-size: 100% 100%;
+  position: relative;
   .top {
     height: 546/@rem;
     background: url("../images/top_bg.png?__sprite") no-repeat;
@@ -69,7 +71,7 @@ body {
     }
     .data-botto {
       width: 546/@rem;
-      margin:70/@rem auto 0;
+      margin: 70/@rem auto 0;
       background: url("../images/share_data_inner_bg.png?__sprite");
       box-sizing: border-box;
       padding: 40/@rem 0 43/@rem 60/@rem;
@@ -88,8 +90,9 @@ body {
     .promot {
       margin-top: 58/@rem;
       height: 18/@rem;
-      background: url("../images/share_promot.png") no-repeat center center;
-      background-size: 409/@rem 18/@rem;
+      text-align: center;
+      line-height: 18/@rem;
+      color: #f6e04e;
     }
   }
   .bonus div {
@@ -172,7 +175,7 @@ body {
   }
 }
 .fixed-btns {
-  height: 130/@rem;
+  //height: 130/@rem;
   width: 100%;
   background: rgba(0, 0, 0, .8);
   position: fixed;
@@ -188,6 +191,25 @@ body {
     line-height: 82/@rem;
     background: #1c57ff;
     margin: 27/@rem;
+  }
+}
+.meto {
+  position: absolute;
+  left: 0;
+  bottom: 100/@rem;
+  width: 100%;
+  a {
+    display: block;
+    margin: 0 auto;
+    width: 260/@rem;
+    height: 64/@rem;
+    line-height: 64/@rem;
+    text-align: center;
+    background: url("../images/btn_bg.png?__sprite");
+    background-size: 100% 100%;
+    font-size: 26/@rem;
+    color: #fff;
+    border-radius: 6/@rem;
   }
 }
 .singUpSuccessWrap {
@@ -264,7 +286,7 @@ body {
       color: #fff;
       border-radius: 6/@rem;
     }
-    a:nth-of-type(1){
+    a:nth-of-type(1) {
       margin: 0 140/@rem 0 80/@rem;
     }
   }
@@ -329,13 +351,11 @@ body {
       position: relative;
       input {
         width: 100%;
-        height: 64/@rem;
-        line-height: 64/@rem;
+        padding: 16/@rem 0 16/@rem 30/@rem;
         font-size: 22/@rem;
         color: #3d60b8;
         border: 1px solid #3d60b8;
         border-radius: 6/@rem;
-        padding-left: 30/@rem;
         box-sizing: border-box;
         background: #f0f4fe;
       }
@@ -350,13 +370,13 @@ body {
       }
       .getMess {
         position: absolute;
-        right: 0;
-        top: 0;
+        right: 1px;
+        top: 1px;
         width: 159/@rem;
         height: 64/@rem;
         border-bottom-right-radius: 6/@rem;
         border-top-right-radius: 6/@rem;
-        border: 1px solid #3d60b8;
+        //border: 1px solid #3d60b8;
         box-sizing: border-box;
         border-left: none;
       }
@@ -390,11 +410,10 @@ body {
     }
   }
 }
-
 #back-alert {
   .my-alert-content {
     padding: 2.3rem 1.05rem 1.4rem;
-    p{
+    p {
       padding-left: 30/@rem;
     }
   }
@@ -412,7 +431,7 @@ body {
       color: #fff;
       border-radius: 6/@rem;
     }
-    a:nth-of-type(1){
+    a:nth-of-type(1) {
       margin: 0 120/@rem 0 20/@rem;
     }
   }

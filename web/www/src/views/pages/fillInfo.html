@@ -72,9 +72,9 @@
                 <div class="info-alert-top clearfix">
                     <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
                     <ul class="fl">
-                        <li>{{info.realName}}</li>
-                        <li>{{info.levelCode}}</li>
-                        <li>大师分排名{{info.masterPointRank}}名</li>
+                        <li>{{userInfo.realName}}</li>
+                        <li>{{userInfo.levelName}}</li>
+                        <li>大师分排名{{userInfo.masterPointRank}}名</li>
                     </ul>
                 </div>
                 <div class="info-alert-bott">
@@ -106,7 +106,7 @@
 </div>
 
 <script>
-getBadgeImg('#badge', '{{info.levelCode}}');
+getBadgeImg('#badge', '{{userInfo.levelCode}}');
 //返回退出
 $('#back').tap(function () {
     $('#back-alert').show();
@@ -362,6 +362,7 @@ $('#confirm').tap(function () {
         dataType: 'json',
         cache: false,
         success: function (json) {
+            $(_this).removeClass('disabled');
             if (json.code == 0) {
                 window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + util.getQueryString('idNumber');
             } else {
