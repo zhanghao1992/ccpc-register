@@ -20,7 +20,7 @@
         }
     }
 
-    loadStyles('/static/toast/css/animate.css');
+    loadStyles(__uri('/static/toast/css/animate.css'));
 
     //显示提示信息    toast
     $.fn.toast = function (options) {

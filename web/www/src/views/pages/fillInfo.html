@@ -105,6 +105,12 @@
 
 </div>
 
+{% if !userInfo %}
+<script>
+window.location.href = 'index?cpId=' + util.getQueryString('cpId');
+</script>
+{% endif %}
+
 <script>
 getBadgeImg('#badge', '{{userInfo.levelCode}}');
 //返回退出

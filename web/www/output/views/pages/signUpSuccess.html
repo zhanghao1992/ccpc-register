@@ -1,0 +1,189 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+{% endblock %}
+
+{% block content %}
+
+<section id="wrapper">
+    <section class="singUpSuccessWrap">
+        <div id="info" class="info">
+
+        </div>
+        <nav class="btns clearfix">
+            <a href="javascript:void(0);" id="back">返回</a>
+            <a href="javascript:void(0);" id="share">分享</a>
+        </nav>
+        <footer class="foot">
+            <p>
+                1.最多一次修改参赛时间、地点的机会，且打联系电话010-87559363
+            </p>
+            <p>
+                2.当前页面的大师分排名截至2017年11月6日24：00
+            </p>
+        </footer>
+    </section>
+
+    <div id="share-alert" class="my-alert">
+        <div>
+            <div class="my-alert-content">
+                <span id="share-close" class="my-alert-close"></span>
+                <p>点击分享按钮进行分享</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="back-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="back-close" class="my-alert-close"></span>
+            <p>确定退出？</p>
+            <nav class="btns clearfix">
+                <a href="javascript:void(0);" id="yes">是</a>
+                <a href="javascript:void(0);" id="no">否</a>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<script>
+var myScroll;
+
+function loaded() {
+    myScroll = new IScroll('#wrapper');
+}
+
+//返回退出
+$('#back').tap(function () {
+    $('#back-alert').show();
+    return false;
+});
+$('#yes').tap(function () {
+    $('#back-alert').hide();
+    $.ajax({
+        url: '/api/backOut',
+        type: 'GET',
+        data: $('#signUp-form').serialize(),
+        dataType: 'json',
+        cache: false,
+        success: function (json) {
+            if (json.code == 0) {
+                window.location.href = '/index?cpId=' + util.getQueryString('cpId');
+            } else {
+                $('.fillInfo-wrap').toast({
+                    content: json.msg,
+                    duration: 1000
+                });
+                return false;
+            }
+        },
+        error: function () {
+            $('.fillInfo-wrap').toast({
+                content: '出错',
+                duration: 1000
+            });
+            return false;
+        }
+    });
+    return false;
+});
+$('#no').tap(function () {
+    $('#back-alert').hide();
+});
+$('#back-close').tap(function () {
+    $('#back-alert').hide();
+});
+
+//点击分享按钮
+$('#share').tap(function () {
+    $('.fixed-btns').hide();
+    $('#share-alert').show();
+    window.location.hash = 'shareQRcode';
+    return false;
+});
+
+$('#share-close').tap(function () {
+    $('#share-alert').hide();
+    $('.fixed-btns').show();
+});
+
+//分享页面跳转
+var hash = window.location.href.split('#')[1];
+switch (hash) {
+    case 'shareQRcode':
+        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+        break;
+
+}
+
+$.ajax({
+    url: '/api/getCurrentUserMatchApply',
+    type: 'GET',
+    data: {
+        cpId: util.getQueryString('cpId'),
+        idNumber: util.getQueryString('idNumber')
+    },
+    dataType: 'json',
+    cache: false,
+    success: function (json) {
+        if (json.code == 0) {
+            $('#info').html(baidu.template('infoTmpl', {data: json}));
+            getBadgeImg('#badge', json.response.levelCode);
+            loaded();
+        } else {
+            $('.fillInfo-wrap').toast({
+                content: json.msg,
+                duration: 1000
+            });
+            return false;
+        }
+    },
+    error: function () {
+        $('.fillInfo-wrap').toast({
+            content: '出错',
+            duration: 1000
+        });
+        $(_this).removeClass('disabled');
+        return false;
+    }
+});
+
+
+</script>
+
+
+<script id="infoTmpl" type="text/html">
+<div class="info-top">
+    <ul>
+        <li class="clearfix">
+            <span></span>
+            <p>参赛时间：<%=data.response.dayInfoDetail%></p>
+        </li>
+        <li class="clearfix">
+            <span></span>
+            <p>参赛地点：<%=data.response.place%></p>
+        </li>
+        <li class="clearfix">
+            <span></span>
+            <p>详细地址：
+                <% if (data.response.placeDetail) { %>
+                <%=data.response.placeDetail%>
+                <% }else{ %>
+                待定
+                <% }%>
+            </p>
+        </li>
+    </ul>
+</div>
+<div class="info-bott clearfix">
+    <img id="badge" class="fl" src="/static/common/images/touxiang_4664457.png" alt="">
+    <ul class="fl">
+        <li><%=data.response.realName%></li>
+        <li><%=data.response.levelName%></li>
+        <li>全国排名<%=data.response.masterPointRank%>名</li>
+    </ul>
+</div>
+</script>
+{% endblock %}

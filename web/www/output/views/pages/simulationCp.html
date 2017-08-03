@@ -1,0 +1,37 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+<link rel="stylesheet" href="/static/common/css/personData_e2e3c44.css">
+{% endblock %}
+
+{% block content %}
+    <ul id="list"></ul>
+
+<style>
+li {
+    margin: 1rem 0;
+    background: #00a2d4;
+    line-height: 2em;
+    text-align: center;
+}
+a {
+    color: #fff;
+}
+</style>
+
+
+<script id="listTmpl" type="text/html">
+<% $.each(data, function(k, v){ %>
+<li>
+    <a href="/index?cpId=<%=v.cpId%>"><%=k+1%>..<%=v.cpName%></a>
+</li>
+<% }); %>
+</script>
+
+<script>
+$('#list').html(baidu.template('listTmpl', {data: cpList}));
+</script>
+
+
+{% endblock %}

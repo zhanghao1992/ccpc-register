@@ -1,0 +1,109 @@
+<script src="/static/validate/jquery.validate.min_4edf3f1.js"></script>
+<script>
+jQuery.extend(jQuery.validator.messages, {
+    required: "必填",
+    remote: "错误",
+    email: "邮箱格式不正确",
+    url: "请输入合法的网址",
+    date: "请输入合法的日期",
+    dateISO: "请输入合法的日期 (ISO).",
+    number: "请输入合法的数字",
+    digits: "只能输入整数",
+    creditcard: "请输入合法的信用卡号",
+    equalTo: "输入不一致",
+    accept: "请输入拥有合法后缀名的字符串",
+    maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+    minlength: jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+    rangelength: jQuery.validator.format("请输入 一个长度介于 {0} 和 {1} 之间的字符串"),
+    range: jQuery.validator.format("请输入一个介于 {0} 和 {1} 之间的值"),
+    max: jQuery.validator.format("请输入一个最大为{0} 的值"),
+    min: jQuery.validator.format("请输入一个最小为{0} 的值")
+});
+
+jQuery.validator.addMethod("email", function (value, element) {
+    return this.optional(element) || /^.+@[^.].*\.[a-z]{2,10}$/.test($.trim(value));
+}, "邮箱格式不正确");
+
+jQuery.validator.addMethod("isIdCardNo", function (value, element) {
+    return isIdcard($.trim(value));
+}, "身份证号不正确");
+jQuery.validator.addMethod("mobile", function (value, element) {
+    return this.optional(element) || /^[\d]{11}$/.test($.trim(value));
+}, "请正确输入您的手机号码");
+
+jQuery.validator.addMethod("loginNameP", function (value, element) {
+    return isIdcard($.trim(value)) || this.mobile(value);
+}, "xxx");
+jQuery.validator.addMethod("loginNameG", function (value, element) {
+    return this.email(value);
+}, "xxx");
+
+jQuery.validator.addMethod("zipcode", function (value, element) {
+    return this.optional(element) || /^[\d]{6}$/.test($.trim(value));
+}, "邮编格式不正确");
+jQuery.validator.addMethod("phone", function (value, element) {
+    return this.optional(element) || /^[\d ]{7,20}$/.test($.trim(value));
+}, "请正确输入您的电话号码");
+jQuery.validator.addMethod("personname", function (value, element) {
+    return this.optional(element) || /^[\u4e00-\u9fa5-\d a-zA-Z]{1,15}$/.test($.trim(value));
+}, "使用者格式不正确");
+jQuery.validator.addMethod("personnamecreate", function (value, element) {
+    return this.optional(element) || /^[\u4e00-\u9fa5 a-zA-Z]{1,10}$/.test($.trim(value));
+}, "只能输入英文或汉字");
+jQuery.validator.addMethod("orgname", function (value, element) {
+    return this.optional(element) || /^.{1,32}$/.test($.trim(value));
+}, "名称格式不正确");
+jQuery.validator.addMethod("mypassword", function (value, element) {
+    return this.optional(element) || $.trim(value).length >= 6;
+}, "密码长度6位以上");
+
+jQuery.validator.addMethod("mypasswordt", function (value, element) {
+    return this.optional(element) || $.trim(value).length <= 12;
+}, "密码长度12位以下");
+
+jQuery.validator.addMethod("captcha", function (value, element) {
+    return this.optional(element) || ($.trim(value).length == 4);
+}, "验证码格式不正确");
+jQuery.validator.addMethod("description", function (value, element) {
+    return this.optional(element) || $.trim(value).length <= 200;
+}, "应少于200字");
+jQuery.validator.addMethod("zlen", function (value, element) {
+    return this.optional(element) || $.trim(value).length <= 20;
+}, "账号长度应少于20字符");
+jQuery.validator.addMethod("mlen", function (value, element) {
+    return this.optional(element) || $.trim(value).length <= 20;
+}, "密码长度应少于20字符");
+jQuery.validator.addMethod("teshuGroupName", function (value, element) {
+    return this.optional(element) || /^[\u4e00-\u9fa5 a-zA-Z 0-9]{1,10}$/.test($.trim(value));
+}, "不能有特殊符号");
+jQuery.validator.addMethod("teshuGroupRule", function (value, element) {
+    return this.optional(element) || /^[\u4e00-\u9fa5 a-zA-Z 0-9]{1,200}$/.test($.trim(value));
+}, "不能有特殊符号");
+jQuery.validator.addMethod("matchRuleMax", function (value, element) {
+    return this.optional(element) || UE.getEditor('editor').getContentLength(true)<=1000;
+}, "不能超过1000位字符");
+jQuery.validator.addMethod("rankNumber", function (value, element) {
+    return this.optional(element) || /^[\a-zA-Z 0-9]{1,15}$/.test($.trim(value));
+}, "1-15位数字或英文");
+jQuery.validator.setDefaults({
+    success: function (o, element) {
+        if ($(element).hasClass('form-ajax')) {
+            $(element).parents('.form-sub').find('.form-msg').removeClass('form-msg-w').addClass('form-msg-r').html('');
+        } else {
+            $(element).parents('.form-sub').find('.form-msg').removeClass('form-msg-w').addClass('hide').html('');
+        }
+
+        $(element).parents('.form-sub').find('.form-txt').removeClass('form-txt-w');
+        $(element).parents('.form-sub').find('.form-input-border').removeClass('form-txt-w');
+        $(element).parents('.form-sub').find('.form-msg-m').addClass('hide');
+    },
+    errorPlacement: function (error, element) {
+        element.parents('.form-sub').find('.form-msg').removeClass('form-msg-r').addClass('form-msg-w').removeClass('hide');
+        element.parents('.form-sub').find('.form-msg').html(error);
+        element.parents('.form-sub').find('.form-txt').addClass('form-txt-w');
+        element.parents('.form-sub').find('.form-input-border').addClass('form-txt-w');
+        element.parents('.form-sub').find('.form-msg-m').addClass('hide');
+    }
+
+});
+</script>

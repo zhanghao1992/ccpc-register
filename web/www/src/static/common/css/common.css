@@ -29,18 +29,18 @@ body {
   font-size: 1rem;
   width: 100%;
   padding-bottom: 12rem;
-  background: url("../images/wrap_bg.png?__sprite") no-repeat;
+  background: url("../images/wrap_bg.png") no-repeat;
   background-size: 100% 100%;
   position: relative;
 }
 .wrap .top {
   height: 27.3rem;
-  background: url("../images/top_bg.png?__sprite") no-repeat;
+  background: url("../images/top_bg.png") no-repeat;
   background-size: 100% 100%;
 }
 .wrap .starts {
   height: 9.1rem;
-  background: url("../images/starts.png?__sprite") no-repeat;
+  background: url("../images/starts.png") no-repeat;
   background-size: 100% 100%;
 }
 .wrap .bonus {
@@ -60,7 +60,7 @@ body {
   width: 28.95rem;
   margin: 2.9rem auto 0;
   padding-bottom: 1rem;
-  background: url("../images/share_data_bg.png?__sprite");
+  background: url("../images/share_data_bg.png");
 }
 .wrap .data .data-top {
   text-align: center;
@@ -72,7 +72,7 @@ body {
 .wrap .data .data-botto {
   width: 27.3rem;
   margin: 3.5rem auto 0;
-  background: url("../images/share_data_inner_bg.png?__sprite");
+  background: url("../images/share_data_inner_bg.png");
   box-sizing: border-box;
   padding: 2rem 0 2.15rem 3rem;
 }
@@ -98,8 +98,8 @@ body {
   margin: 0 auto;
   width: 22.6rem;
   height: 4.25rem;
-  background: url("../images/bonus_bg.png?__sprite") no-repeat;
-  background-size: 100% 100%;
+  background: url("../images/bonus_bg.png") no-repeat;
+  background-size: 22.6rem 4.25rem;
 }
 .wrap .trophy {
   margin-top: 7.75rem;
@@ -108,7 +108,7 @@ body {
   margin: 0 auto;
   width: 28.9rem;
   height: 29.8rem;
-  background: url("../images/trophy_bg.png?__sprite") no-repeat;
+  background: url("../images/trophy_bg.png") no-repeat;
   background-size: 100% 100%;
 }
 .wrap .desription {
@@ -130,14 +130,14 @@ body {
 .wrap .qr-code .qr-title {
   margin-top: 1rem;
   height: 1.2rem;
-  background: url("../images/qr_title.png?__sprite") no-repeat center center;
+  background: url("../images/qr_title.png") no-repeat center center;
   background-size: 13.75rem 1.2rem;
 }
 .wrap .desription div {
   margin: 0 auto;
   width: 28.95rem;
   height: 32.25rem;
-  background: url("../images/desription_bg.png?__sprite") no-repeat;
+  background: url("../images/desription_bg.png") no-repeat;
   background-size: 100% 100%;
 }
 .wrap .desription div .des-btns {
@@ -151,21 +151,21 @@ body {
   height: 7.55rem;
 }
 .wrap .desription div .des-btns a:nth-of-type(1) {
-  background: url("../images/des_btn1_bg.png?__sprite") no-repeat;
+  background: url("../images/des_btn1_bg.png") no-repeat;
   background-size: 100% 100%;
 }
 .wrap .desription div .des-btns a:nth-of-type(2) {
-  background: url("../images/des_btn2_bg.png?__sprite") no-repeat;
+  background: url("../images/des_btn2_bg.png") no-repeat;
   background-size: 100% 100%;
   padding-top: 1.2rem;
 }
 .wrap .desription div .des-btns a:nth-of-type(3) {
-  background: url("../images/des_btn3_bg.png?__sprite") no-repeat;
+  background: url("../images/des_btn3_bg.png") no-repeat;
   background-size: 100% 100%;
   padding-top: 1.2rem;
 }
 .wrap .desription div .des-btns #noClick {
-  background: url("../images/des_btn1_h_bg.png?__sprite") no-repeat;
+  background: url("../images/des_btn1_h_bg.png") no-repeat;
   background-size: 100% 100%;
 }
 .fixed-btns {
@@ -199,7 +199,7 @@ body {
   height: 3.2rem;
   line-height: 3.2rem;
   text-align: center;
-  background: url("../images/btn_bg.png?__sprite");
+  background: url("../images/btn_bg.png");
   background-size: 100% 100%;
   font-size: 1.3rem;
   color: #fff;
@@ -209,7 +209,7 @@ body {
   font-size: 1rem;
   width: 100%;
   height: 57.45rem;
-  background: url("../images/sign_wrap_bg.png?__sprite") no-repeat;
+  background: url("../images/sign_wrap_bg.png") no-repeat;
   background-size: 100% 100%;
   position: relative;
 }
@@ -224,12 +224,12 @@ body {
   line-height: 2.1rem;
 }
 .singUpSuccessWrap .info-top li:nth-of-type(1) span {
-  background: url("../images/date_icon.png?__sprite") no-repeat;
+  background: url("../images/date_icon.png") no-repeat;
   background-size: 100% 100%;
 }
 .singUpSuccessWrap .info-top li:nth-of-type(2) span,
 .singUpSuccessWrap .info-top li:nth-of-type(3) span {
-  background: url("../images/address_icon.png?__sprite") no-repeat;
+  background: url("../images/address_icon.png") no-repeat;
   background-size: 100% 100%;
 }
 .singUpSuccessWrap .info-top span {
@@ -247,7 +247,7 @@ body {
   width: 25.4rem;
   height: 8.1rem;
   margin: 2.85rem auto 0;
-  background: url("../images/info_box_bg.png?__sprite");
+  background: url("../images/info_box_bg.png");
   background-size: 100% 100%;
   border: 1px solid #ccd3e5;
   border-radius: 0.4rem;
@@ -275,7 +275,7 @@ body {
   height: 3.2rem;
   line-height: 3.2rem;
   text-align: center;
-  background: url("../images/btn_bg.png?__sprite");
+  background: url("../images/btn_bg.png");
   background-size: 100% 100%;
   font-size: 1.3rem;
   color: #fff;
@@ -308,7 +308,7 @@ body {
 }
 .my-alert .my-alert-content {
   position: absolute;
-  top: 8rem;
+  top: 7rem;
   left: 2.35rem;
   width: 27.2rem;
   box-sizing: border-box;
@@ -323,19 +323,19 @@ body {
   padding: 0.75rem 1rem;
   width: 1.1rem;
   height: 1.1rem;
-  background: url("../images/alert_close.png?__sprite") no-repeat center center;
+  background: url("../images/alert_close.png") no-repeat center center;
   background-size: 1.1rem 1.1rem;
 }
 .my-alert .title {
   height: 4.55rem;
-  background: url("../images/ccpc_title.png?__sprite") no-repeat 5.3rem 1.45rem;
+  background: url("../images/ccpc_title.png") no-repeat 5.3rem 1.45rem;
   background-size: 14.6rem 1.2rem;
 }
 .my-alert .title .logo {
   width: 3.45rem;
   height: 2.6rem;
   display: block;
-  background: url("../images/ccpc_logo.png?__sprite") no-repeat;
+  background: url("../images/ccpc_logo.png") no-repeat;
   background-size: 100% 100%;
 }
 .my-alert .form .form-group {
@@ -355,7 +355,7 @@ body {
   border-color: red;
 }
 .my-alert .form .form-group #getCode {
-  background: url("../images/btn_bg.png?__sprite");
+  background: url("../images/btn_bg.png");
   line-height: 3.2rem;
   text-align: center;
   color: #fff;
@@ -388,7 +388,7 @@ body {
   width: 100%;
   height: 3.2rem;
   line-height: 3.2rem;
-  background: url("../images/btn_bg.png?__sprite");
+  background: url("../images/btn_bg.png");
   border-radius: 0.3rem;
 }
 .my-alert .form .form-group .warning-message {
@@ -412,7 +412,7 @@ body {
   height: 3.2rem;
   line-height: 3.2rem;
   text-align: center;
-  background: url("../images/btn_bg.png?__sprite");
+  background: url("../images/btn_bg.png");
   background-size: 100% 100%;
   font-size: 1.3rem;
   color: #fff;

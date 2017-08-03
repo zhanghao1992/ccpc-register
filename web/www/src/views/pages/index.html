@@ -183,7 +183,7 @@ $('#submit').tap(function () {
                 $(_this).removeClass('disabled');
                 if (json.code == 0) {
                     if (!json.response.masterPointRank || json.response.masterPointRank === 0) {
-                        window.location.href = '/noResult';
+                        window.location.href = '/noResult?cpId=' + util.getQueryString('cpId');
                     } else if (json.response.masterPointRank >= 1 && json.response.masterPointRank <= 2016) {
                         //
                         if (json.response.matchPlaceId && json.response.matchDayId) {
