@@ -1,0 +1,1 @@
+function getBadgeImg(e,a){$.each(badgesList,function(c,g){g.gradeCode==a&&$(e).prop("src",g.badgeSrc)})}var badgesList=[{levelName:"终身特级大师",gradeCode:101,badgeSrc:"/static/common/images/badges/zstj.png"}],cpList=[{cpName:"北京联众互动网络股份有限公司",QRsrc:"/static/common/images/QRcodes/lzaz.png",cpId:"e44ab68b1c7bb15fc7e014103"}];

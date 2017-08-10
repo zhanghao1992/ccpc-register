@@ -74,7 +74,7 @@
                     <ul class="fl">
                         <li>{{userInfo.realName}}</li>
                         <li>{{userInfo.levelName}}</li>
-                        <li>大师分排名{{userInfo.masterPointRank}}名</li>
+                        <li>大师分排名：{{userInfo.masterPointRank}}名</li>
                     </ul>
                 </div>
                 <div class="info-alert-bott">
@@ -166,9 +166,10 @@ $.ajax({
         if (json.code == 0) {
             dayLiist = json.response.list;
             $('#dayList').html(baidu.template('dayListTmpl', {data: json}));
-            $('.check-box').eq(0).find('li').eq(json.response.listCount).addClass('active');
-            $('.check-box').eq(0).find('li').each(function (k, v) {
-                if ($(v).hasClass('active')) {
+
+            $('#dayList').find('li').each(function (k,v) {
+                if($(v).data('id') === json.response.listCount){
+                    $(v).addClass('active');
                     matchDayId = $(v).data('id');
                 }
             });
@@ -222,7 +223,6 @@ $.ajax({
 //时间选择切换
 $('.check-box').eq(0).delegate('li', 'tap', function () {
     var _this = this;
-    console.log($(this).parent('ul li'))
     if ($(this).hasClass('disabled')) {
         return false;
     } else {
@@ -246,7 +246,6 @@ $('.check-box').eq(0).delegate('li', 'tap', function () {
                 dataType: 'json',
                 cache: false,
                 success: function (json) {
-                    addressList = json.response;
                     if (json.code == 0) {
                         $('#addressList').html(baidu.template('addressListTmpl', {data: json}));
                         $('.check-box').eq(1).find('li').eq(json.response.listCount).addClass('active');
@@ -292,28 +291,31 @@ $('.check-box').eq(1).delegate('li', 'tap', function () {
 });
 
 //点击提交
-$('#submit').tap(function () {
+$('.fillInfo-wrap-bottom').delegate('#submit', 'tap', function () {
     $('#agreement-alert').show();
-    $('.check-box').eq(0).find('li').each(function (k, v) {
+
+    $('#dayList').find('li').each(function (k, v) {
         if ($(v).hasClass('active')) {
             dayId = $(v).data('id');
         }
     });
-    $('.check-box').eq(1).find('li').each(function (k, v) {
+    $('#addressList').find('li').each(function (k, v) {
         if ($(v).hasClass('active')) {
             matchPlaceId = $(v).data('id');
         }
     });
-
-    $(dayLiist).each(function (k, v) {
+    $.each(dayLiist, function (k, v) {
         if (v.id == dayId) {
             dayInfo = v;
         }
     });
-
-    $(addressList).each(function (k, v) {
+    console.log(matchPlaceId)
+    console.log(addressList)
+    $.each(addressList, function (k, v) {
+        console.log(v.matchPlaceId)
         if (v.matchPlaceId == matchPlaceId) {
             addrssInfo = v;
+            console.log(11111111111111)
         }
     });
     console.log(addrssInfo)
@@ -368,7 +370,6 @@ $('#confirm').tap(function () {
         dataType: 'json',
         cache: false,
         success: function (json) {
-            $(_this).removeClass('disabled');
             if (json.code == 0) {
                 window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + util.getQueryString('idNumber');
             } else {
@@ -376,6 +377,7 @@ $('#confirm').tap(function () {
                     content: json.msg,
                     duration: 1000
                 });
+                $(_this).removeClass('disabled');
                 return false;
             }
         },
@@ -407,7 +409,7 @@ function loaded() {
     <p><%=v.place%>(剩<%=v.remainPlayers%>个名额)</p>
 </li>
 <% }else{ %>
-<li class="disabled" data-id="<%=v.id%>">
+<li class="disabled" data-id="<%=v.matchPlaceId%>">
     <span></span>
     <p><%=v.place%>(已报满)</p>
 </li>

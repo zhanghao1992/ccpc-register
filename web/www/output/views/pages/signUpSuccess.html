@@ -13,10 +13,12 @@
         <div id="info" class="info">
 
         </div>
+
         <nav class="btns clearfix">
             <a href="javascript:void(0);" id="back">返回</a>
             <a href="javascript:void(0);" id="share">分享</a>
         </nav>
+        <a class="agreement" href="javascript:void (0);">《CCPC全国二打一扑克锦标赛报名协议》</a>
         <footer class="foot">
             <p>
                 1.最多一次修改参赛时间、地点的机会，且打联系电话010-87559363
@@ -46,6 +48,23 @@
             </nav>
         </div>
     </div>
+
+    <div id="agreement-alert" class="my-alert">
+            <div class="my-alert-content">
+                <span id="agreement-close" class="my-alert-close"></span>
+                <h3>CCP锦标赛报名协议</h3>
+                <div class="text">
+                    <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
+                        师分排名2200名禄禄二级牌手大师分排名2200
+                        2200名禄禄二级牌手大师分排名2200名禄禄二级
+                        牌手大师分排名2200名禄禄二级牌手大师分排名
+                        2200名禄禄二级牌手大师分排名2200名禄禄二级
+                        牌手大师分排名2200名禄禄二级牌手大师分排名
+                        2200名禄禄二级牌手大师分排名2200名
+                    </p>
+                </div>
+            </div>
+        </div>
 </section>
 
 <script>
@@ -118,6 +137,15 @@ switch (hash) {
 
 }
 
+$('.agreement').tap(function () {
+    $('#agreement-alert').show();
+});
+
+//关闭协议弹窗
+$('#agreement-close').tap(function () {
+    $('#agreement-alert').hide();
+});
+
 $.ajax({
     url: '/api/getCurrentUserMatchApply',
     type: 'GET',
@@ -145,7 +173,6 @@ $.ajax({
             content: '出错',
             duration: 1000
         });
-        $(_this).removeClass('disabled');
         return false;
     }
 });

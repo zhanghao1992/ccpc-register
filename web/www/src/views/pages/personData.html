@@ -16,18 +16,18 @@
             <img class="fr" src="/static/common/images/ccpc_logo.png" alt="">
         </header>
         <div class="content">
-            <div id="info">
+            <div id="zhangf">
 
                 <div class="content-top clearfix">
                     <img id="badge" class="fl" src="/static/common/images/touxiang.png" alt="">
                     <ul class="fl">
                         <li>{{userInfo.realName}}</li>
                         <li>{{userInfo.levelName}}</li>
-                        <li>大师分排名{{userInfo.masterPointRank}}名</li>
+                        <li>大师分排名：{{userInfo.masterPointRank}}名</li>
                     </ul>
                 </div>
 
-                {% if info.masterPointRank <= 2016 %}
+                {% if userInfo.masterPointRank <= 2016 %}
                 <div class="encourage">
                     <img src="/static/common/images/encourage.png" alt="">
                 </div>
@@ -44,7 +44,7 @@
                         截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
                     </p>
 
-                    {% if info.masterPointRank <= 2016 %}
+                    {% if userInfo.masterPointRank <= 2016 %}
                     <div class="fig-box clearfix">
                         <div class="fig-item">
                             <h3 class="title">全国大师分排名</h3>
@@ -68,7 +68,7 @@
                     </div>
                     {% endif %}
 
-                    {% if info.masterPointRank <= 2016 %}
+                    {% if userInfo.masterPointRank <= 2016 %}
                     <div class="progress-bar">
                         <span class="pot"></span>
                     </div>
@@ -88,7 +88,7 @@
             </nav>
 
             <a class="agreement" href="javascript:void (0);">《CCPC全国二打一扑克锦标赛报名协议》</a>
-            <p class="warning">当前页面的大师分排名截至2017年11月6日24：00</p>
+            <p class="warning">当前页面的大师分排名截至2017年11月12日24：00</p>
         </div>
 
     </section>

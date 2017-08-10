@@ -53,8 +53,6 @@ module.exports = {
         }
 
         //厂商cpId是否合法
-
-        console.log('11100')
         var isCp = false;
         cpList.forEach(function (k, index) {
             if (k.cpId == req.query.cpId) {

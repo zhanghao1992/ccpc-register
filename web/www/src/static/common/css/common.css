@@ -266,8 +266,16 @@ body {
   padding-left: 1.75rem;
   margin-top: 1.4rem;
 }
+.singUpSuccessWrap .agreement {
+  margin-top: 1rem;
+  display: block;
+  font-size: 0.9rem;
+  color: #1548bb;
+  text-align: center;
+  line-height: 1.5rem;
+}
 .singUpSuccessWrap .btns {
-  margin-top: 7.05rem;
+  margin-top: 6rem;
 }
 .singUpSuccessWrap .btns a {
   float: left;

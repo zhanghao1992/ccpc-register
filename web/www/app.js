@@ -2,12 +2,11 @@ var express = require('express');
 var session = require('express-session');
 var path = require('path');
 var swig = require('swig');
-var cache = require('memory-cache');
 
-var log4js = require('log4js');
-log4js.configure("./log4js.json");
-var logger = log4js.getLogger('logger');
-logger.setLevel('ERROR');
+// var log4js = require('log4js');
+// log4js.configure("./log4js.json");
+// var logger = log4js.getLogger('logger');
+// logger.setLevel('ERROR');
 
 var index = require('./routes/index.js');
 var common = require('./routes/common/main.js');
@@ -32,7 +31,7 @@ if (config.release) {
 
 app.set('view engine', 'html');
 
-app.use(log4js.connectLogger(logger, {level: 'auto', format: ':method :url'}));
+// app.use(log4js.connectLogger(logger, {level: 'auto', format: ':method :url'}));
 
 app.use(session({//todo 参数含义
     secret: '12345',

@@ -62,6 +62,19 @@ router.get('/simulationCp', function (req, res, next) {
     res.render('pages/simulationCp');
 });
 
+router.get('/demo', function (req, res, next) {
+    res.render('pages/demo');
+});
+
+
+
+
+
+
+
+
+
+
 //手机验证码接口
 router.get('/api/sendMobileCode', function (req, res, next) {
     vService.transfer(req, res, {path: '/apply/sendMobileCode'});
@@ -84,15 +97,9 @@ router.post('/api/getQualification', function (req, res, next) {
     // }
 });
 
-//点我报名接口
-router.post('/api/clickToEntry', function (req, res, next) {
-    res.send(JSON.stringify({
-        code: 0,
-        response: '',
-        mes: 'success'
-    }));
-    // vService.transfer(req, res, {path: '/match-user/focusMatch', url: 'http://172.21.120.241:8080/', auth: {type: 'player'}});
-    // vService.transfer(req, res, {path: '/dictionary/getCityDictionaryList'});
+//是否到达报名时间
+router.get('/api/getCurrentTime', function (req, res) {
+    vService.transfer(req, res, {path: '/apply/getCurrentTime'});
 });
 
 //返回退出接口
