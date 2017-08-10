@@ -189,7 +189,7 @@ public class ApplyController extends BaseController {
         if (userModel==null) {
             ResponseRatingForQueryInfo responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
             if (responseRatingForQueryInfo == null) {
-                return ResponseResult.errorResult("没有该用户的大师分数据");
+                return ResponseResult.successResult("没有该用户的大师分数据");
             } else {
                 if (!realName.trim().equals(responseRatingForQueryInfo.getPlayer_name().trim())) {
                     return ResponseResult.errorResult("姓名和身份证号不匹配");
