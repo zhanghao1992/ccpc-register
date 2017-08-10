@@ -15,8 +15,12 @@ public class CpSource {
     @Column(name = "id",nullable = false)
     private Integer id;
 
-    @Column(name = "code",nullable = false)
-    private String code;
+    @Column(name = "cpId",nullable = true)
+    private String cpId;
+
+    @Column(name = "cpIdCode",nullable = true)
+    private String cpIdCode;
+
 
     @Column(name = "createDate")
     private Date createDate;
@@ -29,12 +33,20 @@ public class CpSource {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getCpIdCode() {
+        return cpIdCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCpIdCode(String cpIdCode) {
+        this.cpIdCode = cpIdCode;
+    }
+
+    public String getCpId() {
+        return cpId;
+    }
+
+    public void setCpId(String cpId) {
+        this.cpId = cpId;
     }
 
     public Date getCreateDate() {

@@ -8,6 +8,8 @@ import java.util.Date;
 public class UserModel {
     private Integer id;
 
+    private  String userId;
+
     private String realName;
 
     private String idNumber;
@@ -18,6 +20,9 @@ public class UserModel {
 
     //等级
     private String levelCode;
+
+    //等级名字
+    private String levelName;
 
     //大师分排名
     private Integer MasterPointRank;
@@ -46,6 +51,14 @@ public class UserModel {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getRealName() {
@@ -142,5 +155,13 @@ public class UserModel {
 
     public void setPlaceDetail(String placeDetail) {
         this.placeDetail = placeDetail;
+    }
+
+    public String getLevelName() {
+        return levelName;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
     }
 }

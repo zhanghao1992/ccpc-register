@@ -2,10 +2,7 @@ package com.zhongqi.service.impl;
 
 import com.zhongqi.dao.*;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
-import com.zhongqi.entity.MatchApply;
-import com.zhongqi.entity.MatchDay;
-import com.zhongqi.entity.MatchPlace;
-import com.zhongqi.entity.User;
+import com.zhongqi.entity.*;
 import com.zhongqi.model.UserModel;
 import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.service.MatchApplyService;
@@ -46,6 +43,9 @@ public class UserServiceImpl implements UserService {
     private MatchApplyService matchApplyService;
 
     @Autowired
+    private RatingPersonLeverDetailJpaDao ratingPersonLeverDetailJpaDao;
+
+    @Autowired
     UserDao userDao;
 
     @Override
@@ -56,75 +56,26 @@ public class UserServiceImpl implements UserService {
         if (user==null){
             this.addUser(realName, idNumber, mobile);
         }else {
-            this.updateUser(realName,idNumber,mobile, user.getId());
+            this.updateUser(idNumber,mobile, user.getId());
         }
         user = userJpaDao.findByIdNumber(idNumber);
         if (user!=null) {
-            userModel = new UserModel();
-            userModel.setId(user.getId());
-            userModel.setMobile(user.getMobile());
-            userModel.setRealName(user.getRealName());
-            ResponseRatingForQueryInfo responseRatingForQueryInfo =null;
-            if (BaseUtils.compareCurrentTime(cutOffDate)){
-                responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
-            }else{
-                responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
-            }
-
-            if (responseRatingForQueryInfo != null) {
-                userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
-                userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
-            }
-            MatchApply matchApply =matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
-            if (matchApply!=null){
-                MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
-                if (matchDay!=null){
-                    userModel.setMatchDayId(matchApply.getMatchDayId());
-                    userModel.setDayInfo(matchDay.getDayInfo());
-                    userModel.setDayInfoDetail(matchDay.getDayInfoDetail());
-                }
-                MatchPlace matchPlace =matchPlaceJpaDao.findById(matchApply.getId());
-                if (matchPlace!=null){
-                    userModel.setMatchPlaceId(matchApply.getId());
-                    userModel.setPlace(matchPlace.getPlace());
-                    userModel.setPlaceDetail(matchPlace.getPlaceDetail());
-                }
-            }
+            userModel=this.getUserModel(user);
+            userModel =this.getMatchApply(userModel,idNumber);
         }
         return userModel;
 
     }
 
-
     @Override
     public UserModel getCurrentUser(String idNumber) {
-        UserModel userModel =new UserModel();
-        ResponseRatingForQueryInfo responseRatingForQueryInfo =null;
-        if (BaseUtils.compareCurrentTime(cutOffDate)){
-            responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
-        }else{
-            responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
-        }
 
-
-        if (responseRatingForQueryInfo != null) {
-            userModel.setLevelCode(responseRatingForQueryInfo.getLevel_name());
-            userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
-        }
-        MatchApply matchApply =matchApplyJpaDao.findByIdNumberAndStatus(idNumber,MATCH_Apply_NORMAL);
-        if (matchApply!=null){
-            MatchDay matchDay =matchDayJpaDao.findById(matchApply.getMatchDayId());
-            if (matchDay!=null){
-                userModel.setMatchDayId(matchApply.getMatchDayId());
-                userModel.setDayInfo(matchDay.getDayInfo());
-                userModel.setDayInfoDetail(matchDay.getDayInfoDetail());
-            }
-            MatchPlace matchPlace =matchPlaceJpaDao.findById(matchApply.getId());
-            if (matchPlace!=null){
-                userModel.setMatchPlaceId(matchApply.getId());
-                userModel.setPlace(matchPlace.getPlace());
-                userModel.setPlaceDetail(matchPlace.getPlaceDetail());
-            }
+        User user=null;
+        UserModel userModel =null;
+        user = userJpaDao.findByIdNumber(idNumber);
+        if (user!=null) {
+            userModel=this.getUserModel(user);
+            userModel =this.getMatchApply(userModel,idNumber);
         }
         return userModel;
     }
@@ -142,9 +93,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(String realName, String idNumber, String mobile, Integer id) {
+    public void updateUser( String idNumber, String mobile, Integer id) {
         User user= userJpaDao.findByIdNumber(idNumber);
-        user.setRealName(realName);
         user.setMobile(mobile);
         userJpaDao.save(user);
     }
@@ -161,6 +111,66 @@ public class UserServiceImpl implements UserService {
         return userJpaDao.findById(userId);
     }
 
+    private String  getRelevanceUser(Integer userId) {
+        RelevanceUser relevanceUser = null;
+        if (userId != null && userId != 0) {
+            relevanceUser = matchApplyService.findByUserId(userId);
+            if (relevanceUser == null) {
+                relevanceUser = matchApplyService.createRelevanceUserId(userId);
+            }
+        }
+        relevanceUser = matchApplyService.findByUserId(userId);
+        return relevanceUser.getUserIdCode();
 
-    private static Integer MATCH_Apply_NORMAL=1;
+    }
+
+    private UserModel getUserModel(User user){
+        UserModel userModel =new UserModel();
+        String userIdCode = this.getRelevanceUser(user.getId());
+        userModel = new UserModel();
+        userModel.setId(user.getId());
+        userModel.setUserId(userIdCode);
+        userModel.setMobile(user.getMobile());
+        userModel.setRealName(user.getRealName());
+        userModel.setIdNumber(user.getIdNumber());
+        return userModel;
+    }
+
+
+    private UserModel getMatchApply(UserModel userModel,String idNumber) {
+        ResponseRatingForQueryInfo responseRatingForQueryInfo = null;
+        if (BaseUtils.compareCurrentTime(cutOffDate)) {
+            responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
+        } else {
+            responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
+        }
+
+
+        if (responseRatingForQueryInfo != null) {
+            RatingPersonLeverDetail ratingPersonLeverDetail =ratingPersonLeverDetailJpaDao.findByLevelName(responseRatingForQueryInfo.getLevel_name());
+            if (ratingPersonLeverDetail!=null){
+                userModel.setLevelCode(ratingPersonLeverDetail.getGradeCode().toString());
+                userModel.setLevelName(responseRatingForQueryInfo.getLevel_name());
+            }
+            userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
+        }
+        MatchApply matchApply = matchApplyJpaDao.findByIdNumberAndStatus(idNumber, MATCH_Apply_NORMAL);
+        if (matchApply != null) {
+            MatchDay matchDay = matchDayJpaDao.findById(matchApply.getMatchDayId());
+            if (matchDay != null) {
+                userModel.setMatchDayId(matchApply.getMatchDayId());
+                userModel.setDayInfo(matchDay.getDayInfo());
+                userModel.setDayInfoDetail(matchDay.getDayInfoDetail());
+            }
+            MatchPlace matchPlace = matchPlaceJpaDao.findById(matchApply.getMatchPlaceId());
+            if (matchPlace != null) {
+                userModel.setMatchPlaceId(matchApply.getId());
+                userModel.setPlace(matchPlace.getPlace());
+                userModel.setPlaceDetail(matchPlace.getPlaceDetail());
+            }
+        }
+        return userModel;
+    }
+
+        private static Integer MATCH_Apply_NORMAL=1;
 }

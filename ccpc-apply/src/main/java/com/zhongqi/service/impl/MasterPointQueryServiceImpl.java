@@ -40,9 +40,11 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
         JSONObject result = HttpRequestUtils.httpGetJsonObject(url+"/rating/by_identity_number.do"+params);
         String ranking =result.get("ranking").toString();
         String level_name=result.get("level_name").toString();
+        String player_name=result.get("player_name").toString();
         ResponseRatingForQueryInfo responseRatingForQueryInfo =new ResponseRatingForQueryInfo();
         responseRatingForQueryInfo.setLevel_name(level_name);
         responseRatingForQueryInfo.setRanking(Integer.parseInt(ranking));
+        responseRatingForQueryInfo.setPlayer_name(player_name);
         return responseRatingForQueryInfo;
     }
 

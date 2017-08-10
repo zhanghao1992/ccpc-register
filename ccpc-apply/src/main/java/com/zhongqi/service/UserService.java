@@ -28,7 +28,7 @@ public interface UserService {
     /**
      * 更新用户信息
      */
-    public void updateUser(String realName,String idNumber,String mobile,Integer id);
+    public void updateUser(String idNumber,String mobile,Integer id);
 
     public int[] addUser(List<User> list );
 
