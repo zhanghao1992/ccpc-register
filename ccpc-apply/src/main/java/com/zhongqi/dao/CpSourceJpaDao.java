@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CpSourceJpaDao extends JpaRepository<CpSource,Integer> {
+    public CpSource findByCpId(String cpId);
+
+    public CpSource findByCpIdCode(String cpIdCode);
+
 }

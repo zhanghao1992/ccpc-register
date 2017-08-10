@@ -5,6 +5,9 @@ package com.zhongqi.model;
  */
 public class MatchApplySkuInfo {
 
+
+    private Integer id;
+
     private Integer matchDayId;
 
     private Integer matchPlaceId;
@@ -15,10 +18,8 @@ public class MatchApplySkuInfo {
 
     private String placeDetail;
 
+//    private Boolean checkPeople;
 
-    public Integer getMatchDayId() {
-        return matchDayId;
-    }
 
     public void setMatchDayId(Integer matchDayId) {
         this.matchDayId = matchDayId;
@@ -54,5 +55,15 @@ public class MatchApplySkuInfo {
 
     public void setPlaceDetail(String placeDetail) {
         this.placeDetail = placeDetail;
+    }
+
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

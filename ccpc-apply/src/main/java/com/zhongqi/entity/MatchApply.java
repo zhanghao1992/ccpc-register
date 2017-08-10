@@ -14,6 +14,9 @@ public class MatchApply {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "cpIdCode")
+    private String  cpIdCode;
+
     @Column(name = "idNumber")
     private String idNumber;
 
@@ -75,5 +78,13 @@ public class MatchApply {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getCpIdCode() {
+        return cpIdCode;
+    }
+
+    public void setCpIdCode(String cpIdCode) {
+        this.cpIdCode = cpIdCode;
     }
 }

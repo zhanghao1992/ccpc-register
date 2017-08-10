@@ -1,11 +1,14 @@
 package com.zhongqi.service;
 
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
-import com.zhongqi.entity.*;
-import com.zhongqi.model.MatchApplySkuInfo;
+import com.zhongqi.entity.CpSource;
+import com.zhongqi.entity.MatchApply;
+import com.zhongqi.entity.PersonRatingRank;
+import com.zhongqi.entity.RelevanceUser;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ningcs on 2017/7/4.
@@ -16,13 +19,13 @@ public interface MatchApplyService {
     public ResponseRatingForQueryInfo findMasterPointsRank(String idNumber);
 
     //获取报名时间列表
-    public List<MatchDay> getMatchApplyDayList();
+    public Map<String,Object> getMatchApplyDayList();
 
     //获取报名时间+地点的动态“库存”统计信息
-    public List<MatchApplySkuInfo> findByMatchDayId(Integer matchDayId);
+    public Map<String,Object> findByMatchDayId(Integer matchDayId );
 
     //报名参赛
-    public void applyMatch(Integer matchDayId, Integer matchPlaceId,String idNumber);
+    public void applyMatch(String cpId,Integer matchDayId, Integer matchPlaceId,String idNumber);
 
     //获取等级
     public String getStandardName(BigDecimal g, BigDecimal s, BigDecimal r);
@@ -40,7 +43,7 @@ public interface MatchApplyService {
     public MatchApply findByIdNumber(String idNumber);
 
     //添加厂商访问记录
-    public void getCpSource(String code);
+    public String addCpSource(String cpId);
 
     //生成关联userIdCode
     public RelevanceUser createRelevanceUserId(Integer userId);
@@ -50,6 +53,16 @@ public interface MatchApplyService {
 
     //效验userId
     public RelevanceUser findByUserId(Integer  userId);
+
+    //添加厂商访问记录
+    public void AddCpHotCount(String cpId);
+
+    //添加报名人数
+    public void  addMatchApplySkuCount(Integer matchDayId, Integer matchPlaceId);
+
+    //效验厂商
+    public CpSource findByCpIdCode(String cpIdCode);
+
 
 
 
