@@ -1,4 +1,4 @@
 module.exports = {
     port: 8008,
-    release: false
+    release: true
 };

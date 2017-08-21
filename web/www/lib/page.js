@@ -1,4 +1,5 @@
 var session = require('./session');
+const url = require("url");
 var cpList = [
     {
         cpName: '北京联众互动网络股份有限公司',
@@ -59,10 +60,13 @@ module.exports = {
                 isCp = true;
             }
         })
+
         if (!isCp) {
             res.redirect('/errorCp');
             return false;
         }
+
+        console.log(req.query)
 
 
         if (req.session.user) {

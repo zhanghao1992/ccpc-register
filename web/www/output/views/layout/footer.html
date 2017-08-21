@@ -6,8 +6,6 @@
 <script>
 function footFixed() {
     $('body').css('height', 'auto');
-//    console.log($('body').height())
-//    console.log($(window).height())
     if($('body').height() < $(window).height() - $('.foot').outerHeight()) {
         $('body').css('height', $(window).height()- $('.foot').outerHeight());
         $('.foot').css({
@@ -21,6 +19,5 @@ function footFixed() {
             'margin-top': '50px'
         });
     }
-//    alert($('body').height())
 }
 </script>

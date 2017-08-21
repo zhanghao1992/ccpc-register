@@ -20,7 +20,6 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #aaa;
   overflow: auto;
 }
 .overflow {
@@ -35,12 +34,12 @@ body {
   position: relative;
   .top {
     height: 546/@rem;
-    background: url("/static/common/images/top_bg_6522bc1.png") no-repeat;
+    background: url("/static/common/images/top_bg_d79f79d.png") no-repeat;
     background-size: 100% 100%;
   }
   .starts {
     height: 182/@rem;
-    background: url("/static/common/images/starts_4fe42bb.png") no-repeat;
+    background: url("/static/common/images/starts_8c42b05.png") no-repeat;
     background-size: 100% 100%;
   }
   .bonus {
@@ -60,7 +59,8 @@ body {
     width: 579/@rem;
     margin: 58/@rem auto 0;
     padding-bottom: 20/@rem;
-    background: url("/static/common/images/share_data_bg_e348a91.png");
+    background: url("/static/common/images/share_data_bg_e348a91.png") no-repeat;
+    background-size: 100% 100%;
     .data-top {
       text-align: center;
       img {
@@ -137,7 +137,7 @@ body {
     margin: 0 auto;
     width: 579/@rem;
     height: 645/@rem;
-    background: url("/static/common/images/desription_bg_1d976b9.png") no-repeat;
+    background: url("/static/common/images/desription_bg_39ef7cd.png") no-repeat;
     background-size: 100% 100%;
     .des-btns {
       display: block;
@@ -149,7 +149,7 @@ body {
         height: 151/@rem;
       }
       a:nth-of-type(1) {
-        background: url("/static/common/images/des_btn1_bg_57f76ad.png") no-repeat;
+        background: url("/static/common/images/des_btn1_h_bg_b6de091.png") no-repeat;
         background-size: 100% 100%;
       }
       //a:nth-of-type(1):active {
@@ -165,6 +165,10 @@ body {
         background: url("/static/common/images/des_btn3_bg_23f7a7c.png") no-repeat;
         background-size: 100% 100%;
         padding-top: 24/@rem;
+      }
+      a:nth-of-type(1).active {
+        background: url("/static/common/images/des_btn1_bg_57f76ad.png") no-repeat;
+        background-size: 100% 100%;
       }
       #noClick {
         background: url("/static/common/images/des_btn1_h_bg_b6de091.png") no-repeat;
@@ -440,6 +444,26 @@ body {
     }
     a:nth-of-type(1) {
       margin: 0 120/@rem 0 20/@rem;
+    }
+  }
+}
+#agreement-alert {
+  .my-alert-content {
+    padding: 46/@rem 21/@rem 28/@rem;
+  }
+  h3 {
+    font-size: 22/@rem;
+    color: #000;
+    text-align: center;
+    line-height: 60/@rem;
+  }
+  .text {
+    background: #f0f4fe;
+    padding: 30/@rem 27/@rem 28/@rem;
+    border-radius: 6/@rem;
+    p {
+      line-height: 34/@rem;
+      color: #000;
     }
   }
 }

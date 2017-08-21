@@ -46,8 +46,8 @@
 
     <div id="agreement-alert" class="my-alert">
         <div class="my-alert-content">
-            <span id="agreement-close" class="my-alert-close"></span>
-            <h3>CCP锦标赛报名协议</h3>
+            <span id="agreement-close"></span>
+            <h3>CCPC锦标赛报名协议</h3>
             <div class="text">
                 <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
                     师分排名2200名禄禄二级牌手大师分排名2200
@@ -63,7 +63,7 @@
     </div>
 
     <div id="info-alert" class="my-alert">
-        <div class="my-alert-content">
+        <div id="my-alert-content" class="my-alert-content">
             <span id="info-close" class="my-alert-close"></span>
             <h3>
                 <img src="/static/common/images/info_alert_title_f9c2c76.png" alt="">
@@ -81,7 +81,7 @@
                     <ul>
                         <li class="clearfix"><span></span><p></p></li>
                         <li class="clearfix"><span></span><p></p></li>
-                        <li class="clearfix"><span></span><p></p></li>
+                        <li class="clearfix"><span></span><p>详细地址：<em class="copy"></em></p></li>
                     </ul>
                 </div>
             </div>
@@ -115,6 +115,10 @@ window.location.href = 'index?cpId=' + util.getQueryString('cpId');
 getBadgeImg('#badge', '{{userInfo.levelCode}}');
 //返回退出
 $('#back').tap(function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#back-alert').show();
     $('#yes').tap(function () {
         $('#back-alert').hide();
@@ -146,9 +150,10 @@ $('#back').tap(function () {
     });
     $('#no').tap(function () {
         $('#back-alert').hide();
+        loaded();
     });
     $('#back-close').tap(function () {
-        $('#back-alert').hide();
+        loaded();
     });
     return false;
 });
@@ -292,6 +297,10 @@ $('.check-box').eq(1).delegate('li', 'tap', function () {
 
 //点击提交
 $('.fillInfo-wrap-bottom').delegate('#submit', 'tap', function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#agreement-alert').show();
 
     $('#dayList').find('li').each(function (k, v) {
@@ -309,32 +318,23 @@ $('.fillInfo-wrap-bottom').delegate('#submit', 'tap', function () {
             dayInfo = v;
         }
     });
-    console.log(matchPlaceId)
-    console.log(addressList)
     $.each(addressList, function (k, v) {
-        console.log(v.matchPlaceId)
         if (v.matchPlaceId == matchPlaceId) {
             addrssInfo = v;
-            console.log(11111111111111)
         }
     });
-    console.log(addrssInfo)
 
     $('.info-alert-bott li').eq(0).find('p').html('参赛时间：' + dayInfo.dayInfDetail || '待定');
     $('.info-alert-bott li').eq(1).find('p').html('参赛地点：' + addrssInfo.place || '待定');
-    $('.info-alert-bott li').eq(2).find('p').html('详细地址：' + (function fn() {
+    $('.info-alert-bott li').find('.copy').html((function () {
         return !addrssInfo.placeDetail ? '待定' : addrssInfo.placeDetail;
     })());
 });
 
 //关闭协议弹窗
 $('#agreement-close').tap(function () {
-//    $("#agreement-alert").anim({
-//        opacity: '0'
-//    }, 0.3, 'linear', function () {
-//        $("#agreement-alert").hide()
-//    }, 0);
     $('#agreement-alert').hide();
+    loaded();
 });
 
 //同意协议
@@ -344,10 +344,12 @@ $('#agree').tap(function () {
 });
 
 $('#info-close').tap(function () {
+    loaded();
     $('#info-alert').hide();
 });
 //重新填写报名信息
 $('#recheck').tap(function () {
+    loaded();
     $('#info-alert').hide();
 });
 
@@ -370,19 +372,19 @@ $('#confirm').tap(function () {
         dataType: 'json',
         cache: false,
         success: function (json) {
+            $(_this).removeClass('disabled');
             if (json.code == 0) {
                 window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + util.getQueryString('idNumber');
             } else {
-                $('.fillInfo-wrap').toast({
+                $('#my-alert-content').toast({
                     content: json.msg,
                     duration: 1000
                 });
-                $(_this).removeClass('disabled');
                 return false;
             }
         },
         error: function () {
-            $('.fillInfo-wrap').toast({
+            $('#my-alert-content').toast({
                 content: '出错',
                 duration: 1000
             });
@@ -396,7 +398,10 @@ $('#confirm').tap(function () {
 var myScroll;
 
 function loaded() {
-    myScroll = new IScroll('#wrapper');
+    myScroll = new IScroll('#wrapper',{
+        preventDefault: false,
+        bounce: false
+    });
 }
 </script>
 

@@ -20,7 +20,6 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #aaa;
   overflow: auto;
 }
 .overflow {
@@ -60,7 +59,8 @@ body {
     width: 579/@rem;
     margin: 58/@rem auto 0;
     padding-bottom: 20/@rem;
-    background: url("../images/share_data_bg.png");
+    background: url("../images/share_data_bg.png") no-repeat;
+    background-size: 100% 100%;
     .data-top {
       text-align: center;
       img {
@@ -149,7 +149,7 @@ body {
         height: 151/@rem;
       }
       a:nth-of-type(1) {
-        background: url("../images/des_btn1_bg.png") no-repeat;
+        background: url("../images/des_btn1_h_bg.png") no-repeat;
         background-size: 100% 100%;
       }
       //a:nth-of-type(1):active {
@@ -165,6 +165,10 @@ body {
         background: url("../images/des_btn3_bg.png") no-repeat;
         background-size: 100% 100%;
         padding-top: 24/@rem;
+      }
+      a:nth-of-type(1).active {
+        background: url("../images/des_btn1_bg.png") no-repeat;
+        background-size: 100% 100%;
       }
       #noClick {
         background: url("../images/des_btn1_h_bg.png") no-repeat;
@@ -440,6 +444,26 @@ body {
     }
     a:nth-of-type(1) {
       margin: 0 120/@rem 0 20/@rem;
+    }
+  }
+}
+#agreement-alert {
+  .my-alert-content {
+    padding: 46/@rem 21/@rem 28/@rem;
+  }
+  h3 {
+    font-size: 22/@rem;
+    color: #000;
+    text-align: center;
+    line-height: 60/@rem;
+  }
+  .text {
+    background: #f0f4fe;
+    padding: 30/@rem 27/@rem 28/@rem;
+    border-radius: 6/@rem;
+    p {
+      line-height: 34/@rem;
+      color: #000;
     }
   }
 }

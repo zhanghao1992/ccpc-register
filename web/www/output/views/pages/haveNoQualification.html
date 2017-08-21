@@ -4,10 +4,20 @@
 {% include '../layout/template.html' %}
 {% include '../layout/list.html' %}
 {% include '../layout/toast.html' %}
-<link rel="stylesheet" href="/static/common/css/personData_e2e3c44.css">
+<link rel="stylesheet" href="/static/common/css/personData_c3b1dd4.css">
 {% endblock %}
 
 {% block content %}
+<script>
+//分享页面跳转
+var hash = window.location.href.split('#')[1];
+switch (hash) {
+    case 'shareQRcode':
+        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+        break;
+
+}
+</script>
 
 <div id="wrapper">
     <section class="person-wrap" style="height: 100%;">
@@ -41,23 +51,15 @@
             </nav>
 
             <a class="agreement" href="javascript:void (0);">《CCPC全国二打一扑克锦标赛报名协议》</a>
-            <p class="warning">当前页面的大师分排名截至2017年11月6日24：00</p>
+            <p class="warning">当前页面的大师分排名截至2017年11月12日24：00</p>
         </div>
 
     </section>
-    <div id="share-alert" class="my-alert">
-        <div>
-            <div class="my-alert-content">
-                <span id="share-close" class="my-alert-close"></span>
-                <p>点击分享按钮进行分享</p>
-            </div>
-        </div>
-    </div>
 
     <div id="agreement-alert" class="my-alert">
         <div class="my-alert-content">
             <span id="agreement-close" class="my-alert-close"></span>
-            <h3>CCP锦标赛报名协议</h3>
+            <h3>CCPC锦标赛报名协议</h3>
             <div class="text">
                 <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
                     师分排名2200名禄禄二级牌手大师分排名2200
@@ -92,22 +94,20 @@ document.addEventListener('DOMContentLoaded', function () {
 var myScroll;
 
 function loaded() {
-    myScroll = new IScroll('#wrapper');
-}
-
-//分享页面跳转
-var hash = window.location.href.split('#')[1];
-switch (hash) {
-    case 'shareQRcode':
-        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
-        break;
-
+    myScroll = new IScroll('#wrapper', {
+        preventDefault: false,
+        bounce: false
+    });
 }
 //setTimeout(function () {
 //    window.location.hash = 'sharePersonData';
 //},500);
 
 $('#back').tap(function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#back-alert').show();
     $('#yes').tap(function () {
         $('#back-alert').hide();
@@ -139,36 +139,39 @@ $('#back').tap(function () {
     });
     $('#no').tap(function () {
         $('#back-alert').hide();
+        loaded();
     });
     $('#back-close').tap(function () {
         $('#back-alert').hide();
+        loaded();
     });
     return false;
 });
 
 //点击分享按钮
 $('#share').tap(function () {
-    $('#share-alert').show();
-    window.location.hash = 'shareQRcode';
+    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
     return false;
 });
 
-$('#share-close').tap(function () {
-    $('#share-alert').hide();
-    return false;
-});
 
 $('.agreement').tap(function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#agreement-alert').show();
 });
 
 //关闭协议弹窗
 $('#agreement-close').tap(function () {
     $('#agreement-alert').hide();
+    loaded();
+
 });
 
 $('.person-wrap').delegate('.goEnter', 'tap', function () {
-    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+    window.location.href = '/QRcodeT?cpId=' + util.getQueryString('cpId');
 })
 </script>
 

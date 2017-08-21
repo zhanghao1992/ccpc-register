@@ -66,7 +66,7 @@ module.exports = {
          } else if (req.baseUrl.indexOf('/xiangqi') == 0){
              return 'http://172.21.120.241:8082';
          }*/
-        return 'http://172.21.122.138:18171';
+        return 'http://172.21.120.207:18171';
     },
     requestGo: function (req, res, option, callback) {
         //使用request模块发送请求

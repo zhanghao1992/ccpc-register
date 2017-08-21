@@ -122,10 +122,10 @@ var cpList = [
         cpId: '344a218f47dcb9489cce69135'
     }
 ];
-
-function __uri(src) {
-    return src;
-}
+//
+// function __uri(src) {
+//     return src;
+// }
 
 //徽章图片
 function getBadgeImg(imgEle, levelCode) {

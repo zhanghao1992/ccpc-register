@@ -14,15 +14,19 @@
         <section class="top"></section>
         {% if QRcode %}
         <section class="qr-code">
-            <div>
-                <img id="qrcode" src="" alt="">
+            <div id="qrcode-box">
+                <img style="position: relative;z-index: 999;" id="qrcode" src="/static/common/images/QRcodes/wb.png" alt="">
             </div>
             <p class="qr-title"></p>
         </section>
         {% elseif noResult %}
         <section class="noResult">
             <div>
+                {% if signing %}
                 <img src="/static/common/images/no_result_bg.png" alt="">
+                {% else %}
+                <img src="/static/common/images/no_result_bg0.png" alt="">
+                {% endif %}
             </div>
         </section>
         {% elseif shareData %}
@@ -42,7 +46,7 @@
                     {% if QRcode %}
                     <a id="noClick" href="javascript:void(0);"></a>
                     {% else %}
-                    <a id="getQualification" href="javascript:void(0);"></a>
+                    <a id="getQualification" class="active" href="javascript:void(0);"></a>
                     {% endif %}
                     <a href="javascript:void(0);"></a>
                     <a href="javascript:void(0);"></a>
@@ -93,7 +97,7 @@
                 <div class="form-group">
                     <input id="phoneInput" type="tel" name="mobile" value="" placeholder="请输入您的手机号">
                     <a id="getCode" class="getMess" href="javascript:void(0);">获取验证码</a>
-                    <p class="error-message danger-message">报名手机号与比赛时登录竞技软件手机号一致，不可更改</p>
+                    <p class="error-message danger-message">参加CCPC锦标赛会用到该手机号，且不可更改</p>
                 </div>
                 <div class="form-group">
                     <input id="code" type="text" name="checkCode" value="" placeholder="请输入短信验证码">
@@ -111,66 +115,33 @@
                 <div class="form-group">
                     <a id="submit" class="submit" href="javascript:void(0);">点我报名</a>
                     <a id="submit2" class="submit" href="javascript:void(0);">查询资格</a>
-                    <p class="warning-message">
-                        在2017年11月12日24：00前大师分排名到全国排名前2016名的选手才具有参赛资格
-                    </p>
+                    <p class="warning-message">截至2017年11月12日24：00前大师分排名到全国排名前2016名的选手才具有参赛资格</p>
                 </div>
             </form>
         </div>
     </div>
 
 
-    <div id="share-alert" class="my-alert">
-        <div>
-            <div class="my-alert-content">
-                <span id="share-close" class="my-alert-close"></span>
-                <p>点击分享按钮进行分享</p>
-            </div>
-        </div>
-    </div>
 </section>
 
 
 <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(loaded, 200);
+}, false);
+var myScroll;
+
+function loaded() {
+    myScroll = new IScroll('#wrapper', {
+        preventDefault: false,
+        bounce: false
+    });
+}
 //验证码点击切换
 $('.getMess').tap(function () {
     $(this).prop('src', $(this).data('src') + '?_=' + new Date().getTime());
     return false;
-});
-
-//获取个人信息
-$.ajax({
-    url: '/api/getRelevanceUserId',
-    type: 'GET',
-    data: {
-        cpId: util.getQueryString('cpId'),
-        userIdCode: util.getQueryString('userIdCode')
-    },
-    dataType: 'json',
-    cache: false,
-    success: function (json) {
-        if (json.code == 0) {
-            $('#data').html(baidu.template('infoTempl', {data: json}));
-            getBadgeImg('#badge', json.response.levelCode);
-            if (myScroll) {
-                loaded();
-            }
-
-        } else {
-            $('.person-wrap').toast({
-                content: json.msg,
-                duration: 1000
-            });
-            return false;
-        }
-    },
-    error: function () {
-        $('.person-wrap').toast({
-            content: '出错',
-            duration: 1000
-        });
-        return false;
-    }
 });
 //是否到达报名时间
 $.ajax({
@@ -180,11 +151,15 @@ $.ajax({
     dataType: 'json',
     cache: false,
     success: function (json) {
-        console.log(json)
         if (json.code == 0) {
             if (json.response) {
                 $('#signUp').hide();
+                $('#getQualification').tap(function () {
+                    window.location.href = '/QRcodeT?cpId=' + util.getQueryString('cpId');
+                });
             } else {
+                $('.warning-message').hide();
+                $('#getQualification').removeClass('active');
                 $('#checkQua').hide();
             }
         } else {
@@ -202,9 +177,6 @@ $.ajax({
         });
         return false;
     }
-});
-$('#getQualification').tap(function () {
-    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
 });
 $('#signUp').tap(function () {
     if (myScroll) {
@@ -233,8 +205,9 @@ $('#submit').tap(function () {
             cache: false,
             success: function (json) {
                 if (json.code == 0) {
+                    $(_this).removeClass('disabled');
                     if (!json.response || !json.response.masterPointRank) {
-                        window.location.href = '/noResult?cpId=' + util.getQueryString('cpId');
+                        window.location.href = '/noResult1?cpId=' + util.getQueryString('cpId');
                     } else if (json.response.masterPointRank >= 1 && json.response.masterPointRank <= 2016) {
                         if (json.response.matchPlaceId && json.response.matchDayId) {
                             //有资格报过名
@@ -294,11 +267,12 @@ $('#submit2').tap(function () {
             dataType: 'json',
             cache: false,
             success: function (json) {
+                $(_this).removeClass('disabled');
                 if (json.code == 0) {
                     if (!json.response || !json.response.masterPointRank) {
-                        window.location.href = '/noResult?&cpId=' + util.getQueryString('cpId');
+                        window.location.href = '/noResult0?&cpId=' + util.getQueryString('cpId');
                     } else {
-                        window.location.href = '/personData?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId');
+                        window.location.href = '/personData?idNumber=' + json.response.idNumber + '&cpId=' + util.getQueryString('cpId') + '&userIdCode=' + json.response.userId;
                     }
                 } else {
                     $('.form').toast({
@@ -325,7 +299,7 @@ $('#submit2').tap(function () {
 
 //获取短信验证码
 var djsN, djsT;
-$('#getCode').click(function () {
+$('#getCode').tap(function () {
     var _this = this;
     if ($(_this).hasClass('disabled')) {
         return false;
@@ -380,9 +354,7 @@ $('#getCode').click(function () {
 });
 
 $('#signUp-close').tap(function () {
-    myScroll = new IScroll('#wrapper', {
-//        scrollbars: true
-    });
+    loaded();
     $('#signUp-alert').hide();
     $('.fixed-btns').show();
     $('body').removeClass('overflow');
@@ -433,20 +405,11 @@ function checkForm() {
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(loaded, 200);
-}, false);
-var myScroll;
-
-function loaded() {
-    myScroll = new IScroll('#wrapper');
-}
 
 //获取可视宽度
 
 $('.my-alert-content')[0].ontouchstart = function (ev) {
     var startY = ev.targetTouches[0].clientY - $('.my-alert-content')[0].offsetTop;
-//    console.log(startY)
     document.ontouchmove = function (ev) {
         var endY = ev.targetTouches[0].clientY;
         $('.my-alert-content').css({
@@ -462,55 +425,41 @@ $('.my-alert-content')[0].ontouchstart = function (ev) {
     }
 }
 
-//分享页面跳转
-var hash = window.location.href.split('#')[1];
-switch (hash) {
-    case 'shareQRcode':
-        window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
-        break;
-
-}
-
 //点击分享按钮
 $('#share').tap(function () {
-    $('.fixed-btns').hide();
-    $('#share-alert').show();
-    $('#wrapper').addClass('overflow');
-    window.location.hash = 'shareQRcode';
-    return false;
+    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
 });
 
-$('#share-close').tap(function () {
-    $('#share-alert').hide();
-    $('.fixed-btns').show();
-    $('#wrapper').removeClass('overflow');
-});
 </script>
+
 {% if QRcode %}
 <script>
 var cpId = util.getQueryString('cpId');
-var isCp = false;
 $.each(cpList, function (k, v) {
     if (v.cpId == cpId) {
-        console.log(v)
-        $('#qrcode').prop('src', v.QRsrc);
-        isCp = true;
+        $('#qrcode-box').html('<img id="qrcode" src="' + v.QRsrc + '" alt="">');
+        //        $('#qrcode').prop('src', v.QRsrc);
     }
 });
-if (!isCp) {
-    $('.qr-code').toast({
-        content: '厂商不合法',
-        duration: 1000
-    });
-}
-
 </script>
+{% if !noToast %}
+<script>
+$('.top').toast({
+    content: '点击分享按钮进行分享！',
+    duration: 1000
+});
+</script>
+{% endif %}
 {% endif %}
 
 <!--个人资格查询结果分享页-->
 {% if shareData %}
 <script>
 //获取个人信息
+$('.top').toast({
+    content: '点击分享按钮进行分享！',
+    duration: 1000
+});
 $.ajax({
     url: '/api/getRelevanceUserId',
     type: 'GET',
@@ -545,7 +494,7 @@ $.ajax({
     }
 });
 $('.meto a').tap(function () {
-    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+    window.location.href = '/QRcodeT?cpId=' + util.getQueryString('cpId');
 })
 </script>
 {% endif %}
@@ -564,9 +513,9 @@ $('.meto a').tap(function () {
     </ul>
 </div>
 <% if (data.response.masterPointRank > 0 && data.response.masterPointRank < 2016) { %>
-<p class="promot">您目前全国大师分排名已到前2016名，请继续保持！</p>
+<p class="promot">在竞技二打一扑克中，我已到全国前2016名了，来挑战！</p>
 <% }else{ %>
-<p class="promot">您目前全国大师分排名没到前2016名，请继续努力！</p>
+<p class="promot">在竞技二打一扑克中，我还没到全国前2016名，加油！</p>
 <% } %>
 
 </script>
@@ -576,7 +525,7 @@ $('.meto a').tap(function () {
 <script>
 $('.fixed-btns').hide();
 $('.meto a').tap(function () {
-    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+    window.location.href = '/QRcodeT?cpId=' + util.getQueryString('cpId');
 })
 </script>
 {% endif %}
