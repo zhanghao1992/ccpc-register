@@ -13,12 +13,12 @@
     <section class="wrap">
         <section class="top"></section>
         {% if QRcode %}
-        <section class="qr-code">
-            <div id="qrcode-box">
-                <img style="position: relative;z-index: 999;" id="qrcode" src="/static/common/images/QRcodes/wb_05bccfd.png" alt="">
-            </div>
-            <p class="qr-title"></p>
-        </section>
+        <!--<section class="qr-code">-->
+            <!--<div id="qrcode-box">-->
+                <!--<img style="position: relative;z-index: 999;" id="qrcode" src="/static/common/images/QRcodes/wb.png" alt="">-->
+            <!--</div>-->
+            <!--<p class="qr-title"></p>-->
+        <!--</section>-->
         {% elseif noResult %}
         <section class="noResult">
             <div>
@@ -62,8 +62,12 @@
         <div class="meto">
             <a href="javascript:void (0)">去参赛</a>
         </div>
+        {% elseif QRcode %}
+        <section class="qr-code">
+            <div id="qrcode-box"></div>
+            <p class="qr-title"></p>
+        </section>
         {% endif %}
-
     </section>
 
     {% if QRcode %}
@@ -73,8 +77,8 @@
     {% else %}
     <nav class="fixed-btns">
         <a id="share" href="javascript:void(0);">分享</a>
-        <a id="signUp" href="javascript:void(0);">点我报名</a>
-        <a id="checkQua" class="qualification" href="javascript:void(0);">查询资格</a>
+        <a id="signUp" href="javascript:void(0);" style="display: none;">点我报名</a>
+        <a id="checkQua" class="qualification" href="javascript:void(0);" style="display: none;">查询资格</a>
     </nav>
     {% endif %}
 
@@ -153,14 +157,14 @@ $.ajax({
     success: function (json) {
         if (json.code == 0) {
             if (json.response) {
-                $('#signUp').hide();
+                $('#checkQua').show();
                 $('#getQualification').tap(function () {
                     window.location.href = '/QRcodeT?cpId=' + util.getQueryString('cpId');
                 });
             } else {
                 $('.warning-message').hide();
+                $('#signUp').show();
                 $('#getQualification').removeClass('active');
-                $('#checkQua').hide();
             }
         } else {
             $('.form').toast({
