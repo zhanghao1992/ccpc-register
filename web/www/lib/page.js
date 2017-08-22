@@ -1,4 +1,5 @@
 var session = require('./session');
+const url = require("url");
 var cpList = [
     {
         cpName: '北京联众互动网络股份有限公司',
@@ -53,18 +54,19 @@ module.exports = {
         }
 
         //厂商cpId是否合法
-
-        console.log('11100')
         var isCp = false;
         cpList.forEach(function (k, index) {
             if (k.cpId == req.query.cpId) {
                 isCp = true;
             }
         })
+
         if (!isCp) {
             res.redirect('/errorCp');
             return false;
         }
+
+        console.log(req.query)
 
 
         if (req.session.user) {

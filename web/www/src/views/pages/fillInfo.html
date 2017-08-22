@@ -46,8 +46,8 @@
 
     <div id="agreement-alert" class="my-alert">
         <div class="my-alert-content">
-            <span id="agreement-close" class="my-alert-close"></span>
-            <h3>CCP锦标赛报名协议</h3>
+            <span id="agreement-close"></span>
+            <h3>CCPC锦标赛报名协议</h3>
             <div class="text">
                 <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
                     师分排名2200名禄禄二级牌手大师分排名2200
@@ -63,7 +63,7 @@
     </div>
 
     <div id="info-alert" class="my-alert">
-        <div class="my-alert-content">
+        <div id="my-alert-content" class="my-alert-content">
             <span id="info-close" class="my-alert-close"></span>
             <h3>
                 <img src="/static/common/images/info_alert_title.png" alt="">
@@ -74,14 +74,14 @@
                     <ul class="fl">
                         <li>{{userInfo.realName}}</li>
                         <li>{{userInfo.levelName}}</li>
-                        <li>大师分排名{{userInfo.masterPointRank}}名</li>
+                        <li>大师分排名：{{userInfo.masterPointRank}}名</li>
                     </ul>
                 </div>
                 <div class="info-alert-bott">
                     <ul>
                         <li class="clearfix"><span></span><p></p></li>
                         <li class="clearfix"><span></span><p></p></li>
-                        <li class="clearfix"><span></span><p></p></li>
+                        <li class="clearfix"><span></span><p>详细地址：<em class="copy"></em></p></li>
                     </ul>
                 </div>
             </div>
@@ -115,6 +115,10 @@ window.location.href = 'index?cpId=' + util.getQueryString('cpId');
 getBadgeImg('#badge', '{{userInfo.levelCode}}');
 //返回退出
 $('#back').tap(function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#back-alert').show();
     $('#yes').tap(function () {
         $('#back-alert').hide();
@@ -146,9 +150,10 @@ $('#back').tap(function () {
     });
     $('#no').tap(function () {
         $('#back-alert').hide();
+        loaded();
     });
     $('#back-close').tap(function () {
-        $('#back-alert').hide();
+        loaded();
     });
     return false;
 });
@@ -166,9 +171,10 @@ $.ajax({
         if (json.code == 0) {
             dayLiist = json.response.list;
             $('#dayList').html(baidu.template('dayListTmpl', {data: json}));
-            $('.check-box').eq(0).find('li').eq(json.response.listCount).addClass('active');
-            $('.check-box').eq(0).find('li').each(function (k, v) {
-                if ($(v).hasClass('active')) {
+
+            $('#dayList').find('li').each(function (k,v) {
+                if($(v).data('id') === json.response.listCount){
+                    $(v).addClass('active');
                     matchDayId = $(v).data('id');
                 }
             });
@@ -222,7 +228,6 @@ $.ajax({
 //时间选择切换
 $('.check-box').eq(0).delegate('li', 'tap', function () {
     var _this = this;
-    console.log($(this).parent('ul li'))
     if ($(this).hasClass('disabled')) {
         return false;
     } else {
@@ -246,7 +251,6 @@ $('.check-box').eq(0).delegate('li', 'tap', function () {
                 dataType: 'json',
                 cache: false,
                 success: function (json) {
-                    addressList = json.response;
                     if (json.code == 0) {
                         $('#addressList').html(baidu.template('addressListTmpl', {data: json}));
                         $('.check-box').eq(1).find('li').eq(json.response.listCount).addClass('active');
@@ -292,47 +296,45 @@ $('.check-box').eq(1).delegate('li', 'tap', function () {
 });
 
 //点击提交
-$('#submit').tap(function () {
+$('.fillInfo-wrap-bottom').delegate('#submit', 'tap', function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#agreement-alert').show();
-    $('.check-box').eq(0).find('li').each(function (k, v) {
+
+    $('#dayList').find('li').each(function (k, v) {
         if ($(v).hasClass('active')) {
             dayId = $(v).data('id');
         }
     });
-    $('.check-box').eq(1).find('li').each(function (k, v) {
+    $('#addressList').find('li').each(function (k, v) {
         if ($(v).hasClass('active')) {
             matchPlaceId = $(v).data('id');
         }
     });
-
-    $(dayLiist).each(function (k, v) {
+    $.each(dayLiist, function (k, v) {
         if (v.id == dayId) {
             dayInfo = v;
         }
     });
-
-    $(addressList).each(function (k, v) {
+    $.each(addressList, function (k, v) {
         if (v.matchPlaceId == matchPlaceId) {
             addrssInfo = v;
         }
     });
-    console.log(addrssInfo)
 
     $('.info-alert-bott li').eq(0).find('p').html('参赛时间：' + dayInfo.dayInfDetail || '待定');
     $('.info-alert-bott li').eq(1).find('p').html('参赛地点：' + addrssInfo.place || '待定');
-    $('.info-alert-bott li').eq(2).find('p').html('详细地址：' + (function fn() {
+    $('.info-alert-bott li').find('.copy').html((function () {
         return !addrssInfo.placeDetail ? '待定' : addrssInfo.placeDetail;
     })());
 });
 
 //关闭协议弹窗
 $('#agreement-close').tap(function () {
-//    $("#agreement-alert").anim({
-//        opacity: '0'
-//    }, 0.3, 'linear', function () {
-//        $("#agreement-alert").hide()
-//    }, 0);
     $('#agreement-alert').hide();
+    loaded();
 });
 
 //同意协议
@@ -342,10 +344,12 @@ $('#agree').tap(function () {
 });
 
 $('#info-close').tap(function () {
+    loaded();
     $('#info-alert').hide();
 });
 //重新填写报名信息
 $('#recheck').tap(function () {
+    loaded();
     $('#info-alert').hide();
 });
 
@@ -372,7 +376,7 @@ $('#confirm').tap(function () {
             if (json.code == 0) {
                 window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + util.getQueryString('idNumber');
             } else {
-                $('.fillInfo-wrap').toast({
+                $('#my-alert-content').toast({
                     content: json.msg,
                     duration: 1000
                 });
@@ -380,7 +384,7 @@ $('#confirm').tap(function () {
             }
         },
         error: function () {
-            $('.fillInfo-wrap').toast({
+            $('#my-alert-content').toast({
                 content: '出错',
                 duration: 1000
             });
@@ -394,7 +398,10 @@ $('#confirm').tap(function () {
 var myScroll;
 
 function loaded() {
-    myScroll = new IScroll('#wrapper');
+    myScroll = new IScroll('#wrapper',{
+        preventDefault: false,
+        bounce: false
+    });
 }
 </script>
 
@@ -407,7 +414,7 @@ function loaded() {
     <p><%=v.place%>(剩<%=v.remainPlayers%>个名额)</p>
 </li>
 <% }else{ %>
-<li class="disabled" data-id="<%=v.id%>">
+<li class="disabled" data-id="<%=v.matchPlaceId%>">
     <span></span>
     <p><%=v.place%>(已报满)</p>
 </li>

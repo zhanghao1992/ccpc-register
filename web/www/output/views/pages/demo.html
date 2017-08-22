@@ -1,0 +1,38 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div id="div">
+    <img src="" alt="">
+</div>
+
+
+<div id="div2" style="height: 200px;background: pink;">
+
+</div>
+
+<script type="text/javascript">
+$('img').prop('src', '/static/common/images/QRcodes/wb.png');
+
+$('#div2').doubleTap(function (e) {
+    alert('doubleTap')
+    e.preventDefault();
+});
+
+$('#div2').singleTap(function (e) {
+    alert('singleTap')
+    e.preventDefault();
+});
+
+$('#div2').longTap(function (e) {
+    alert('longTap')
+    e.preventDefault();
+});
+</script>
+{% endblock %}

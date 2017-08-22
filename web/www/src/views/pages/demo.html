@@ -1,0 +1,48 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div id="div">
+    <img src="" alt="">
+</div>
+
+<script src="/static/common/js/better-scroll.js"></script>
+<div id="div2" style="height: 200px;background: pink;"></div>
+
+<div id="div3" style="height: 300px;overflow: hidden;background: yellow;">
+    <div style="height: 1000px;background: #ccc;">
+        1111111111111</br>
+        2222222222222</br>
+        133333333333333</br>
+        144444444444</br>
+    </div>
+</div>
+<script type="text/javascript">
+//$('img').prop('src', '/static/common/images/QRcodes/wb.png');
+//
+//$('#div2').doubleTap(function (e) {
+//    alert('doubleTap')
+//    e.preventDefault();
+//});
+//
+//$('#div2').singleTap(function (e) {
+//    alert('singleTap')
+//    e.preventDefault();
+//});
+//
+//$('#div2').longTap(function (e) {
+//    alert('longTap')
+//    e.preventDefault();
+//});
+var myScroll = new BScroll('#div3',{
+    bounce: false,
+    preventDefault: false
+});
+</script>
+{% endblock %}

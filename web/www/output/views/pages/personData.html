@@ -4,7 +4,7 @@
 {% include '../layout/template.html' %}
 {% include '../layout/list.html' %}
 {% include '../layout/toast.html' %}
-<link rel="stylesheet" href="/static/common/css/personData_e2e3c44.css">
+<link rel="stylesheet" href="/static/common/css/personData_c3b1dd4.css">
 {% endblock %}
 
 {% block content %}
@@ -16,35 +16,32 @@
             <img class="fr" src="/static/common/images/ccpc_logo_117125a.png" alt="">
         </header>
         <div class="content">
-            <div id="info">
+            <div id="zhangf">
 
                 <div class="content-top clearfix">
                     <img id="badge" class="fl" src="/static/common/images/touxiang_4664457.png" alt="">
                     <ul class="fl">
                         <li>{{userInfo.realName}}</li>
                         <li>{{userInfo.levelName}}</li>
-                        <li>大师分排名{{userInfo.masterPointRank}}名</li>
+                        <li>大师分排名：{{userInfo.masterPointRank}}名</li>
                     </ul>
                 </div>
 
-                {% if info.masterPointRank <= 2016 %}
                 <div class="encourage">
-                    <img src="/static/common/images/encourage_6dd2a67.png" alt="">
+                    {% if userInfo.masterPointRank <= 2016 %}
+                    <img src="/static/common/images/encourage_9562107.png" alt="">
+                    {% else %}
+                    <img src="/static/common/images/encourage1_a3bdb95.png" alt="">
+                    {% endif %}
                 </div>
-
-                {% else %}
-                <div class="sorry">
-                    <img src="/static/common/images/sorry_49511f4.png" alt="">
-                </div>
-                {% endif %}
 
                 <div class="content-bott clearfix">
-                    <h3>全国大师分排名</h3>
+                    <!--<h3>全国大师分排名</h3>-->
                     <p>
-                        截止2017年11月6日24：00大师分排名到全国排名前2016名的选手有参赛资格
+                        截止2017年11月12日24：00大师分排名到全国排名前2016名的选手有参赛资格
                     </p>
 
-                    {% if info.masterPointRank <= 2016 %}
+                    {% if userInfo.masterPointRank <= 2016 %}
                     <div class="fig-box clearfix">
                         <div class="fig-item">
                             <h3 class="title">全国大师分排名</h3>
@@ -68,7 +65,7 @@
                     </div>
                     {% endif %}
 
-                    {% if info.masterPointRank <= 2016 %}
+                    {% if userInfo.masterPointRank <= 2016 %}
                     <div class="progress-bar">
                         <span class="pot"></span>
                     </div>
@@ -86,37 +83,10 @@
                 <a href="javascript:void(0);" id="share">分享</a>
                 <a class="goEnter" href="javascript:void(0);" id="go">去参赛</a>
             </nav>
-
-            <a class="agreement" href="javascript:void (0);">《CCPC全国二打一扑克锦标赛报名协议》</a>
-            <p class="warning">当前页面的大师分排名截至2017年11月6日24：00</p>
         </div>
 
     </section>
-    <div id="share-alert" class="my-alert">
-        <div>
-            <div class="my-alert-content">
-                <span id="share-close" class="my-alert-close"></span>
-                <p>点击分享按钮进行分享</p>
-            </div>
-        </div>
-    </div>
 
-    <div id="agreement-alert" class="my-alert">
-        <div class="my-alert-content">
-            <span id="agreement-close" class="my-alert-close"></span>
-            <h3>CCP锦标赛报名协议</h3>
-            <div class="text">
-                <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
-                    师分排名2200名禄禄二级牌手大师分排名2200
-                    2200名禄禄二级牌手大师分排名2200名禄禄二级
-                    牌手大师分排名2200名禄禄二级牌手大师分排名
-                    2200名禄禄二级牌手大师分排名2200名禄禄二级
-                    牌手大师分排名2200名禄禄二级牌手大师分排名
-                    2200名禄禄二级牌手大师分排名2200名
-                </p>
-            </div>
-        </div>
-    </div>
 
     <div id="back-alert" class="my-alert">
         <div class="my-alert-content">
@@ -138,19 +108,17 @@ document.addEventListener('DOMContentLoaded', function () {
 var myScroll;
 
 function loaded() {
-    myScroll = new IScroll('#wrapper');
-}
-
-//分享页面跳转
-var hash = window.location.href.split('#')[1];
-switch (hash) {
-    case 'sharePersonData':
-        window.location.href = '/sharePersonData?cpId='+util.getQueryString('cpId')+'&userIdCode={{userInfo.userId}}';
-        break;
-
+    myScroll = new IScroll('#wrapper', {
+        preventDefault: false,
+        bounce: false
+    });
 }
 
 $('#back').tap(function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
     $('#back-alert').show();
     $('#yes').tap(function () {
         $('#back-alert').hide();
@@ -182,9 +150,11 @@ $('#back').tap(function () {
     });
     $('#no').tap(function () {
         $('#back-alert').hide();
+        loaded();
     });
     $('#back-close').tap(function () {
         $('#back-alert').hide();
+        loaded();
     });
     return false;
 });
@@ -192,27 +162,13 @@ $('#back').tap(function () {
 
 //点击分享按钮
 $('#share').tap(function () {
-    $('#share-alert').show();
-    window.location.hash = 'sharePersonData';
+    window.location.href = '/sharePersonData?cpId=' + util.getQueryString('cpId') + '&userIdCode=' + util.getQueryString('userIdCode');
     return false;
 });
 
-$('#share-close').tap(function () {
-    $('#share-alert').hide();
-    return false;
-});
-
-$('.agreement').tap(function () {
-    $('#agreement-alert').show();
-});
-
-//关闭协议弹窗
-$('#agreement-close').tap(function () {
-    $('#agreement-alert').hide();
-});
 
 $('.person-wrap').delegate('.goEnter', 'tap', function () {
-    window.location.href = '/QRcode?cpId=' + util.getQueryString('cpId');
+    window.location.href = '/QRcodeT?cpId=' + util.getQueryString('cpId');
 })
 
 getBadgeImg('#badge','{{userInfo.levelCode}}');

@@ -22,16 +22,24 @@ router.get('/fillInfo', function (req, res, next) {
 router.get('/QRcode', function (req, res, next) {
     page.load(req, res, {path: 'pages/index', data: {QRcode: true}});
 });
-
-// 输入身份证没数据页面
-router.get('/noResult', function (req, res, next) {
-    page.load(req, res, {path: 'pages/index', data: {noResult: true, cpId: req.query.cpId}});
+router.get('/QRcodeT', function (req, res, next) {
+    page.load(req, res, {path: 'pages/index', data: {QRcode: true, noToast: true}});
 });
 
-// 个人有数据分享页面
-router.get('/shareDtata', function (req, res, next) {
-    page.load(req, res, {path: 'pages/index'});
+// 输入身份证没数据页面（报名没开始）
+router.get('/noResult0', function (req, res, next) {
+    page.load(req, res, {path: 'pages/index', data: {noResult: true, signing: false, cpId: req.query.cpId}});
 });
+
+// 输入身份证没数据页面（报名开始）
+router.get('/noResult1', function (req, res, next) {
+    page.load(req, res, {path: 'pages/index', data: {noResult: true, signing: true, cpId: req.query.cpId}});
+});
+
+// // 个人有数据分享页面
+// router.get('/shareDtata', function (req, res, next) {
+//     page.load(req, res, {path: 'pages/index'});
+// });
 
 // 晋级成功首页
 router.get('/signUpSuccess', function (req, res) {
@@ -62,6 +70,10 @@ router.get('/simulationCp', function (req, res, next) {
     res.render('pages/simulationCp');
 });
 
+router.get('/demo', function (req, res, next) {
+    res.render('pages/demo');
+});
+
 //手机验证码接口
 router.get('/api/sendMobileCode', function (req, res, next) {
     vService.transfer(req, res, {path: '/apply/sendMobileCode'});
@@ -74,25 +86,19 @@ router.post('/api/getQualification', function (req, res, next) {
     //     res.send(JSON.stringify(captchaResult));
     // } else {
     vService.request(req, res, {path: '/apply/getCurrentUserInfo'}, function (s) {
-        if(JSON.parse(s).code == 0){
+        if (JSON.parse(s).code == 0) {
             req.session.user = JSON.parse(s).response;
             res.send(JSON.stringify({code: 0, response: req.session.user}));
-        }else {
+        } else {
             res.send(s);
         }
     });
     // }
 });
 
-//点我报名接口
-router.post('/api/clickToEntry', function (req, res, next) {
-    res.send(JSON.stringify({
-        code: 0,
-        response: '',
-        mes: 'success'
-    }));
-    // vService.transfer(req, res, {path: '/match-user/focusMatch', url: 'http://172.21.120.241:8080/', auth: {type: 'player'}});
-    // vService.transfer(req, res, {path: '/dictionary/getCityDictionaryList'});
+//是否到达报名时间
+router.get('/api/getCurrentTime', function (req, res) {
+    vService.transfer(req, res, {path: '/apply/getCurrentTime'});
 });
 
 //返回退出接口

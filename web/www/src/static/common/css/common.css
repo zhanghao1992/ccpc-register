@@ -19,7 +19,6 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #aaa;
   overflow: auto;
 }
 .overflow {
@@ -60,7 +59,8 @@ body {
   width: 28.95rem;
   margin: 2.9rem auto 0;
   padding-bottom: 1rem;
-  background: url("../images/share_data_bg.png");
+  background: url("../images/share_data_bg.png") no-repeat;
+  background-size: 100% 100%;
 }
 .wrap .data .data-top {
   text-align: center;
@@ -131,7 +131,7 @@ body {
   margin-top: 1rem;
   height: 1.2rem;
   background: url("../images/qr_title.png") no-repeat center center;
-  background-size: 13.75rem 1.2rem;
+  background-size: 15rem 1.2rem;
 }
 .wrap .desription div {
   margin: 0 auto;
@@ -151,7 +151,7 @@ body {
   height: 7.55rem;
 }
 .wrap .desription div .des-btns a:nth-of-type(1) {
-  background: url("../images/des_btn1_bg.png") no-repeat;
+  background: url("../images/des_btn1_h_bg.png") no-repeat;
   background-size: 100% 100%;
 }
 .wrap .desription div .des-btns a:nth-of-type(2) {
@@ -163,6 +163,10 @@ body {
   background: url("../images/des_btn3_bg.png") no-repeat;
   background-size: 100% 100%;
   padding-top: 1.2rem;
+}
+.wrap .desription div .des-btns a:nth-of-type(1).active {
+  background: url("../images/des_btn1_bg.png") no-repeat;
+  background-size: 100% 100%;
 }
 .wrap .desription div .des-btns #noClick {
   background: url("../images/des_btn1_h_bg.png") no-repeat;
@@ -266,8 +270,16 @@ body {
   padding-left: 1.75rem;
   margin-top: 1.4rem;
 }
+.singUpSuccessWrap .agreement {
+  margin-top: 1rem;
+  display: block;
+  font-size: 0.9rem;
+  color: #1548bb;
+  text-align: center;
+  line-height: 1.5rem;
+}
 .singUpSuccessWrap .btns {
-  margin-top: 7.05rem;
+  margin-top: 6rem;
 }
 .singUpSuccessWrap .btns a {
   float: left;
@@ -420,4 +432,22 @@ body {
 }
 #back-alert .btns a:nth-of-type(1) {
   margin: 0 6rem 0 1rem;
+}
+#agreement-alert .my-alert-content {
+  padding: 2.3rem 1.05rem 1.4rem;
+}
+#agreement-alert h3 {
+  font-size: 1.1rem;
+  color: #000;
+  text-align: center;
+  line-height: 3rem;
+}
+#agreement-alert .text {
+  background: #f0f4fe;
+  padding: 1.5rem 1.35rem 1.4rem;
+  border-radius: 0.3rem;
+}
+#agreement-alert .text p {
+  line-height: 1.7rem;
+  color: #000;
 }

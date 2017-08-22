@@ -21,7 +21,7 @@
     }
 
     loadStyles(__uri('/static/toast/css/animate.css'));
-
+    // loadStyles('/static/toast/css/animate.css');
     //显示提示信息    toast
     $.fn.toast = function (options) {
         var $this = $(this);
@@ -97,9 +97,18 @@
                 var isLowerIe9 = defaults.isLowerIe9();
                 if (!isLowerIe9) {
                     t = setTimeout(function () {
-                        box.removeClass(opt.animateIn).addClass(opt.animateOut).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        /*原版写法*/
+                        // box.removeClass(opt.animateIn).addClass(opt.animateOut).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                        //     box.remove();
+                        // });
+
+
+                        /*iphon4 写法*/
+                        box.removeClass(opt.animateIn).addClass(opt.animateOut);
+                        setTimeout(function () {
                             box.remove();
-                        });
+                        },500)
+
                     }, opt.duration);
                 } else {
                     t = setTimeout(function () {

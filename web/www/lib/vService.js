@@ -3,7 +3,7 @@
 var session = require('./session');
 var request = require('request');
 module.exports = {
-    debug: false,
+    debug: true,
     request: function (req, res, option, callback) {
         var me = this;
         if (option.auth == undefined) {
@@ -61,12 +61,12 @@ module.exports = {
         //} else {
         //    return 'http://172.21.120.241:8080';
         //}
-       /* if (req.baseUrl.indexOf('/guotiao') == 0) {
-            return 'http://172.21.120.211:7070';
-        } else if (req.baseUrl.indexOf('/xiangqi') == 0){
-            return 'http://172.21.120.241:8082';
-        }*/
-        return 'http://172.21.122.138:7071';
+        /* if (req.baseUrl.indexOf('/guotiao') == 0) {
+             return 'http://172.21.120.211:7070';
+         } else if (req.baseUrl.indexOf('/xiangqi') == 0){
+             return 'http://172.21.120.241:8082';
+         }*/
+        return 'http://172.21.120.207:18171';
     },
     requestGo: function (req, res, option, callback) {
         //使用request模块发送请求
@@ -87,11 +87,12 @@ module.exports = {
                 headers: {
                     'Authorization': me.getUserId(req)
                 },
-                url: ( (me.debug && option.url) ? option.url : me.getUrl(req)) +
-                    (option.paths ? option.paths['p_' + req.session.user.level] : option.path), form: req.query}, function (err, httpResponse, body) {
+                url: ( (me.debug && option.url) ? option.url : me.getUrl(req)) + (option.paths ? option.paths['p_' + req.session.user.level] : option.path),
+                form: req.query
+            }, function (err, httpResponse, body) {
 
                 if (err || httpResponse.statusCode != 200) {
-                    res.send(JSON.stringify({code:-1}));
+                    res.send(JSON.stringify({code: -1}));
 //                    res.end();
                 } else {
                     callback(body);
@@ -116,20 +117,24 @@ module.exports = {
                 // console.log(me.getUserId(req));
                 request.post({
                         headers: {
+                            "content-type": "application/json",
                             'Authorization': me.getUserId(req)
                         },
-                        url: ( (me.debug && option.url) ? option.url : me.getUrl(req)) +
-                            (option.paths ? option.paths['p_' + req.session.user.level] : option.path),
-                        form: {postjson: JSON.stringify(req.body)}},
+                        url: ( (me.debug && option.url) ? option.url : me.getUrl(req)) + (option.paths ? option.paths['p_' + req.session.user.level] : option.path),
+                        json: true,
+                        body: req.body
+                        //                        form: {postjson: JSON.stringify(req.body)}
+                    },
                     function (err, httpResponse, body) {
                         if (err || httpResponse.statusCode != 200) {
-                            res.send(JSON.stringify({code:-1}));
-//                            res.end();
+                            res.send(JSON.stringify({code: -1}));
                         } else {
+                            if (typeof body == 'object') {
+                                body = JSON.stringify(body);
+                            }
                             callback(body);
                         }
-
-                    });
+                    })
 
 //                request({
 //                        method: 'POST',
@@ -165,12 +170,13 @@ module.exports = {
                             'Authorization': me.getUserId(req)
                         },
                         url: ( (me.debug && option.url) ? option.url : me.getUrl(req)) +
-                            (option.paths ? option.paths['p_' + req.session.user.level] : option.path),
-                        form: req.body},
+                        (option.paths ? option.paths['p_' + req.session.user.level] : option.path),
+                        form: req.body
+                    },
                     function (err, httpResponse, body) {
 
                         if (err || httpResponse.statusCode != 200) {
-                            res.send(JSON.stringify({code:-1}));
+                            res.send(JSON.stringify({code: -1}));
 //                            res.end();
                         } else {
                             callback(body);
@@ -226,7 +232,8 @@ module.exports = {
 //        });
 //        rrr.write(qs.stringify(req.query));
 //        rrr.end();
-    },
+    }
+    ,
     transfer: function (req, res, option) {
 //        console.log(option);
         var me = this;

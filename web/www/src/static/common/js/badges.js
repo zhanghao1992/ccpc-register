@@ -41,7 +41,7 @@ var badgesList = [
     },
     {
         levelName: '二星国家大师',
-        gradeCode: 108,
+        gradeCode: 109,
         badgeSrc: __uri('/static/common/images/badges/xj2.png')
     },
     {
@@ -122,6 +122,10 @@ var cpList = [
         cpId: '344a218f47dcb9489cce69135'
     }
 ];
+
+function __uri(src) {
+    return src;
+}
 
 //徽章图片
 function getBadgeImg(imgEle, levelCode) {
