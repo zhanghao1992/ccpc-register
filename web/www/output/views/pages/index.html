@@ -383,27 +383,27 @@ function checkForm() {
         });
         return false;
     }
-//    if (!/^1[0-9]{10}$/.test($('#phoneInput').val())) {
-//        $('.form').toast({
-//            content: '请输入正确的手机号！',
-//            duration: 1000
-//        });
-//        return false;
-//    }
-//    if (!$('#code').val()) {
-//        $('.form').toast({
-//            content: '请输入短信验证码！',
-//            duration: 1000
-//        });
-//        return false;
-//    }
-//    if (!$('#imgCode').val()) {
-//        $('.form').toast({
-//            content: '请输入图形验证码！',
-//            duration: 1000
-//        });
-//        return false;
-//    }
+    if (!/^1[0-9]{10}$/.test($('#phoneInput').val())) {
+        $('.form').toast({
+            content: '请输入正确的手机号！',
+            duration: 1000
+        });
+        return false;
+    }
+    if (!$('#code').val()) {
+        $('.form').toast({
+            content: '请输入短信验证码！',
+            duration: 1000
+        });
+        return false;
+    }
+    if (!$('#imgCode').val()) {
+        $('.form').toast({
+            content: '请输入图形验证码！',
+            duration: 1000
+        });
+        return false;
+    }
     return true;
 }
 </script>

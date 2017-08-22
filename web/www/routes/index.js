@@ -81,10 +81,10 @@ router.get('/api/sendMobileCode', function (req, res, next) {
 
 //查询资格接口
 router.post('/api/getQualification', function (req, res, next) {
-    // var captchaResult = captcha.check(req, req.body.captcha);
-    // if (captchaResult.code != 0) {
-    //     res.send(JSON.stringify(captchaResult));
-    // } else {
+    var captchaResult = captcha.check(req, req.body.captcha);
+    if (captchaResult.code != 0) {
+        res.send(JSON.stringify(captchaResult));
+    } else {
     vService.request(req, res, {path: '/apply/getCurrentUserInfo'}, function (s) {
         if (JSON.parse(s).code == 0) {
             req.session.user = JSON.parse(s).response;
@@ -93,7 +93,7 @@ router.post('/api/getQualification', function (req, res, next) {
             res.send(s);
         }
     });
-    // }
+    }
 });
 
 //是否到达报名时间
