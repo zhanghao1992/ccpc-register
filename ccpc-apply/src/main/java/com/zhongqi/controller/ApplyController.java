@@ -181,7 +181,7 @@ public class ApplyController extends BaseController {
             return ResponseResult.errorResult("厂商不合法");
         }
         matchApplyService.AddCpHotCount(cpId);
-        if ("false".equals(loginCheckMobileCode)) {
+        if ("true".equals(loginCheckMobileCode)) {
             result = smsService.checkMobileCode(mobile, checkCode);
         }
         UserModel userModel =null;
@@ -295,6 +295,7 @@ public class ApplyController extends BaseController {
 
 
     }
+
     @ApiOperation(value = "9、获取二维码",notes = "9、获取二维码")
     @RequestMapping(value = "/getErWeiMa", method = {RequestMethod.POST,RequestMethod.GET})
     public String    getErWeiMa(HttpServletRequest request)throws Exception {
