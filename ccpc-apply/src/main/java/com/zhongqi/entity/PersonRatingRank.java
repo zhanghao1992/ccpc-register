@@ -22,7 +22,7 @@ public class PersonRatingRank {
     private Integer goldenRank;
     private Integer silverRank;
     private Integer heartRank;
-    private Integer gradeCode;
+//    private Integer gradeCode;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -145,13 +145,13 @@ public class PersonRatingRank {
         this.heartRank = heartRank;
         return this;
     }
-    @Basic
-    @Column(name = "GradeCode", nullable = true)
-    public Integer getGradeCode() {
-        return gradeCode;
-    }
-
-    public void setGradeCode(Integer gradeCode) {
-        this.gradeCode = gradeCode;
-    }
+//    @Basic
+//    @Column(name = "GradeCode", nullable = true)
+//    public Integer getGradeCode() {
+//        return gradeCode;
+//    }
+//
+//    public void setGradeCode(Integer gradeCode) {
+//        this.gradeCode = gradeCode;
+//    }
 }
