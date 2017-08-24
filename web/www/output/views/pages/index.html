@@ -443,6 +443,10 @@ $.each(cpList, function (k, v) {
     if (v.cpId == cpId) {
         $('#qrcode-box').html('<img id="qrcode" src="' + v.QRsrc + '" alt="">');
         //        $('#qrcode').prop('src', v.QRsrc);
+        if(v.cpId == '164fffadbec40b80d0d0cb125') {
+            $('.qr-title').hide();
+            $('#qrcode-box').addClass('pike').find('img').addClass('bigImg');
+        }
     }
 });
 </script>

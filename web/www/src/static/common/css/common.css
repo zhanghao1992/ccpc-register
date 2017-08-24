@@ -117,6 +117,9 @@ body {
 .wrap .qr-code {
   text-align: center;
 }
+.wrap .qr-code .pike {
+  padding: 0;
+}
 .wrap .qr-code div {
   display: inline-block;
   padding: 0.5rem;
@@ -126,6 +129,12 @@ body {
 .wrap .qr-code img {
   width: 11.2rem;
   height: 11.2rem;
+  display: block;
+  vertical-align: top;
+}
+.wrap .qr-code .bigImg {
+  width: 15rem;
+  height: 15rem;
 }
 .wrap .qr-code .qr-title {
   margin-top: 1rem;

@@ -12,9 +12,6 @@ router.get('/index', function (req, res, next) {
 
 //报名信息填写页面
 router.get('/fillInfo', function (req, res, next) {
-    req.session.zh = {
-        sex: 'male'
-    }
     page.load(req, res, {path: 'pages/fillInfo'});
 });
 

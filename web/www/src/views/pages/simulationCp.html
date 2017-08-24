@@ -24,7 +24,7 @@ a {
 <script id="listTmpl" type="text/html">
 <% $.each(data, function(k, v){ %>
 <li>
-    <a href="/index?cpId=<%=v.cpId%>"><%=k+1%>..<%=v.cpName%></a>
+    <a style="display: block;" href="/index?cpId=<%=v.cpId%>"><%=v.index%>..<%=v.cpName%></a>
 </li>
 <% }); %>
 <li>
