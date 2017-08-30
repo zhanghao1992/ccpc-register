@@ -5,6 +5,7 @@ import com.zhongqi.entity.CpSource;
 import com.zhongqi.entity.MatchApply;
 import com.zhongqi.entity.PersonRatingRank;
 import com.zhongqi.entity.RelevanceUser;
+import com.zhongqi.model.MatchAddresssDayDetail;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface MatchApplyService {
     public Map<String,Object> findByMatchDayId(Integer matchDayId );
 
     //报名参赛
-    public void applyMatch(String cpId,Integer matchDayId, Integer matchPlaceId,String idNumber);
+    public MatchAddresssDayDetail applyMatch(String cpId, Integer matchDayId, Integer matchPlaceId, String idNumber);
 
     //获取等级
     public String getStandardName(BigDecimal g, BigDecimal s, BigDecimal r);

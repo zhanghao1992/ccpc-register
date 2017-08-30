@@ -12,6 +12,7 @@ import com.zhongqi.entity.CpSource;
 import com.zhongqi.entity.MatchApply;
 import com.zhongqi.entity.RelevanceUser;
 import com.zhongqi.entity.User;
+import com.zhongqi.model.MatchAddresssDayDetail;
 import com.zhongqi.model.UserModel;
 import com.zhongqi.service.*;
 import com.zhongqi.util.BaseController;
@@ -147,7 +148,11 @@ public class ApplyController extends BaseController {
                 return ResponseResult.errorResult("该用户已报名");
             }else{
                 matchApplyService.addMatchApplySkuCount(matchDayId, matchPlaceId);
-                matchApplyService.applyMatch(cpId,matchDayId, matchPlaceId, idNumber);
+                UserModel userModel=userService.getCurrentUser(idNumber);
+                MatchAddresssDayDetail matchAddresssDayDetail=matchApplyService.applyMatch(cpId,matchDayId, matchPlaceId, idNumber);
+                if (matchAddresssDayDetail!=null && userModel!=null){
+                    smsService.sendCCPCApplyPass(userModel.getMobile(),matchAddresssDayDetail.getDayDetail(),matchAddresssDayDetail.getPlaceDetail());
+                }
                 return ResponseResult.successResult("报名成功");
             }
 
@@ -172,7 +177,6 @@ public class ApplyController extends BaseController {
                                              String realName, String idNumber, String mobile, String checkCode) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
 
-        // TODO: 2017/7/10 验证码注释掉
         if (cpId==null && "".equals(cpId.trim())){
             return  ResponseResult.errorResult("error");
         }
@@ -181,8 +185,12 @@ public class ApplyController extends BaseController {
             return ResponseResult.errorResult("厂商不合法");
         }
         matchApplyService.AddCpHotCount(cpId);
+        //手机验证码
         if ("true".equals(loginCheckMobileCode)) {
             result = smsService.checkMobileCode(mobile, checkCode);
+            if (result.getCode()!=0){
+                return result;
+            }
         }
         UserModel userModel =null;
         userModel =userService.getCurrentUser(idNumber);
@@ -286,7 +294,7 @@ public class ApplyController extends BaseController {
     public ResponseResult getCurrentTime() {
         Map<String,Object> map =new HashedMap();
         Date date =new Date();
-        Date date1 =BaseUtils.formatStrToDateDayHourMin(cutOffDate+" 08:00:00");
+        Date date1 =BaseUtils.formatStrToDate(cutOffDate+" 12:30:00");
         Boolean checkDate =true;
         if (!date.before(date1)){
             checkDate =false;

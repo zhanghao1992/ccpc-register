@@ -21,4 +21,9 @@ public interface SMSService {
     @RequestMapping(value = "/sms/checkMobileCode",method = RequestMethod.POST)
     public ResponseResult checkMobileCode(@RequestParam(value = "mobile") String mobile,
                                           @RequestParam(value = "checkCode") String checkCode);
+    //发送CCPC报名成功短信
+    @RequestMapping(value = "/sms/sendCCPCApplyPass",method = RequestMethod.POST)
+    public ResponseResult sendCCPCApplyPass(@RequestParam(value = "mobile") String mobile,
+                                          @RequestParam(value = "timeStr") String timeStr,
+                                          @RequestParam(value = "addressStr") String addressStr);
 }

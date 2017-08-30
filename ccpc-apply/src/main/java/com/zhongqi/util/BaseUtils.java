@@ -665,11 +665,11 @@ public class BaseUtils {
      */
     public static Boolean compareCurrentTime(String dateStr) {
         Boolean checkResult=false;
-        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
         Date date =new Date();
         String date1 =dateFormater.format(date);
         date = BaseUtils.formatStrToDateDay(date1);
-        Date date2 =BaseUtils.formatStrToDateDay(dateStr);
+        Date date2 =BaseUtils.formatStrToDate(dateStr+" 12:30:00");
         //2017-7-4 早于2017-9-30
         if (date.before(date2)){
             checkResult =true;

@@ -4,6 +4,7 @@ import com.zhongqi.dao.*;
 import com.zhongqi.dto.ParameterResult;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.*;
+import com.zhongqi.model.MatchAddresssDayDetail;
 import com.zhongqi.model.MatchApplySkuInfo;
 import com.zhongqi.model.MatchDayModel;
 import com.zhongqi.service.MatchApplyService;
@@ -146,8 +147,15 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     }
 
     @Override
-    public void applyMatch(String cpId, Integer matchDayId, Integer matchPlaceId, String idNumber) {
+    public MatchAddresssDayDetail applyMatch(String cpId, Integer matchDayId, Integer matchPlaceId, String idNumber) {
         MatchApply matchApply = new MatchApply();
+        MatchPlace matchPlace = matchPlaceJpaDao.findById(matchPlaceId);
+        MatchDay matchDay = matchDayJpaDao.findById(matchDayId);
+        MatchAddresssDayDetail matchAddresssDayDetail =new MatchAddresssDayDetail();
+        if (matchPlace!=null && matchDay!=null){
+            matchAddresssDayDetail.setDayDetail(matchDay.getDayInfoDetail());
+            matchAddresssDayDetail.setPlaceDetail(matchPlace.getPlaceDetail());
+        }
         matchApply.setCpIdCode(cpId);
         matchApply.setMatchPlaceId(matchPlaceId);
         matchApply.setMatchDayId(matchDayId);
@@ -155,6 +163,8 @@ public class MatchApplyServiceImpl implements MatchApplyService {
         matchApply.setApplyTime(new Date());
         matchApply.setStatus(MATCH_Apply_NORMAL);
         matchApplyJpaDao.save(matchApply);
+
+        return matchAddresssDayDetail;
     }
 
     public List<RatingPersonLeverDetail> getPersonLeverCallList() {
