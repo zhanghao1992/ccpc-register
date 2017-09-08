@@ -137,6 +137,10 @@ public class ApplyController extends BaseController {
         if (cpSource==null){
             return ResponseResult.errorResult("厂商不合法");
         }
+        if(BaseUtils.compareCurrentTime(cutOffDate)){
+            return ResponseResult.errorResult("报名尚未开启");
+        }
+
         matchApplyService.AddCpHotCount(cpId);
         if (matchDayId != null && matchDayId != 0 && matchPlaceId != null
                 && matchPlaceId != 0 && idNumber != null && !"".equals(idNumber.trim())) {
