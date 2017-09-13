@@ -156,15 +156,15 @@ public class UserServiceImpl implements UserService {
         }
         MatchApply matchApply = matchApplyJpaDao.findByIdNumberAndStatus(idNumber, MATCH_Apply_NORMAL);
         if (matchApply != null) {
-            MatchDay matchDay = matchDayJpaDao.findById(matchApply.getMatchDayId());
+            MatchDay matchDay = matchDayJpaDao.findByMatchDayId(matchApply.getMatchDayId());
             if (matchDay != null) {
                 userModel.setMatchDayId(matchApply.getMatchDayId());
                 userModel.setDayInfo(matchDay.getDayInfo());
                 userModel.setDayInfoDetail(matchDay.getDayInfoDetail());
             }
-            MatchPlace matchPlace = matchPlaceJpaDao.findById(matchApply.getMatchPlaceId());
+            MatchPlace matchPlace = matchPlaceJpaDao.findByMatchPlaceId(matchApply.getMatchPlaceId());
             if (matchPlace != null) {
-                userModel.setMatchPlaceId(matchApply.getId());
+                userModel.setMatchPlaceId(matchApply.getMatchPlaceId());
                 userModel.setPlace(matchPlace.getPlace());
                 userModel.setPlaceDetail(matchPlace.getPlaceDetail());
             }

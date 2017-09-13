@@ -19,6 +19,33 @@ public class PersonRatingRankInfo {
     private Integer silverRank;
     private Integer heartRank;
     private Integer gradeCode;
+    private String createDatetimeStr;
+    private String bindDateTimeStr;
+    private String  ratingLevel;
+
+    public String getRatingLevel() {
+        return ratingLevel;
+    }
+
+    public void setRatingLevel(String ratingLevel) {
+        this.ratingLevel = ratingLevel;
+    }
+
+    public String getCreateDatetimeStr() {
+        return createDatetimeStr;
+    }
+
+    public void setCreateDatetimeStr(String createDatetimeStr) {
+        this.createDatetimeStr = createDatetimeStr;
+    }
+
+    public String getBindDateTimeStr() {
+        return bindDateTimeStr;
+    }
+
+    public void setBindDateTimeStr(String bindDateTimeStr) {
+        this.bindDateTimeStr = bindDateTimeStr;
+    }
 
     public Integer getId() {
         return id;

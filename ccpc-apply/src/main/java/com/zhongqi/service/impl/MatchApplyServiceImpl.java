@@ -2,6 +2,7 @@ package com.zhongqi.service.impl;
 
 import com.zhongqi.dao.*;
 import com.zhongqi.dto.ParameterResult;
+import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchAddresssDayDetail;
@@ -9,6 +10,7 @@ import com.zhongqi.model.MatchApplySkuInfo;
 import com.zhongqi.model.MatchDayModel;
 import com.zhongqi.service.MatchApplyService;
 import com.zhongqi.util.BaseUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,11 +85,11 @@ public class MatchApplyServiceImpl implements MatchApplyService {
         if (!matchDays.isEmpty()) {
             for (MatchDay matchDay : matchDays) {
                 MatchDayModel matchDayModel = new MatchDayModel();
-                matchDayModel.setId(matchDay.getId());
+                matchDayModel.setId(matchDay.getMatchDayId());
                 matchDayModel.setDayInfo(matchDay.getDayInfo());
                 matchDayModel.setDayInfDetail(matchDay.getDayInfoDetail());
                 matchDayModel.setCheckPeople(checkPeopleCount);
-                List<MatchApplySku> matchApplySkuList = matchApplySkuJpaDao.findByMatchDayId(matchDay.getId());
+                List<MatchApplySku> matchApplySkuList = matchApplySkuJpaDao.findByMatchDayId(matchDay.getMatchDayId());
                 if (!matchApplySkuList.isEmpty()) {
                     for (int i=0;i<matchApplySkuList.size();i++){
                         if (matchApplySkuList.get(i).getCurrentPlayers()==null ){
@@ -95,7 +97,7 @@ public class MatchApplyServiceImpl implements MatchApplyService {
                         }
                        if( matchApplySkuList.get(i).getTotalPlayers() > matchApplySkuList.get(i).getCurrentPlayers()){
                            if (listCount==null){
-                               listCount =matchDay.getId();
+                               listCount =matchDay.getMatchDayId();
                            }
                            matchDayModel.setCheckPeople(false);
                        }
@@ -132,7 +134,7 @@ public class MatchApplyServiceImpl implements MatchApplyService {
                     }
                 }else {
                 }
-                MatchPlace matchPlace = matchPlaceJpaDao.findById(matchApplySkuList.get(i).getMatchPlaceId());
+                MatchPlace matchPlace = matchPlaceJpaDao.findByMatchPlaceId(matchApplySkuList.get(i).getMatchPlaceId());
                 if (matchPlace != null) {
                     matchApplySkuInfo.setPlace(matchPlace.getPlace());
                     matchApplySkuInfo.setPlaceDetail(matchPlace.getPlaceDetail());
@@ -149,8 +151,8 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     @Override
     public MatchAddresssDayDetail applyMatch(String cpId, Integer matchDayId, Integer matchPlaceId, String idNumber) {
         MatchApply matchApply = new MatchApply();
-        MatchPlace matchPlace = matchPlaceJpaDao.findById(matchPlaceId);
-        MatchDay matchDay = matchDayJpaDao.findById(matchDayId);
+        MatchPlace matchPlace = matchPlaceJpaDao.findByMatchPlaceId(matchPlaceId);
+        MatchDay matchDay = matchDayJpaDao.findByMatchDayId(matchDayId);
         MatchAddresssDayDetail matchAddresssDayDetail =new MatchAddresssDayDetail();
         if (matchPlace!=null && matchDay!=null){
             matchAddresssDayDetail.setDayDetail(matchDay.getDayInfoDetail());
@@ -294,6 +296,36 @@ public class MatchApplyServiceImpl implements MatchApplyService {
     @Override
     public CpSource findByCpIdCode(String cpIdCode) {
         return cpSourceJpaDao.findByCpIdCode(cpIdCode);
+    }
+
+    @Override
+    public Map<String, Object> personRatingRankList(Integer page, Integer page_size,String idNumber) throws Exception {
+        Map<String,Object> map = new HashMap<String,Object>();
+        List<PersonRatingRank>personRatingRanks = personRatingRankDao.personRatingRankList(page,page_size,idNumber);
+        Integer total =personRatingRankDao.personRatingRankListCount(idNumber);
+        List<PersonRatingRankInfo> personRatingRankInfoList =new ArrayList<>();
+        String ratingLevel="";
+        if (!personRatingRanks.isEmpty() && total!=0){
+            for (int i = 0; i < personRatingRanks.size(); i++) {
+                PersonRatingRank personRatingRank =new PersonRatingRank();
+                PersonRatingRankInfo personRatingRankInfo =new PersonRatingRankInfo();
+                personRatingRank=personRatingRanks.get(i);
+                BeanUtils.copyProperties(personRatingRankInfo,personRatingRank);
+                ratingLevel =this.getStandardName(personRatingRank.getGoldenPoint(),personRatingRank.getSilverPoint(),personRatingRank.getHeartPoint());
+                personRatingRankInfo.setIdentityCardNumber(BaseUtils.encryptIdNumber(personRatingRank.getIdentityCardNumber()));
+                personRatingRankInfo.setPlayerName(BaseUtils.encryptRealName(personRatingRank.getPlayerName()));
+                personRatingRankInfo.setBindDateTimeStr(BaseUtils.formatDateToStrDay(personRatingRank.getBindDateTime()));
+                personRatingRankInfo.setCreateDatetimeStr(BaseUtils.formatDateToStrDay(personRatingRank.getCreateDatetime()));
+                personRatingRankInfo.setRatingLevel(ratingLevel);
+                personRatingRankInfoList.add(personRatingRankInfo);
+        }
+        map.put("page",page);
+        map.put("page_szie",page_size);
+        map.put("total",total);
+        map.put("list",personRatingRankInfoList);
+        }
+        return map;
+
     }
 
     private static Integer MATCH_DAY_NORMAL = 1;

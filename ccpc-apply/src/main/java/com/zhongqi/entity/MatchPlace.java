@@ -20,6 +20,17 @@ public class MatchPlace {
     @Column(name = "placeDetail")
     private String placeDetail;
 
+    @Column(name = "matchPlaceId")
+    private Integer matchPlaceId;
+
+    public Integer getMatchPlaceId() {
+        return matchPlaceId;
+    }
+
+    public void setMatchPlaceId(Integer matchPlaceId) {
+        this.matchPlaceId = matchPlaceId;
+    }
+
     public Integer getId() {
         return id;
     }

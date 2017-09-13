@@ -15,5 +15,5 @@ public interface MatchDayJpaDao extends JpaRepository<MatchDay,Integer> {
     //获取报名时间列表
     public List<MatchDay> findByStatus(Integer status);
 
-    public MatchDay findById(Integer id);
+    public MatchDay findByMatchDayId(Integer matchDayId);
 }

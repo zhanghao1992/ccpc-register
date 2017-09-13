@@ -1,12 +1,5 @@
 package com.zhongqi.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.zhongqi.dao.PersonRatingRankJpaDao;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.CpSource;
 import com.zhongqi.entity.MatchApply;
@@ -21,6 +14,7 @@ import com.zhongqi.util.ResponseResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,10 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,9 +38,6 @@ public class ApplyController extends BaseController {
 
     @Autowired
     private MatchApplyService matchApplyService;
-
-    @Autowired
-    private PersonRatingRankJpaDao personRatingRankJpaDao;
 
     @Autowired
     private UserService userService;
@@ -67,6 +57,8 @@ public class ApplyController extends BaseController {
     @Value("${cut-off-data}")
     private String cutOffDate;
 
+    @Value("${ratingRank}")
+    private Integer ratingRank;
 
 
     /**
@@ -119,7 +111,7 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "4、报名参赛",notes = "4、报名参赛")
     @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "464c8983f7828ef92883d52"),
+            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "e44ab68b1c7bb15fc7e014103"),
             @ApiImplicitParam(name = "matchDayId", paramType = "query",value = "报名时间ID", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "matchPlaceId", paramType = "query",value = "报名地点ID", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "idNumber", paramType = "query",value = "身份证号", required = true, dataType = "String"),
@@ -140,12 +132,17 @@ public class ApplyController extends BaseController {
         if(BaseUtils.compareCurrentTime(cutOffDate)){
             return ResponseResult.errorResult("报名尚未开启");
         }
-
         matchApplyService.AddCpHotCount(cpId);
         if (matchDayId != null && matchDayId != 0 && matchPlaceId != null
                 && matchPlaceId != 0 && idNumber != null && !"".equals(idNumber.trim())) {
             if(idNumber.length()!=18){
                 return  ResponseResult.errorResult("身份证号不合法");
+            }
+            ResponseRatingForQueryInfo responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
+            if (responseRatingForQueryInfo == null) {
+                return ResponseResult.errorResult("没有该用户的大师分数据");
+            } else if (responseRatingForQueryInfo.getRanking()>ratingRank){
+                return ResponseResult.errorResult("大师分排名没有达到2016之前");
             }
             matchApply =matchApplyService.findByIdNumber(idNumber);
             if (matchApply!=null){
@@ -170,7 +167,7 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "5、查询资格",notes = "5、查询资格")
     @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "464c8983f7828ef92883d52"),
+            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "e44ab68b1c7bb15fc7e014103"),
             @ApiImplicitParam(name = "realName", paramType = "query",value = "真实姓名", required = true, dataType = "String",defaultValue = "陈亚"),
             @ApiImplicitParam(name = "idNumber", paramType = "query",value = "身份证号", required = true, dataType = "String",defaultValue = "310108196312261637"),
             @ApiImplicitParam(name = "mobile", paramType = "query",value = "手机号", required = true, dataType = "String",defaultValue = "18310456275"),
@@ -223,7 +220,7 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "6、获取当前用户报名信息",notes = "6、获取当前用户报名信息")
     @RequestMapping(value = "/getCurrentUserMatchApply", method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "464c8983f7828ef92883d52"),
+            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "e44ab68b1c7bb15fc7e014103"),
             @ApiImplicitParam(name = "idNumber",paramType = "query", value = "身份证号", required = true, dataType = "String",defaultValue="310108196312261637"),
     })
     public ResponseResult getCurrentUserMatchApply(HttpServletRequest request,String cpId, String idNumber) {
@@ -308,29 +305,35 @@ public class ApplyController extends BaseController {
 
     }
 
-    @ApiOperation(value = "9、获取二维码",notes = "9、获取二维码")
-    @RequestMapping(value = "/getErWeiMa", method = {RequestMethod.POST,RequestMethod.GET})
-    public String    getErWeiMa(HttpServletRequest request)throws Exception {
-        String filePath = "D://";
-        String fileName = "zxing.jpg";
-        JSONObject json = new JSONObject();
-//        json.put(
-//                "zxing",
-//                "https://github.com/zxing/zxing/tree/zxing-3.0.0/javase/src/main/java/com/google/zxing");
-        json.put("author", "ningcs");
-        String content = json.toJSONString();// 内容
-        int width = 200; // 图像宽度
-        int height = 200; // 图像高度
-        String format = "jpg";// 图像类型
-        Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
-        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(content,
-                BarcodeFormat.QR_CODE, width, height, hints);// 生成矩阵
-        Path path = FileSystems.getDefault().getPath(filePath, fileName);
-        MatrixToImageWriter.writeToPath(bitMatrix, format, path);// 输出图像
-        System.out.println("输出成功.");
-
-        return filePath+fileName;
+    /**
+     * 10、获取排名大师分2016列表
+     */
+    @ApiOperation(value = "10、获取排名大师分2016列表",notes = "10、获取排名大师分2016列表")
+    @RequestMapping(value = "/personRatingRankList", method = {RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", paramType = "query",value = "page", required = true, dataType = "Integer",defaultValue = "1"),
+            @ApiImplicitParam(name = "page_size", paramType = "query",value = "page_size", required = true, dataType = "Integer",defaultValue = "20"),
+            @ApiImplicitParam(name = "callback", paramType = "query",value = "page_size", required = true, dataType = "String",defaultValue = "cc"),
+            @ApiImplicitParam(name = "idNumber", paramType = "query",value = "page_size", required = false, dataType = "String"),
+    })
+    public String  getRelevanceUserId(HttpServletRequest request,Integer page,Integer page_size,String callback,String idNumber) throws Exception{
+        ResponseResult result =new ResponseResult();
+        JSONObject jsonObject =null;
+        String callBacks ="";
+        List<String> list =new ArrayList<>();
+        if (page==null ||page ==0 ||page_size==null || page_size==0){
+            result=ResponseResult.errorResult("分页页码传入错误");
+            jsonObject =JSONObject.fromObject(result);
+            callBacks =callback+"("+jsonObject+")";
+            return callBacks;
+        }
+        Map<String,Object> map =matchApplyService.personRatingRankList(page,page_size,idNumber);
+        result=new ResponseResult(ResponseResult.SUCCESS,"获取列表成功",map);
+        jsonObject =JSONObject.fromObject(result);
+        callBacks =callback+"("+jsonObject+")";
+        return callBacks;
     }
+
+
 
 }

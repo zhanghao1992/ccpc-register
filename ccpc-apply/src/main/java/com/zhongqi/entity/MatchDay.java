@@ -23,6 +23,18 @@ public class MatchDay {
     @Column(name = "status")
     private Integer status;
 
+
+    @Column(name = "matchDayId")
+    private Integer matchDayId;
+
+    public Integer getMatchDayId() {
+        return matchDayId;
+    }
+
+    public void setMatchDayId(Integer matchDayId) {
+        this.matchDayId = matchDayId;
+    }
+
     public Integer getId() {
         return id;
     }

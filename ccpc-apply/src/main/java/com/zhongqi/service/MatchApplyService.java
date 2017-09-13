@@ -64,6 +64,11 @@ public interface MatchApplyService {
     //效验厂商
     public CpSource findByCpIdCode(String cpIdCode);
 
+//---------------------------竞技趣味专题-------------------------------------
+    //获取排名2016之前的大师分列表
+    public Map<String ,Object> personRatingRankList(Integer page, Integer page_size,String idNumber) throws Exception;
+
+    //获取比赛成绩
 
 
 

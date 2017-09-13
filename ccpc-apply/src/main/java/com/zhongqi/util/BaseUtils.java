@@ -678,6 +678,37 @@ public class BaseUtils {
 
     }
 
+    /**
+     *  身份证号加密
+     * @ningcs
+     *
+     */
+    public static String  encryptIdNumber(String idNumber) {
+        String regex = "(\\w{4})(\\w+)(\\w{3})";
+        idNumber=idNumber.replaceAll(regex, "$1****$3");
+        idNumber = idNumber.substring(0,idNumber.length() - 1)+"*";
+        return idNumber;
+    }
+
+    /**
+     *  姓名加密(只保留姓氏)
+     * @ningcs
+ */
+    public static String  encryptRealName(String realName) {
+        //保留姓氏
+        char str2=realName.charAt(0);
+        //截取名字
+        String str1=realName.substring(1);
+        //用正则表达式替换(包括汉字，数字，大小写字母)
+        str1=str1.replaceAll("[^x00-xff]|\\w", "*");
+        //输出替换后的名字
+        System.out.println(str2+str1);
+        realName=str2+str1;
+        return realName;
+    }
+
+
+
 //    /**
 //     * 循环取出100条数据
 //     * @ningcs
