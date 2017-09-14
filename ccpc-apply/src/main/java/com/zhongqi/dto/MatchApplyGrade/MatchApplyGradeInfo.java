@@ -1,4 +1,4 @@
-package com.zhongqi.entity;
+package com.zhongqi.dto.MatchApplyGrade;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Created by ningcs on 2017/9/13.
  */
-public class MatchApplyGrade {
+public class MatchApplyGradeInfo {
     private Integer id;
     private String identityCardNumber;
     private String playerName;
@@ -17,15 +17,33 @@ public class MatchApplyGrade {
     private Integer goldenRank;
     private Integer gradeCode;
     private String matchTime;
-    private Integer matchType;
-    private double bonus;
+    private Integer machType;
+    private String  createDatetimeStr;
+    private String  ratingLevel;
+    private String  bonus;
 
-    public double getBonus() {
+    public String getBonus() {
         return bonus;
     }
 
-    public void setBonus(double bonus) {
+    public void setBonus(String bonus) {
         this.bonus = bonus;
+    }
+
+    public String getCreateDatetimeStr() {
+        return createDatetimeStr;
+    }
+
+    public void setCreateDatetimeStr(String createDatetimeStr) {
+        this.createDatetimeStr = createDatetimeStr;
+    }
+
+    public String getRatingLevel() {
+        return ratingLevel;
+    }
+
+    public void setRatingLevel(String ratingLevel) {
+        this.ratingLevel = ratingLevel;
     }
 
     public Integer getId() {
@@ -108,11 +126,11 @@ public class MatchApplyGrade {
         this.matchTime = matchTime;
     }
 
-    public Integer getMatchType() {
-        return matchType;
+    public Integer getMachType() {
+        return machType;
     }
 
-    public void setMatchType(Integer matchType) {
-        this.matchType = matchType;
+    public void setMachType(Integer machType) {
+        this.machType = machType;
     }
 }

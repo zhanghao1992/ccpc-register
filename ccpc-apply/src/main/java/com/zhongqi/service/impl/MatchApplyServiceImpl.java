@@ -1,6 +1,7 @@
 package com.zhongqi.service.impl;
 
 import com.zhongqi.dao.*;
+import com.zhongqi.dto.MatchApplyGrade.MatchApplyGradeInfo;
 import com.zhongqi.dto.ParameterResult;
 import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
@@ -60,6 +61,9 @@ public class MatchApplyServiceImpl implements MatchApplyService {
 
     @Autowired
     private MatchApplyService matchApplyService;
+
+    @Autowired
+    private MatchApplyGradeDao matchApplyGradeDao;
 
 
     @Override
@@ -326,6 +330,42 @@ public class MatchApplyServiceImpl implements MatchApplyService {
         }
         return map;
 
+    }
+
+    @Override
+    public Map<String, Object> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber, Integer type, String matchTime) throws Exception {
+        Map<String,Object> map = new HashMap<String,Object>();
+        List<MatchApplyGrade> matchApplyGrades =matchApplyGradeDao.getMatchApplyGradeList(page, page_size, idNumber, type, matchTime);
+        Integer total =matchApplyGradeDao.getMatchApplyGradeListCount(idNumber, type, matchTime);
+        List<MatchApplyGradeInfo> personRatingRankInfoList =new ArrayList<>();
+        String ratingLevel="";
+        if (!matchApplyGrades.isEmpty() && total!=0){
+            for (int i = 0; i < matchApplyGrades.size(); i++) {
+                MatchApplyGrade matchApplyGrade =new MatchApplyGrade();
+                MatchApplyGradeInfo matchApplyGradeInfo =new MatchApplyGradeInfo();
+                matchApplyGrade=matchApplyGrades.get(i);
+                BeanUtils.copyProperties(matchApplyGradeInfo,matchApplyGrade);
+                ratingLevel =this.getStandardName(matchApplyGrade.getGoldenPoint(),matchApplyGrade.getSilverPoint(),matchApplyGrade.getHeartPoint());
+                matchApplyGradeInfo.setIdentityCardNumber(BaseUtils.encryptIdNumber(matchApplyGrade.getIdentityCardNumber()));
+                matchApplyGradeInfo.setPlayerName(BaseUtils.encryptRealName(matchApplyGrade.getPlayerName()));
+                matchApplyGradeInfo.setCreateDatetimeStr(BaseUtils.formatDateToStrDay(matchApplyGrade.getCreateDatetime()));
+                matchApplyGradeInfo.setRatingLevel(ratingLevel);
+                if (idNumber==null || "".equals(idNumber.trim())){
+                    matchApplyGradeInfo.setBonus("0");
+                }else{
+                    if (matchApplyGrade.getBonus()>0.0001){
+                        matchApplyGradeInfo.setBonus(BaseUtils.getTwoDecimal(matchApplyGrade.getBonus()));
+                    }
+                }
+
+                personRatingRankInfoList.add(matchApplyGradeInfo);
+            }
+            map.put("page",page);
+            map.put("page_szie",page_size);
+            map.put("total",total);
+            map.put("list",personRatingRankInfoList);
+        }
+        return map;
     }
 
     private static Integer MATCH_DAY_NORMAL = 1;

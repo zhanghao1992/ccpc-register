@@ -1,10 +1,7 @@
 package com.zhongqi.service;
 
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
-import com.zhongqi.entity.CpSource;
-import com.zhongqi.entity.MatchApply;
-import com.zhongqi.entity.PersonRatingRank;
-import com.zhongqi.entity.RelevanceUser;
+import com.zhongqi.entity.*;
 import com.zhongqi.model.MatchAddresssDayDetail;
 
 import java.math.BigDecimal;
@@ -68,8 +65,9 @@ public interface MatchApplyService {
     //获取排名2016之前的大师分列表
     public Map<String ,Object> personRatingRankList(Integer page, Integer page_size,String idNumber) throws Exception;
 
-    //获取比赛成绩
-
+    //获取比赛成绩列表
+    public Map<String, Object> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber,
+                                                        Integer type, String matchTime)throws Exception ;
 
 
     }

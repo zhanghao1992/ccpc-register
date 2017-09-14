@@ -14,7 +14,6 @@ import com.zhongqi.util.ResponseResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -304,36 +301,5 @@ public class ApplyController extends BaseController {
 
 
     }
-
-    /**
-     * 10、获取排名大师分2016列表
-     */
-    @ApiOperation(value = "10、获取排名大师分2016列表",notes = "10、获取排名大师分2016列表")
-    @RequestMapping(value = "/personRatingRankList", method = {RequestMethod.GET})
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", paramType = "query",value = "page", required = true, dataType = "Integer",defaultValue = "1"),
-            @ApiImplicitParam(name = "page_size", paramType = "query",value = "page_size", required = true, dataType = "Integer",defaultValue = "20"),
-            @ApiImplicitParam(name = "callback", paramType = "query",value = "page_size", required = true, dataType = "String",defaultValue = "cc"),
-            @ApiImplicitParam(name = "idNumber", paramType = "query",value = "page_size", required = false, dataType = "String"),
-    })
-    public String  getRelevanceUserId(HttpServletRequest request,Integer page,Integer page_size,String callback,String idNumber) throws Exception{
-        ResponseResult result =new ResponseResult();
-        JSONObject jsonObject =null;
-        String callBacks ="";
-        List<String> list =new ArrayList<>();
-        if (page==null ||page ==0 ||page_size==null || page_size==0){
-            result=ResponseResult.errorResult("分页页码传入错误");
-            jsonObject =JSONObject.fromObject(result);
-            callBacks =callback+"("+jsonObject+")";
-            return callBacks;
-        }
-        Map<String,Object> map =matchApplyService.personRatingRankList(page,page_size,idNumber);
-        result=new ResponseResult(ResponseResult.SUCCESS,"获取列表成功",map);
-        jsonObject =JSONObject.fromObject(result);
-        callBacks =callback+"("+jsonObject+")";
-        return callBacks;
-    }
-
-
 
 }

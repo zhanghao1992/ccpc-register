@@ -5,6 +5,7 @@ import net.sf.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -681,6 +682,7 @@ public class BaseUtils {
     /**
      *  身份证号加密
      * @ningcs
+     * 加密后4113********21*
      *
      */
     public static String  encryptIdNumber(String idNumber) {
@@ -706,6 +708,42 @@ public class BaseUtils {
         realName=str2+str1;
         return realName;
     }
+
+
+    /**
+     * 四舍五入得两位小数
+     * @ningcs
+     */
+    public static String   getTwoDecimal(Double decimal) {
+        String decimals="";
+        DecimalFormat df = new DecimalFormat("#.00");
+        if(decimal!=null && (decimal>0.0001)||(decimal<-0.0001)){
+            decimals=df.format(decimal);
+            System.out.println(decimals);
+            return  decimals;
+        }
+        return decimals;
+    }
+
+    /**
+     * 字符串转换Double
+     * 四舍五入得两位小数
+     * @ningcs
+     */
+    public static Double   getTwoDecimalDouble(String  decimal) {
+        String decimalStr="";
+
+        Double decimals =Double.parseDouble(decimal);
+        DecimalFormat df = new DecimalFormat("#.00");
+        if(decimals!=null && (decimals>0.0001)||(decimals<-0.0001)){
+            decimalStr=df.format(decimal);
+            System.out.println(decimalStr);
+            decimals =Double.parseDouble(decimalStr);
+            return  decimals;
+        }
+        return decimals;
+    }
+
 
 
 
