@@ -8,10 +8,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +34,12 @@ import java.util.Map;
 @RequestMapping("athletics")
 public class AthleticsController extends BaseController {
 
+    Logger logger = Logger.getLogger(getClass());
     @Autowired
     private MatchApplyGradeService matchApplyGradeService;
+
+    @Value("${matchApply_Grade_path}")
+    private String  matchApply_Grade_path;
 
 
 
@@ -59,12 +65,14 @@ public class AthleticsController extends BaseController {
             result=ResponseResult.errorResult("分页页码传入错误");
             jsonObject =JSONObject.fromObject(result);
             callBacks =callback+"("+jsonObject+")";
+            logger.info("分页页码传入错误："+callBacks);
             return callBacks;
         }
         Map<String,Object> map =matchApplyGradeService.personRatingRankList(page,page_size,idNumber);
         result=new ResponseResult(ResponseResult.SUCCESS,"获取列表成功",map);
         jsonObject =JSONObject.fromObject(result);
         callBacks =callback+"("+jsonObject+")";
+        logger.info("大师分排名2016列表成功："+callBacks);
         return callBacks;
     }
 
@@ -92,18 +100,21 @@ public class AthleticsController extends BaseController {
             result=ResponseResult.errorResult("比赛类型未传入");
             jsonObject =JSONObject.fromObject(result);
             callBacks =callback+"("+jsonObject+")";
+            logger.info("比赛类型未传入："+callBacks);
             return callBacks;
         }
         if (page==null ||page ==0 ||page_size==null || page_size==0){
             result=ResponseResult.errorResult("分页页码传入错误");
             jsonObject =JSONObject.fromObject(result);
             callBacks =callback+"("+jsonObject+")";
+            logger.info("分页页码传入错误："+callBacks);
             return callBacks;
         }
         Map<String,Object> map =matchApplyGradeService.getMatchApplyGradeList(page,page_size,idNumber,type,matchTime);
-        result=new ResponseResult(ResponseResult.SUCCESS,"获取列表成功",map);
+        result=new ResponseResult(ResponseResult.SUCCESS,"获取报名比赛成绩列表成功",map);
         jsonObject =JSONObject.fromObject(result);
         callBacks =callback+"("+jsonObject+")";
+        logger.info("获取报名比赛成绩列表成功："+callBacks);
         return callBacks;
     }
 
@@ -111,7 +122,7 @@ public class AthleticsController extends BaseController {
     @RequestMapping(value = "/importMatchApplyGrade",method = {RequestMethod.GET,RequestMethod.POST})
     public ResponseResult importMatchApplyGrade(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ResponseResult result = ResponseResult.successResult("参数校验正确");
-        String path = "f:\\telName.xlsx";
+        String path = matchApply_Grade_path;
         System.out.println(path);
         try {
             File fileNew = new File(path);
@@ -131,9 +142,10 @@ public class AthleticsController extends BaseController {
                 Map<String,Object> map =matchApplyGradeService.importMatchApplyGrade(excelList);
                 String list ="list";
                 if (map.get(list).toString().length()<=2){
-                    result = new ResponseResult(ResponseResult.SUCCESS,"导入成功",map.get("successCount"));
+                    result =ResponseResult.successResult("导入成功的数量为"+map.get("sucessCount"));
                 } else {
-                    result = new ResponseResult(ResponseResult.ERROR,"导入的数据中存在未完善的字段，请检查。",map.get("list"));
+                    result = new ResponseResult(ResponseResult.ERROR,"导入失败的数量为"+map.get("errorCount")+";导入成功的数量为"+map.get("successCount"),
+                            map.get("list"));
                 }
             }
         } catch (IOException e) {

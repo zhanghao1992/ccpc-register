@@ -1,6 +1,5 @@
 package com.zhongqi.dao;
 
-import com.zhongqi.entity.User;
 import com.zhongqi.entity.WhiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface WhiteUserJpaDao extends JpaRepository<WhiteUser,Integer> {
-    public User findByIdNumberAndRealName(String idNumber, String realName);
+    public WhiteUser findByIdNumberAndRealName(String idNumber, String realName);
 }

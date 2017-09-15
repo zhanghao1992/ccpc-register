@@ -8,19 +8,19 @@ import com.zhongqi.dto.MatchApplyGrade.UserInfo;
 import com.zhongqi.dto.PersonRatingRankInfo;
 import com.zhongqi.entity.MatchApplyGrade;
 import com.zhongqi.entity.PersonRatingRank;
-import com.zhongqi.entity.User;
+import com.zhongqi.entity.WhiteUser;
 import com.zhongqi.entity.constant.MatchApplyGradeConstant;
 import com.zhongqi.service.MatchApplyGradeService;
 import com.zhongqi.service.MatchApplyService;
 import com.zhongqi.util.BaseUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +31,8 @@ import java.util.Map;
  */
 @Service
 public class MatchApplyServiceGradeImpl implements MatchApplyGradeService {
+
+    Logger logger = Logger.getLogger(getClass());
 
     @Value("${get_master_point_ip}")
     private String url;
@@ -118,12 +120,14 @@ public class MatchApplyServiceGradeImpl implements MatchApplyGradeService {
 
     @Override
     public Map<String, Object> importMatchApplyGrade(List<List<List<String>>> list) {
-        User user =null;
+        WhiteUser whiteUser =null;
         Map<String, Object> map =new HashedMap();
         List<UserInfo> userInfoList =new ArrayList<>();
+        Integer successCount=0;
+        Integer errorCount=0;
         for (int i=0;i<list.size();i++) {
             List<List<String>> rowList = list.get(i);
-            if (rowList.size() == 0 || rowList.get(0).size() != 7) {
+            if (rowList.size() == 0 || rowList.get(0).size() != 9) {
                 continue;
             }
             for (int j = 1; j < rowList.size(); j++) {
@@ -132,79 +136,125 @@ public class MatchApplyServiceGradeImpl implements MatchApplyGradeService {
                 if (cellList.size() == 0) {
                     continue;
                 }
+                Integer userId = 0;
+                Integer  goldenRank=0;
+                Double bonus=0.0;
+                Integer  matchType=0;
+                UserInfo userInfo=new UserInfo();
+
                 // 姓名
                 String cell0 = cellList.get(0);
                 String realName = cell0;
                 // 身份证号码
                 String cell1 = cellList.get(1);
                 String idNumber = cell1;
-                Integer userId = 0;
-                Integer  goldenRank=0;
-                Double bonus=0.0;
-                Integer  matchType=0;
+
+                // 排名
+                String cell2 = cellList.get(2);
+                String goldenRankStr = cell2;
+
+                // 金分
+                String cell3 = cellList.get(3);
+                String goldenPoint= cell3;
+
+                // 银分
+                String cell4 = cellList.get(4);
+                String silverPoint = cell4;
+
+                // 红分
+                String cell5 = cellList.get(5);
+                String  heartPoint = cell5;
+
+                // 比赛类型
+                String cell6 = cellList.get(6);
+                String matchTypeName = cell6;
+                matchType=MatchApplyGradeConstant.getMatchType(matchTypeName);
+
+                //比赛时间
+                String cell7 = cellList.get(7);
+                String matchTime= cell7;
+
+                //奖金
+                String cell8 = cellList.get(8);
+                String bonusStr = cell8;
+
                 if (realName != null && !"".equals(realName.trim()) && !"无".equals(realName.trim()) &&
                         idNumber != null && !"".equals(idNumber.trim())) {
                     try {
-                        user = userJpaDao.findByIdNumberAndRealName(idNumber, realName);
+                        whiteUser = userJpaDao.findByIdNumberAndRealName(idNumber, realName);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (user != null) {
-                        userId = user.getId();
-
-                        // 排名
-                        String cell2 = cellList.get(2);
-                        String goldenRankStr = cell2;
-                        goldenRank=Integer.parseInt(goldenRankStr);
-
-                        // 金分
-                        String cell3 = cellList.get(3);
-                        String goldenPoint= cell3;
-
-                        // 银分
-                        String cell4 = cellList.get(4);
-                        String silverPoint = cell4;
-
-                        // 红分
-                        String cell5 = cellList.get(5);
-                        String  heartPoint = cell5;
-
-                        // 比赛类型
-                        String cell6 = cellList.get(6);
-                        String matchTypeName = cell6;
-                        matchType=MatchApplyGradeConstant.getMatchType(matchTypeName);
-
-                        //比赛时间
-                        String cell7 = cellList.get(7);
-                        String matchTime= cell7;
-
-                        //奖金
-                        String cell8 = cellList.get(8);
-                        String bonusStr = cell8;
-                        bonus=BaseUtils.getTwoDecimalDouble(bonusStr);
-
+                    if (whiteUser != null) {
+                        logger.info("开始录入userId为:"+whiteUser.getId());
                         MatchApplyGrade matchApplyGrade = null;
-
-
-                        try {
-                            matchApplyGrade = matchApplyGradeDao.getMatchApplyGradeByIdNumber(idNumber,matchType );
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        if (matchApplyGrade == null) {
+                        matchApplyGrade = matchApplyGradeDao.getMatchApplyGradeByIdNumber(idNumber,matchType );
+                        if (matchApplyGrade == null && matchType==MatchApplyGradeConstant.MATCH_HALF_FINAL
+                                || matchType==MatchApplyGradeConstant.MATCH_FINAL) {
+                            goldenRank=Integer.parseInt(goldenRankStr);
+                            bonus=BaseUtils.getTwoDecimalDouble(bonusStr);
                             BigDecimal g=new BigDecimal(goldenPoint);
                             BigDecimal s=new BigDecimal(silverPoint);
                             BigDecimal h=new BigDecimal(heartPoint);
                             matchApplyGradeDao.addMatchApplyGrade(idNumber, realName, g, s, h,goldenRank,matchTime ,matchType,bonus);
-
+                            successCount=getSuccessCount(successCount);
+                        }else {
+                            errorCount=getErrorCount(errorCount);
+                            userInfo= addUserInfo(userId,idNumber,realName,goldenPoint,silverPoint,heartPoint,goldenRankStr,matchTime,matchTypeName);
+                            userInfoList.add(userInfo);
                         }
+                    }else{
+                        logger.info("用户："+realName+",身份证号："+idNumber+",不在白名单内");
+                        errorCount=getErrorCount(errorCount);
+                        userInfo= addUserInfo(userId,idNumber,realName,goldenPoint,silverPoint,heartPoint,goldenRankStr,matchTime,matchTypeName);
+                        userInfoList.add(userInfo);
                     }
+
                 }
             }
         }
         map.put("list", userInfoList);
+        map.put("successCount", successCount);
+        map.put("errorCount", errorCount);
+        logger.info("排名成绩录入成功条数:"+successCount);
+        logger.info("排名成绩录入失败条数:"+errorCount);
+        logger.info("排名成绩录入失败人数信息:"+userInfoList);
         return map;
     }
+
+    //统计导入成功人数
+    private Integer getSuccessCount(Integer successCount){
+        if (successCount==0){
+            successCount=1;
+        }else {
+            successCount=successCount+1;
+        }
+        return successCount;
+    }
+    //统计导入失败人数
+    private Integer getErrorCount(Integer errorCount){
+        if (errorCount==0){
+            errorCount=1;
+        }else {
+            errorCount=errorCount+1;
+        }
+        return errorCount;
+    }
+
+    //统计导入失败信息
+    private UserInfo addUserInfo(Integer userId,String idNumber,String realName,String goldenPoint,String silverPoint,
+                                 String heartPoint,String goldenRankStr,String matchTime,String matchTypeName){
+        UserInfo userInfo=new UserInfo();
+        userInfo.setUserId(userId);
+        userInfo.setIdNumber(idNumber);
+        userInfo.setRealnName(realName);
+        userInfo.setGoldenPoint(goldenPoint);
+        userInfo.setSilverPoint(silverPoint);
+        userInfo.setHeartPoint(heartPoint);
+        userInfo.setGoldenRank(goldenRankStr);
+        userInfo.setMatchTime(matchTime);
+        userInfo.setMatchTypeName(matchTypeName);
+        return  userInfo;
+    }
+
 }

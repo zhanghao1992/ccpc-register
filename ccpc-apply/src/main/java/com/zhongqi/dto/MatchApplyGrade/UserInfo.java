@@ -8,7 +8,7 @@ public class UserInfo {
     /**
      * 用户ID
      */
-    private Integer id;
+    private Integer userId;
 
     /**
      * 真实姓名
@@ -21,17 +21,41 @@ public class UserInfo {
     private String idNumber;
 
     /**
-     *导入失败数量
-     *
+     * 金分
      */
-    private Integer ErrorCount;
+    private String goldenPoint;
 
-    public Integer getId() {
-        return id;
+    /**
+     * 银分
+     */
+    private String silverPoint;
+
+    /**
+     * 红分
+     */
+    private String heartPoint;
+
+    /**
+     * 比赛时间
+     */
+    private String matchTime;
+
+    /**
+     * 比赛类型
+     */
+    private String  matchTypeName;
+
+    /**
+     * 排名
+     */
+    private String goldenRank;
+
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getRealnName() {
@@ -50,22 +74,66 @@ public class UserInfo {
         this.idNumber = idNumber;
     }
 
-    public Integer getErrorCount() {
-        return ErrorCount;
+    public String getGoldenPoint() {
+        return goldenPoint;
     }
 
-    public void setErrorCount(Integer errorCount) {
-        ErrorCount = errorCount;
+    public void setGoldenPoint(String goldenPoint) {
+        this.goldenPoint = goldenPoint;
     }
 
+    public String getSilverPoint() {
+        return silverPoint;
+    }
+
+    public void setSilverPoint(String silverPoint) {
+        this.silverPoint = silverPoint;
+    }
+
+    public String getHeartPoint() {
+        return heartPoint;
+    }
+
+    public void setHeartPoint(String heartPoint) {
+        this.heartPoint = heartPoint;
+    }
+
+    public String getMatchTime() {
+        return matchTime;
+    }
+
+    public void setMatchTime(String matchTime) {
+        this.matchTime = matchTime;
+    }
+
+    public String getMatchTypeName() {
+        return matchTypeName;
+    }
+
+    public void setMatchTypeName(String matchTypeName) {
+        this.matchTypeName = matchTypeName;
+    }
+
+    public String getGoldenRank() {
+        return goldenRank;
+    }
+
+    public void setGoldenRank(String goldenRank) {
+        this.goldenRank = goldenRank;
+    }
 
     @Override
     public String toString() {
         return "UserInfo{" +
-                "id=" + id +
+                "userId=" + userId +
                 ", realnName='" + realnName + '\'' +
                 ", idNumber='" + idNumber + '\'' +
-                ", ErrorCount=" + ErrorCount +
+                ", goldenPoint='" + goldenPoint + '\'' +
+                ", silverPoint='" + silverPoint + '\'' +
+                ", heartPoint='" + heartPoint + '\'' +
+                ", matchTime='" + matchTime + '\'' +
+                ", matchTypeName='" + matchTypeName + '\'' +
+                ", goldenRank='" + goldenRank + '\'' +
                 '}';
     }
 }

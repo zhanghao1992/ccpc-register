@@ -719,7 +719,6 @@ public class BaseUtils {
         DecimalFormat df = new DecimalFormat("#.00");
         if(decimal!=null && (decimal>0.0001)||(decimal<-0.0001)){
             decimals=df.format(decimal);
-            System.out.println(decimals);
             return  decimals;
         }
         return decimals;
@@ -732,12 +731,11 @@ public class BaseUtils {
      */
     public static Double   getTwoDecimalDouble(String  decimal) {
         String decimalStr="";
-
-        Double decimals =Double.parseDouble(decimal);
+        Double decimals =0.0;
+        decimals =Double.parseDouble(decimal);
         DecimalFormat df = new DecimalFormat("#.00");
         if(decimals!=null && (decimals>0.0001)||(decimals<-0.0001)){
-            decimalStr=df.format(decimal);
-            System.out.println(decimalStr);
+            decimalStr=df.format(decimals);
             decimals =Double.parseDouble(decimalStr);
             return  decimals;
         }

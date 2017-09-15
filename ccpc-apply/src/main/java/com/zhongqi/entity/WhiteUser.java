@@ -1,15 +1,25 @@
 package com.zhongqi.entity;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by ningcs on 2017/9/14.
  */
+@Entity
+@Table(name = "WhiteUser")
 public class WhiteUser {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id",unique = true,nullable = false)
     private Integer id;
+    @Column(name = "realName",nullable = true)
     private String realName;
+    @Column(name = "mobile",nullable = true)
     private String mobile;
+    @Column(name = "idNumber",unique = true,nullable = false)
     private String idNumber;
+    @Column(name = "createDateTime",nullable = true)
     private Date createDateTime;
 
     public Integer getId() {
