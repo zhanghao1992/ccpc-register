@@ -17,11 +17,8 @@ public interface MatchApplyGradeDao {
     //获取比赛成绩列表数量
     public Integer getMatchApplyGradeListCount(String idNumber,Integer type,String matchTime);
 
-//    //录入比赛成绩
-//    public Map<String, Object> importMatchApplyGrade(List<List<List<String>>> list);
-
     //通过身份证号判断用户是否录入
-    public MatchApplyGrade getMatchApplyGradeByIdNumber(String idNumber,Integer type);
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchType(String idNumber,Integer type);
 
     //添加用户比赛成绩
     public void addMatchApplyGrade(String identityCardNumber,
@@ -33,6 +30,14 @@ public interface MatchApplyGradeDao {
                                    String matchTime,
                                    Integer matchType,
                                    double bonus);
+
+
+//    //获取个人成绩信息
+//    public MatchApplyGrade getMatchApplyGradeByIdNumber(String idNumber);
+
+
+    //通过身份证号和时间判断用户是否存在
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchTypeAndMatchTime(String idNumber,Integer type,String matchTime);
 
 
 }

@@ -704,7 +704,6 @@ public class BaseUtils {
         //用正则表达式替换(包括汉字，数字，大小写字母)
         str1=str1.replaceAll("[^x00-xff]|\\w", "*");
         //输出替换后的名字
-        System.out.println(str2+str1);
         realName=str2+str1;
         return realName;
     }
@@ -740,6 +739,20 @@ public class BaseUtils {
             return  decimals;
         }
         return decimals;
+    }
+
+    /**
+     * 跨域请求
+     * 返回形式
+     * @param result
+     * @return
+     */
+    public static String  callBack(ResponseResult result,String callback){
+        String callBacks="";
+        JSONObject jsonObject =JSONObject.fromObject(result);
+        callBacks =callback+"("+jsonObject+")";
+        return callBacks;
+
     }
 
 

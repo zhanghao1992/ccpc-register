@@ -2,8 +2,10 @@ package com.zhongqi.dao.impl;
 
 import com.zhongqi.dao.MatchApplyGradeDao;
 import com.zhongqi.entity.MatchApplyGrade;
+import com.zhongqi.entity.constant.MatchApplyGradeConstant;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,6 +24,9 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
+    @Value("${match_half_final_goldenRank_}")
+    private String  match_half_final_goldenRank_;
+
     @Override
     public List<MatchApplyGrade> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber,
                                                         Integer type,String matchTime) {
@@ -29,6 +34,10 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
 
         String sql ="select * from MatchApplyGrade where matchType=:matchType ";
         params.put("matchType",type);
+        if (idNumber==null || "".equals(idNumber.trim()) && type!=null && type==MatchApplyGradeConstant.MATCH_HALF_FINAL){
+            sql=sql+"  and goldenRank <= :goldenRank";
+            params.put("goldenRank",match_half_final_goldenRank_);
+        }
         if(matchTime!=null && !"".equals(matchTime.trim())){
             sql=sql+"  and matchTime=:matchTime";
             params.put("matchTime",matchTime);
@@ -60,6 +69,10 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
         Map<String,Object>  params =new HashedMap();
         String sql ="select count(*) from MatchApplyGrade where matchType=:matchType ";
         params.put("matchType",type);
+        if (idNumber==null && type!=null && type==MatchApplyGradeConstant.MATCH_HALF_FINAL){
+            sql=sql+"  and goldenRank <= :goldenRank";
+            params.put("goldenRank",match_half_final_goldenRank_);
+        }
         if(matchTime!=null && !"".equals(matchTime.trim())){
             sql=sql+"  and matchTime=:matchTime";
             params.put("matchTime",matchTime);
@@ -78,7 +91,7 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
     }
 
     @Override
-    public MatchApplyGrade getMatchApplyGradeByIdNumber(String idNumber,Integer type) {
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchType(String idNumber,Integer type) {
         Map<String,Object>  params =new HashedMap();
         String sql ="select * from MatchApplyGrade where matchType=:matchType and identityCardNumber=:idNumber";
         params.put("matchType",type);
@@ -115,5 +128,24 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
         params.put("createDatetime",new Date());
         jdbcTemplate.update(sql,params);
 
+    }
+
+    @Override
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchTypeAndMatchTime(String idNumber, Integer type, String matchTime) {
+        Map<String,Object>  params =new HashedMap();
+        String sql ="select * from MatchApplyGrade where identityCardNumber=:idNumber and matchType=:matchType ";
+        if (type== MatchApplyGradeConstant.MATCH_HALF_FINAL &&matchTime !=null && !"".equals(matchTime) ){
+            sql=sql+" and matchTime=:matchTime";
+            params.put("matchTime",matchTime);
+        }
+        params.put("matchType",type);
+        params.put("idNumber",idNumber);
+        MatchApplyGrade  matchApplyGrade=null;
+        try {
+            matchApplyGrade= jdbcTemplate.queryForObject(sql,params,new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return matchApplyGrade;
     }
 }

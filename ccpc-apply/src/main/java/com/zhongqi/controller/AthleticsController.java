@@ -1,7 +1,10 @@
 package com.zhongqi.controller;
 
+import com.zhongqi.entity.MatchApplyGrade;
+import com.zhongqi.entity.constant.MatchApplyGradeConstant;
 import com.zhongqi.service.MatchApplyGradeService;
 import com.zhongqi.util.BaseController;
+import com.zhongqi.util.BaseUtils;
 import com.zhongqi.util.ExcelUtils;
 import com.zhongqi.util.ResponseResult;
 import io.swagger.annotations.ApiImplicitParam;
@@ -26,6 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.zhongqi.util.ResponseResult.errorResult;
 
 /**
  * Created by songrenfei on 2017/7/3.
@@ -62,16 +67,14 @@ public class AthleticsController extends BaseController {
         String callBacks ="";
         List<String> list =new ArrayList<>();
         if (page==null ||page ==0 ||page_size==null || page_size==0){
-            result=ResponseResult.errorResult("分页页码传入错误");
-            jsonObject =JSONObject.fromObject(result);
-            callBacks =callback+"("+jsonObject+")";
+            result= errorResult("分页页码传入错误");
+            callBacks =BaseUtils.callBack(result,callback);
             logger.info("分页页码传入错误："+callBacks);
             return callBacks;
         }
         Map<String,Object> map =matchApplyGradeService.personRatingRankList(page,page_size,idNumber);
         result=new ResponseResult(ResponseResult.SUCCESS,"获取列表成功",map);
-        jsonObject =JSONObject.fromObject(result);
-        callBacks =callback+"("+jsonObject+")";
+        callBacks = BaseUtils.callBack(result,callback);
         logger.info("大师分排名2016列表成功："+callBacks);
         return callBacks;
     }
@@ -97,23 +100,36 @@ public class AthleticsController extends BaseController {
         String callBacks ="";
         List<String> list =new ArrayList<>();
         if (type==null ){
-            result=ResponseResult.errorResult("比赛类型未传入");
-            jsonObject =JSONObject.fromObject(result);
-            callBacks =callback+"("+jsonObject+")";
+            result= errorResult("比赛类型未传入");
+            callBacks = BaseUtils.callBack(result,callback);
             logger.info("比赛类型未传入："+callBacks);
             return callBacks;
         }
         if (page==null ||page ==0 ||page_size==null || page_size==0){
-            result=ResponseResult.errorResult("分页页码传入错误");
-            jsonObject =JSONObject.fromObject(result);
-            callBacks =callback+"("+jsonObject+")";
+            result= errorResult("分页页码传入错误");
+            callBacks =BaseUtils.callBack(result,callback);
             logger.info("分页页码传入错误："+callBacks);
             return callBacks;
         }
+        if (idNumber !=null && !"".equals(idNumber) ){
+            MatchApplyGrade matchApplyGrade = matchApplyGradeService.getMatchApplyGradeByIdNumberAndMatchTypeAndMatchTime(idNumber,type,matchTime);
+            if (matchApplyGrade==null && type==MatchApplyGradeConstant.MATCH_HALF_FINAL ){
+                result= ResponseResult.errorResult("抱歉，您没有在"+matchTime+"参加CCPC锦标赛"+ MatchApplyGradeConstant.getMatchName(type)+"！");
+                callBacks=BaseUtils.callBack(result,callback);
+                logger.info("idNumber:"+idNumber +callBacks);
+                return callBacks;
+            }
+
+            if (matchApplyGrade==null && type==MatchApplyGradeConstant.MATCH_FINAL ){
+                result= ResponseResult.errorResult("抱歉，您不在CCPC锦标赛"+ MatchApplyGradeConstant.getMatchName(type)+"范围内！");
+                callBacks =BaseUtils.callBack(result,callback);
+                logger.info("idNumber:"+idNumber +callBacks);
+                return callBacks;
+            }
+        }
         Map<String,Object> map =matchApplyGradeService.getMatchApplyGradeList(page,page_size,idNumber,type,matchTime);
         result=new ResponseResult(ResponseResult.SUCCESS,"获取报名比赛成绩列表成功",map);
-        jsonObject =JSONObject.fromObject(result);
-        callBacks =callback+"("+jsonObject+")";
+        callBacks =BaseUtils.callBack(result,callback);
         logger.info("获取报名比赛成绩列表成功："+callBacks);
         return callBacks;
     }
@@ -153,7 +169,6 @@ public class AthleticsController extends BaseController {
         }
         return result;
     }
-
 
 
 }

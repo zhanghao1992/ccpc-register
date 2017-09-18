@@ -83,7 +83,7 @@ public class MatchApplyServiceGradeImpl implements MatchApplyGradeService {
     }
 
     @Override
-    public Map<String, Object> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber, Integer type, String matchTime) throws Exception {
+    public Map<String ,Object> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber, Integer type, String matchTime) throws Exception {
         Map<String,Object> map = new HashMap<String,Object>();
         List<MatchApplyGrade> matchApplyGrades =matchApplyGradeDao.getMatchApplyGradeList(page, page_size, idNumber, type, matchTime);
         Integer total =matchApplyGradeDao.getMatchApplyGradeListCount(idNumber, type, matchTime);
@@ -188,7 +188,7 @@ public class MatchApplyServiceGradeImpl implements MatchApplyGradeService {
                     if (whiteUser != null) {
                         logger.info("开始录入userId为:"+whiteUser.getId());
                         MatchApplyGrade matchApplyGrade = null;
-                        matchApplyGrade = matchApplyGradeDao.getMatchApplyGradeByIdNumber(idNumber,matchType );
+                        matchApplyGrade = matchApplyGradeDao.getMatchApplyGradeByIdNumberAndMatchType(idNumber,matchType );
                         if (matchApplyGrade == null && matchType==MatchApplyGradeConstant.MATCH_HALF_FINAL
                                 || matchType==MatchApplyGradeConstant.MATCH_FINAL) {
                             goldenRank=Integer.parseInt(goldenRankStr);
@@ -220,6 +220,19 @@ public class MatchApplyServiceGradeImpl implements MatchApplyGradeService {
         logger.info("排名成绩录入失败条数:"+errorCount);
         logger.info("排名成绩录入失败人数信息:"+userInfoList);
         return map;
+    }
+
+
+
+
+    @Override
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchType(String idNumber, Integer type) {
+        return matchApplyGradeDao.getMatchApplyGradeByIdNumberAndMatchType(idNumber,type);
+    }
+
+    @Override
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchTypeAndMatchTime(String idNumber, Integer type, String matchTime) {
+        return matchApplyGradeDao.getMatchApplyGradeByIdNumberAndMatchTypeAndMatchTime(idNumber, type,matchTime);
     }
 
     //统计导入成功人数
