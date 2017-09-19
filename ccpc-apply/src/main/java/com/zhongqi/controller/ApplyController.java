@@ -55,7 +55,7 @@ public class ApplyController extends BaseController {
     private String cutOffDate;
 
     @Value("${ratingRank}")
-    private Integer ratingRank;
+    private String  ratingRank;
 
 
     /**
@@ -138,8 +138,9 @@ public class ApplyController extends BaseController {
             ResponseRatingForQueryInfo responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
             if (responseRatingForQueryInfo == null) {
                 return ResponseResult.errorResult("没有该用户的大师分数据");
-            } else if (responseRatingForQueryInfo.getRanking()>ratingRank){
-                return ResponseResult.errorResult("大师分排名没有达到2016之前");
+            }
+            if (responseRatingForQueryInfo != null && responseRatingForQueryInfo.getRanking() > Integer.parseInt(ratingRank)){
+                return ResponseResult.errorResult("大师分排名没有达到2017之前");
             }
             matchApply =matchApplyService.findByIdNumber(idNumber);
             if (matchApply!=null){

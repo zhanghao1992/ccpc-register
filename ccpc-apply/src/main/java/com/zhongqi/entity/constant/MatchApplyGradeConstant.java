@@ -22,7 +22,7 @@ public class MatchApplyGradeConstant {
 
         switch (status){
             case 1:
-                statusName="半决赛";
+                statusName="预赛";
                 break;
             case 2:
                 statusName="决赛";
@@ -38,7 +38,7 @@ public class MatchApplyGradeConstant {
         Integer status=0;
 
         switch (matchName){
-            case "半决赛":
+            case "预赛":
                 status=1;
                 break;
             case "决赛":

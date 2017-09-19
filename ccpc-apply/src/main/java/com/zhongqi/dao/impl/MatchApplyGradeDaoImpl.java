@@ -5,7 +5,6 @@ import com.zhongqi.entity.MatchApplyGrade;
 import com.zhongqi.entity.constant.MatchApplyGradeConstant;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,9 +23,6 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Value("${match_half_final_goldenRank_}")
-    private String  match_half_final_goldenRank_;
-
     @Override
     public List<MatchApplyGrade> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber,
                                                         Integer type,String matchTime) {
@@ -34,10 +30,7 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
 
         String sql ="select * from MatchApplyGrade where matchType=:matchType ";
         params.put("matchType",type);
-        if (idNumber==null || "".equals(idNumber.trim()) && type!=null && type==MatchApplyGradeConstant.MATCH_HALF_FINAL){
-            sql=sql+"  and goldenRank <= :goldenRank";
-            params.put("goldenRank",match_half_final_goldenRank_);
-        }
+
         if(matchTime!=null && !"".equals(matchTime.trim())){
             sql=sql+"  and matchTime=:matchTime";
             params.put("matchTime",matchTime);
@@ -69,10 +62,6 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
         Map<String,Object>  params =new HashedMap();
         String sql ="select count(*) from MatchApplyGrade where matchType=:matchType ";
         params.put("matchType",type);
-        if (idNumber==null && type!=null && type==MatchApplyGradeConstant.MATCH_HALF_FINAL){
-            sql=sql+"  and goldenRank <= :goldenRank";
-            params.put("goldenRank",match_half_final_goldenRank_);
-        }
         if(matchTime!=null && !"".equals(matchTime.trim())){
             sql=sql+"  and matchTime=:matchTime";
             params.put("matchTime",matchTime);
