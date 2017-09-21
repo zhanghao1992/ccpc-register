@@ -7,7 +7,6 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-//@EnableScheduling
 @EnableEurekaClient
 @EnableSwagger2
 @EnableFeignClients
@@ -17,11 +16,4 @@ public class CcpcApplyApplication {
 		SpringApplication.run(CcpcApplyApplication.class, args);
 	}
 
-//	@Bean
-//	public FilterRegistrationBean filterRegistrationBean() {
-//		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-//		filterRegistrationBean.setFilter(new GlobalFilter());
-//		filterRegistrationBean.addUrlPatterns("/*");
-//		return filterRegistrationBean;
-//	}
 }

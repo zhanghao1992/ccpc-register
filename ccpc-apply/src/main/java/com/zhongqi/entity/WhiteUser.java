@@ -11,15 +11,19 @@ import java.util.Date;
 public class WhiteUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",unique = true,nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
-    @Column(name = "realName",nullable = true)
+
+    @Column(name = "realName", nullable = true)
     private String realName;
-    @Column(name = "mobile",nullable = true)
+
+    @Column(name = "mobile", nullable = true)
     private String mobile;
-    @Column(name = "idNumber",unique = true,nullable = false)
+
+    @Column(name = "idNumber", unique = true, nullable = false)
     private String idNumber;
-    @Column(name = "createDateTime",nullable = true)
+
+    @Column(name = "createDateTime", nullable = true)
     private Date createDateTime;
 
     public Integer getId() {

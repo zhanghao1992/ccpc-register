@@ -42,7 +42,7 @@ public class ApplyController extends BaseController {
     @Value("${loginCheckMobileCode}")
     private String loginCheckMobileCode;
 
-        @Autowired
+    @Autowired
     private SMSService smsService;
 
     @Autowired
@@ -51,19 +51,21 @@ public class ApplyController extends BaseController {
     @Autowired
     private MasterPointQueryService masterPointQueryService;
 
+    // 参赛资格大师分最后截止日期
     @Value("${cut-off-data}")
     private String cutOffDate;
 
+    // 有参赛资格玩家排名
     @Value("${ratingRank}")
-    private String  ratingRank;
+    private String ratingRank;
 
 
     /**
      * 发送图形验证码
      */
-    @ApiOperation(value = "0、发送图形验证码",notes = "0、发送图形验证码")
+    @ApiOperation(value = "0、发送图形验证码", notes = "0、发送图形验证码")
     @RequestMapping(value = "/createCaptcha", method = {RequestMethod.POST})
-    public ResponseResult createCaptcha( HttpServletRequest request, HttpServletResponse response) {
+    public ResponseResult createCaptcha(HttpServletRequest request, HttpServletResponse response) {
         return fileService.createCaptcha();
     }
 
@@ -71,11 +73,11 @@ public class ApplyController extends BaseController {
     /**
      * 发送手机验证码
      */
-    @ApiOperation(value = "1、发送手机验证码",notes = "1、发送手机验证码")
-    @RequestMapping(value = "/sendMobileCode", method = {RequestMethod.POST})
+    @ApiOperation(value = "1、发送手机验证码", notes = "1、发送手机验证码")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "mobile",paramType = "query", value = "手机号", required = true, dataType = "String")
+            @ApiImplicitParam(name = "mobile", paramType = "query", value = "手机号", required = true, dataType = "String")
     })
+    @RequestMapping(value = "/sendMobileCode", method = {RequestMethod.POST})
     public ResponseResult sendMobileCode(String mobile, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = 0;
         return smsService.sendMobileCode(userId, mobile);
@@ -84,7 +86,7 @@ public class ApplyController extends BaseController {
     /**
      * 获取报名时间列表
      */
-    @ApiOperation(value = "2、获取报名时间列表",notes = "2、获取报名时间列表")
+    @ApiOperation(value = "2、获取报名时间列表", notes = "2、获取报名时间列表")
     @RequestMapping(value = "/getMatchApplyDayList", method = {RequestMethod.POST})
     public ResponseResult getMatchApplyDayList() {
         return new ResponseResult(ResponseResult.SUCCESS, "success", matchApplyService.getMatchApplyDayList());
@@ -93,66 +95,80 @@ public class ApplyController extends BaseController {
     /**
      * 获取报名时间+地点的动态“库存”统计信息
      */
-    @ApiOperation(value = "3、获取报名时间+地点的动态“库存”统计信息",notes = "3、获取报名时间+地点的动态“库存”统计信息")
-    @RequestMapping(value = "/getMatchApplySKU", method = {RequestMethod.POST})
+    @ApiOperation(value = "3、获取报名时间+地点的动态“库存”统计信息", notes = "3、获取报名时间+地点的动态“库存”统计信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "matchDayId", paramType = "query",value = "时间id", required = true, dataType = "Integer",defaultValue = "1"),
+            @ApiImplicitParam(name = "matchDayId", paramType = "query", value = "时间id", required = true, dataType = "Integer", defaultValue = "1"),
     })
-    public ResponseResult getMatchApplySKU(Integer matchDayId  ) {
+    @RequestMapping(value = "/getMatchApplySKU", method = {RequestMethod.POST})
+    public ResponseResult getMatchApplySKU(Integer matchDayId) {
         return new ResponseResult(ResponseResult.SUCCESS, "success", matchApplyService.findByMatchDayId(matchDayId));
     }
 
     /**
      * 报名参赛
      */
-    @ApiOperation(value = "4、报名参赛",notes = "4、报名参赛")
-    @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST})
+    @ApiOperation(value = "4、报名参赛", notes = "4、报名参赛")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "e44ab68b1c7bb15fc7e014103"),
-            @ApiImplicitParam(name = "matchDayId", paramType = "query",value = "报名时间ID", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "matchPlaceId", paramType = "query",value = "报名地点ID", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "idNumber", paramType = "query",value = "身份证号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商id", required = true, dataType = "String", defaultValue = "e44ab68b1c7bb15fc7e014103"),
+            @ApiImplicitParam(name = "matchDayId", paramType = "query", value = "报名时间ID", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "matchPlaceId", paramType = "query", value = "报名地点ID", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "idNumber", paramType = "query", value = "身份证号", required = true, dataType = "String"),
     })
+    @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST})
     public ResponseResult applyMatch(HttpServletRequest request,
                                      String cpId,
                                      Integer matchDayId,
                                      Integer matchPlaceId,
                                      String idNumber) {
-        MatchApply matchApply =null;
-        if (cpId==null && "".equals(cpId.trim())){
-            return  ResponseResult.errorResult("error");
+        MatchApply matchApply = null;
+        if (cpId == null || "".equals(cpId.trim())) {
+            return ResponseResult.errorResult("error");
         }
-        CpSource cpSource =matchApplyService.findByCpIdCode(cpId);
-        if (cpSource==null){
+        CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
+        if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
         }
-        if(BaseUtils.compareCurrentTime(cutOffDate)){
+        if (BaseUtils.compareCurrentTime(cutOffDate)) {
             return ResponseResult.errorResult("报名尚未开启");
         }
+
         matchApplyService.AddCpHotCount(cpId);
+
         if (matchDayId != null && matchDayId != 0 && matchPlaceId != null
                 && matchPlaceId != 0 && idNumber != null && !"".equals(idNumber.trim())) {
-            if(idNumber.length()!=18){
-                return  ResponseResult.errorResult("身份证号不合法");
+
+            if (idNumber.length() != 18) {
+                return ResponseResult.errorResult("身份证号不合法");
             }
+
             ResponseRatingForQueryInfo responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
+
             if (responseRatingForQueryInfo == null) {
                 return ResponseResult.errorResult("没有该用户的大师分数据");
             }
-            if (responseRatingForQueryInfo != null && responseRatingForQueryInfo.getRanking() > Integer.parseInt(ratingRank)){
+            if (responseRatingForQueryInfo != null && responseRatingForQueryInfo.getRanking() > Integer.parseInt(ratingRank)) {
                 return ResponseResult.errorResult("大师分排名没有达到2017之前");
             }
-            matchApply =matchApplyService.findByIdNumber(idNumber);
-            if (matchApply!=null){
+
+            matchApply = matchApplyService.findByIdNumber(idNumber);
+
+            if (matchApply != null) {
                 return ResponseResult.errorResult("该用户已报名");
-            }else{
-                matchApplyService.addMatchApplySkuCount(matchDayId, matchPlaceId);
-                UserModel userModel=userService.getCurrentUser(idNumber);
-                MatchAddresssDayDetail matchAddresssDayDetail=matchApplyService.applyMatch(cpId,matchDayId, matchPlaceId, idNumber);
-                if (matchAddresssDayDetail!=null && userModel!=null){
-                    smsService.sendCCPCApplyPass(userModel.getMobile(),matchAddresssDayDetail.getDayDetail(),matchAddresssDayDetail.getPlaceDetail());
+            } else {
+                try{
+                    MatchAddresssDayDetail matchAddresssDayDetail = matchApplyService.doMatchApply(cpId,idNumber,matchDayId,matchPlaceId);
+
+                    UserModel userModel = userService.getCurrentUser(idNumber);
+
+                    if (matchAddresssDayDetail != null && userModel != null) {
+                        smsService.sendCCPCApplyPass(userModel.getMobile(), matchAddresssDayDetail.getDayDetail(), matchAddresssDayDetail.getPlaceDetail());
+                    }
+
+                    return ResponseResult.successResult("报名成功");
+                }catch (Exception e){
+
                 }
-                return ResponseResult.successResult("报名成功");
+
             }
 
         }
@@ -162,38 +178,41 @@ public class ApplyController extends BaseController {
     /**
      * 查询资格
      */
-    @ApiOperation(value = "5、查询资格",notes = "5、查询资格")
-    @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST})
+    @ApiOperation(value = "5、查询资格", notes = "5、查询资格")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "e44ab68b1c7bb15fc7e014103"),
-            @ApiImplicitParam(name = "realName", paramType = "query",value = "真实姓名", required = true, dataType = "String",defaultValue = "陈亚"),
-            @ApiImplicitParam(name = "idNumber", paramType = "query",value = "身份证号", required = true, dataType = "String",defaultValue = "310108196312261637"),
-            @ApiImplicitParam(name = "mobile", paramType = "query",value = "手机号", required = true, dataType = "String",defaultValue = "18310456275"),
-            @ApiImplicitParam(name = "checkCode", paramType = "query",value = "手机验证码", required = true, dataType = "String",defaultValue = "2323"),
+            @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商id", required = true, dataType = "String", defaultValue = "e44ab68b1c7bb15fc7e014103"),
+            @ApiImplicitParam(name = "realName", paramType = "query", value = "真实姓名", required = true, dataType = "String", defaultValue = "陈亚"),
+            @ApiImplicitParam(name = "idNumber", paramType = "query", value = "身份证号", required = true, dataType = "String", defaultValue = "310108196312261637"),
+            @ApiImplicitParam(name = "mobile", paramType = "query", value = "手机号", required = true, dataType = "String", defaultValue = "18310456275"),
+            @ApiImplicitParam(name = "checkCode", paramType = "query", value = "手机验证码", required = true, dataType = "String", defaultValue = "2323"),
     })
+    @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST})
     public ResponseResult getCurrentUserInfo(HttpServletRequest request,
                                              String cpId,
                                              String realName, String idNumber, String mobile, String checkCode) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
 
-        if (cpId==null && "".equals(cpId.trim())){
-            return  ResponseResult.errorResult("error");
+        if (cpId == null || "".equals(cpId.trim())) {
+            return ResponseResult.errorResult("error");
         }
-       CpSource cpSource =matchApplyService.findByCpIdCode(cpId);
-        if (cpSource==null){
+        CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
+        if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
         }
+
         matchApplyService.AddCpHotCount(cpId);
+
         //手机验证码
         if ("true".equals(loginCheckMobileCode)) {
             result = smsService.checkMobileCode(mobile, checkCode);
-            if (result.getCode()!=0){
+            if (result.getCode() != 0) {
                 return result;
             }
         }
-        UserModel userModel =null;
-        userModel =userService.getCurrentUser(idNumber);
-        if (userModel==null) {
+
+        UserModel userModel = null;
+        userModel = userService.getCurrentUser(idNumber);
+        if (userModel == null) {
             ResponseRatingForQueryInfo responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
             if (responseRatingForQueryInfo == null) {
                 return ResponseResult.successResult("没有该用户的大师分数据");
@@ -203,8 +222,9 @@ public class ApplyController extends BaseController {
                 }
             }
         }
-        if (userModel!=null){
-            if(!realName.trim().equals(userModel.getRealName().trim())){
+
+        if (userModel != null) {
+            if (!realName.trim().equals(userModel.getRealName().trim())) {
                 return ResponseResult.errorResult("姓名和身份证号不匹配");
             }
         }
@@ -215,25 +235,27 @@ public class ApplyController extends BaseController {
     /**
      * 获取当前用户报名信息
      */
-    @ApiOperation(value = "6、获取当前用户报名信息",notes = "6、获取当前用户报名信息")
-    @RequestMapping(value = "/getCurrentUserMatchApply", method = {RequestMethod.POST})
+    @ApiOperation(value = "6、获取当前用户报名信息", notes = "6、获取当前用户报名信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "e44ab68b1c7bb15fc7e014103"),
-            @ApiImplicitParam(name = "idNumber",paramType = "query", value = "身份证号", required = true, dataType = "String",defaultValue="310108196312261637"),
+            @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商id", required = true, dataType = "String", defaultValue = "e44ab68b1c7bb15fc7e014103"),
+            @ApiImplicitParam(name = "idNumber", paramType = "query", value = "身份证号", required = true, dataType = "String", defaultValue = "310108196312261637"),
     })
-    public ResponseResult getCurrentUserMatchApply(HttpServletRequest request,String cpId, String idNumber) {
+    @RequestMapping(value = "/getCurrentUserMatchApply", method = {RequestMethod.POST})
+    public ResponseResult getCurrentUserMatchApply(HttpServletRequest request, String cpId, String idNumber) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
-        if (cpId==null && "".equals(cpId.trim())){
-            return  ResponseResult.errorResult("error");
+        if (cpId == null || "".equals(cpId.trim())) {
+            return ResponseResult.errorResult("error");
         }
-        CpSource cpSource =matchApplyService.findByCpIdCode(cpId);
-        if (cpSource==null){
+        CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
+        if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
         }
+
         matchApplyService.AddCpHotCount(cpId);
-        if (result.getCode() == ResponseResult.SUCCESS) {
+
+        if (result.getCode().equals(ResponseResult.SUCCESS)) {
             UserModel userModel = userService.getCurrentUser(idNumber);
-            if (userModel!=null){
+            if (userModel != null) {
                 return new ResponseResult(ResponseResult.SUCCESS, "获取当前信息成功", userModel);
             }
         }
@@ -244,61 +266,68 @@ public class ApplyController extends BaseController {
     /**
      * 加密厂商cpId
      */
-    @ApiOperation(value = "7、加密厂商cpId",notes = "7、加密厂商cpId")
-    @RequestMapping(value = "/addCpSource", method = {RequestMethod.POST})
+    @ApiOperation(value = "7、加密厂商cpId", notes = "7、加密厂商cpId")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId",paramType = "query", value = "厂商标识id", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商标识id", required = true, dataType = "String"),
     })
-    public ResponseResult addCpSource(HttpServletRequest request, String  cpId) {
+    @RequestMapping(value = "/addCpSource", method = {RequestMethod.POST})
+    public ResponseResult addCpSource(HttpServletRequest request, String cpId) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
-        if (cpId==null && "".equals(cpId.trim())){
-            return  ResponseResult.errorResult("error");
+        if (cpId == null || "".equals(cpId.trim())) {
+            return ResponseResult.errorResult("error");
         }
-        String cpIdCode =matchApplyService.addCpSource(cpId);
-        return new ResponseResult(ResponseResult.SUCCESS,"获取当前信息成功",cpIdCode);
+        String cpIdCode = matchApplyService.addCpSource(cpId);
+        return new ResponseResult(ResponseResult.SUCCESS, "获取当前信息成功", cpIdCode);
     }
 
     /**
      * 获取分享用户信息
      */
-    @ApiOperation(value = "9、获取分享用户信息",notes = "9、获取分享用户信息")
-    @RequestMapping(value = "/getRelevanceUserId", method = {RequestMethod.POST})
+    @ApiOperation(value = "9、获取分享用户信息", notes = "9、获取分享用户信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cpId", paramType = "query",value = "厂商id", required = true, dataType = "String",defaultValue = "464c8983f7828ef92883d52"),
-            @ApiImplicitParam(name = "userIdCode",paramType = "query", value = "用户ID", required = true, dataType = "String",defaultValue = "6244c1aa2eefca4f86cbf31"),
+            @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商id", required = true, dataType = "String", defaultValue = "464c8983f7828ef92883d52"),
+            @ApiImplicitParam(name = "userIdCode", paramType = "query", value = "用户ID", required = true, dataType = "String", defaultValue = "6244c1aa2eefca4f86cbf31"),
     })
-    public ResponseResult getRelevanceUserId(HttpServletRequest request,String cpId, String userIdCode) {
-        RelevanceUser relevanceUser =matchApplyService.findByUserIdCode(userIdCode);
-        Integer userId=0;
-        if (cpId==null && "".equals(cpId.trim())){
-            return  ResponseResult.errorResult("error");
+    @RequestMapping(value = "/getRelevanceUserId", method = {RequestMethod.POST})
+    public ResponseResult getRelevanceUserId(HttpServletRequest request, String cpId, String userIdCode) {
+        RelevanceUser relevanceUser = matchApplyService.findByUserIdCode(userIdCode);
+        Integer userId = 0;
+        if (cpId == null || "".equals(cpId.trim())) {
+            return ResponseResult.errorResult("error");
         }
-        CpSource cpSource =matchApplyService.findByCpIdCode(cpId);
-        if (cpSource==null){
+        CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
+        if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
         }
+
         matchApplyService.AddCpHotCount(cpId);
-        if (relevanceUser !=null){
-            userId= relevanceUser.getUserId();
-            User user =userService.findByUserId(userId);
-            if (user!=null){
+
+        if (relevanceUser != null) {
+            userId = relevanceUser.getUserId();
+            User user = userService.findByUserId(userId);
+            if (user != null) {
                 UserModel userModel = userService.getCurrentUser(user.getIdNumber());
                 return new ResponseResult(ResponseResult.SUCCESS, "success", userModel);
             }
         }
         return ResponseResult.errorResult("获取失败");
     }
-    @ApiOperation(value = "10、获取服务器时间",notes = "10、获取服务器时间")
+
+    // true 查询资格
+    // false 开始报名
+    @ApiOperation(value = "10、获取服务器时间", notes = "10、获取服务器时间")
     @RequestMapping(value = "/getCurrentTime", method = {RequestMethod.POST})
     public ResponseResult getCurrentTime() {
-        Map<String,Object> map =new HashedMap();
-        Date date =new Date();
-        Date date1 =BaseUtils.formatStrToDate(cutOffDate+" 12:30:00");
-        Boolean checkDate =true;
-        if (!date.before(date1)){
-            checkDate =false;
+
+        Date now = new Date();
+        Date cutOff = BaseUtils.formatStrToDate(cutOffDate + " 12:30:00");
+
+        Boolean checkDate = true;
+
+        if (cutOff.before(now)) {
+            checkDate = false;
         }
-        return new ResponseResult(ResponseResult.SUCCESS,"sucess",checkDate);
+        return new ResponseResult(ResponseResult.SUCCESS, "sucess", checkDate);
 
 
     }

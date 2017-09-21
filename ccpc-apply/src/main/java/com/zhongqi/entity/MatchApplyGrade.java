@@ -5,6 +5,8 @@ import java.util.Date;
 
 /**
  * Created by ningcs on 2017/9/13.
+ * 比赛成绩
+ * 数据来源：导入
  */
 public class MatchApplyGrade {
     private Integer id;

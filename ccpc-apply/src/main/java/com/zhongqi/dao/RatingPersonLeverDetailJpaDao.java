@@ -14,9 +14,10 @@ import java.util.List;
 public interface RatingPersonLeverDetailJpaDao extends JpaRepository<RatingPersonLeverDetail,Integer>{
 
     public RatingPersonLeverDetail findByLevelName(String  levelName);
+
     public RatingPersonLeverDetail findByGradeCode(Integer gradeCode);
 
-    @Query(value = "select  * from RatingPersonLeverDetail order by id",nativeQuery=true)
+    @Query(value = "select * from RatingPersonLeverDetail order by id",nativeQuery=true)
     public List<RatingPersonLeverDetail> findRatingPersonLeverDetailList();
 
 }

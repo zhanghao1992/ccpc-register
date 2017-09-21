@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public interface MatchApplyService {
 
+    public MatchAddresssDayDetail doMatchApply(String cpId,String idNumber,Integer matchDayId,Integer matchPlaceId) throws Exception;
+
     //获取截止日期时的固定快照排名
     public ResponseRatingForQueryInfo findMasterPointsRank(String idNumber);
 
@@ -56,7 +58,7 @@ public interface MatchApplyService {
     public void AddCpHotCount(String cpId);
 
     //添加报名人数
-    public void  addMatchApplySkuCount(Integer matchDayId, Integer matchPlaceId);
+    public void  addMatchApplySkuCount(Integer matchDayId, Integer matchPlaceId) throws Exception;
 
     //效验厂商
     public CpSource findByCpIdCode(String cpIdCode);

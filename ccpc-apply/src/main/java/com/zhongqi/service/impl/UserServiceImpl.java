@@ -22,46 +22,40 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static Integer MATCH_Apply_NORMAL = 1;
+    @Autowired
+    UserDao userDao;
     @Value("${cut-off-data}")
     private String cutOffDate;
     @Autowired
     private MatchPlaceJpaDao matchPlaceJpaDao;
-
     @Autowired
     private MatchApplyJpaDao matchApplyJpaDao;
-
     @Autowired
     private MatchDayJpaDao matchDayJpaDao;
-
     @Autowired
     private UserJpaDao userJpaDao;
-
     @Autowired
     private MasterPointQueryService masterPointQueryService;
-
     @Autowired
     private MatchApplyService matchApplyService;
-
     @Autowired
     private RatingPersonLeverDetailJpaDao ratingPersonLeverDetailJpaDao;
 
-    @Autowired
-    UserDao userDao;
-
     @Override
-    public UserModel getCurrentUserInfo(String realName,String idNumber,String mobile) {
-        User user=null;
-        UserModel userModel =null;
-         user = userJpaDao.findByIdNumber(idNumber);
-        if (user==null){
+    public UserModel getCurrentUserInfo(String realName, String idNumber, String mobile) {
+        User user = null;
+        UserModel userModel = null;
+        user = userJpaDao.findByIdNumber(idNumber);
+        if (user == null) {
             this.addUser(realName, idNumber, mobile);
-        }else {
-            this.updateUser(idNumber,mobile, user.getId());
+        } else {
+            this.updateUser(idNumber, mobile, user.getId());
         }
         user = userJpaDao.findByIdNumber(idNumber);
-        if (user!=null) {
-            userModel=this.getUserModel(user);
-            userModel =this.getMatchApply(userModel,idNumber);
+        if (user != null) {
+            userModel = this.getUserModel(user);
+            userModel = this.getMatchApply(userModel, idNumber);
         }
         return userModel;
 
@@ -70,33 +64,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel getCurrentUser(String idNumber) {
 
-        User user=null;
-        UserModel userModel =null;
+        User user = null;
+        UserModel userModel = null;
+
+        // 通过身份证号获取用户
         user = userJpaDao.findByIdNumber(idNumber);
-        if (user!=null) {
-            userModel=this.getUserModel(user);
-            userModel =this.getMatchApply(userModel,idNumber);
+        if (user != null) {
+            userModel = this.getUserModel(user);
+            userModel = this.getMatchApply(userModel, idNumber);
         }
         return userModel;
     }
 
     @Override
     @Transactional
-    public void addUser(String realName,String idNumber,String mobile){
-        User user =new User();
+    public void addUser(String realName, String idNumber, String mobile) {
+        User user = new User();
         user.setIdNumber(idNumber);
         user.setRealName(realName);
         user.setMobile(mobile);
         user.setQueryTime(new Date());
-        userJpaDao.save(user);
+        userJpaDao.saveAndFlush(user);
     }
 
     @Override
     @Transactional
-    public void updateUser( String idNumber, String mobile, Integer id) {
-        User user= userJpaDao.findByIdNumber(idNumber);
+    public void updateUser(String idNumber, String mobile, Integer id) {
+        User user = userJpaDao.findByIdNumber(idNumber);
         user.setMobile(mobile);
-        userJpaDao.save(user);
+        userJpaDao.saveAndFlush(user);
     }
 
     @Override
@@ -105,13 +101,13 @@ public class UserServiceImpl implements UserService {
         return userDao.addUser(list);
     }
 
-
     @Override
     public User findByUserId(Integer userId) {
         return userJpaDao.findById(userId);
     }
 
-    private String  getRelevanceUser(Integer userId) {
+    // 获取用户ID对应的加密码（如果没有就创建一个）
+    private String getRelevanceUser(Integer userId) {
         RelevanceUser relevanceUser = null;
         if (userId != null && userId != 0) {
             relevanceUser = matchApplyService.findByUserId(userId);
@@ -124,36 +120,45 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private UserModel getUserModel(User user){
-        UserModel userModel =new UserModel();
+    // 获取用户Model对象
+    private UserModel getUserModel(User user) {
+        UserModel userModel = null;
+
+        // 获取用户ID对应的加密码（如果没有就创建一个）
         String userIdCode = this.getRelevanceUser(user.getId());
+
         userModel = new UserModel();
         userModel.setId(user.getId());
         userModel.setUserId(userIdCode);
         userModel.setMobile(user.getMobile());
         userModel.setRealName(user.getRealName());
         userModel.setIdNumber(user.getIdNumber());
+
         return userModel;
     }
 
-
-    private UserModel getMatchApply(UserModel userModel,String idNumber) {
+    // 获取用户Model详细信息
+    private UserModel getMatchApply(UserModel userModel, String idNumber) {
         ResponseRatingForQueryInfo responseRatingForQueryInfo = null;
         if (BaseUtils.compareCurrentTime(cutOffDate)) {
+            // 通过接口获取信息
             responseRatingForQueryInfo = masterPointQueryService.findMasterPointsRank(idNumber);
         } else {
+            // 查询本地数据库信息
             responseRatingForQueryInfo = matchApplyService.findMasterPointsRank(idNumber);
         }
 
-
+        // 排名、等级信息
         if (responseRatingForQueryInfo != null) {
-            RatingPersonLeverDetail ratingPersonLeverDetail =ratingPersonLeverDetailJpaDao.findByLevelName(responseRatingForQueryInfo.getLevel_name());
-            if (ratingPersonLeverDetail!=null){
+            RatingPersonLeverDetail ratingPersonLeverDetail = ratingPersonLeverDetailJpaDao.findByLevelName(responseRatingForQueryInfo.getLevel_name());
+            if (ratingPersonLeverDetail != null) {
                 userModel.setLevelCode(ratingPersonLeverDetail.getGradeCode().toString());
                 userModel.setLevelName(responseRatingForQueryInfo.getLevel_name());
             }
             userModel.setMasterPointRank(responseRatingForQueryInfo.getRanking());
         }
+
+        // 报名信息
         MatchApply matchApply = matchApplyJpaDao.findByIdNumberAndStatus(idNumber, MATCH_Apply_NORMAL);
         if (matchApply != null) {
             MatchDay matchDay = matchDayJpaDao.findByMatchDayId(matchApply.getMatchDayId());
@@ -171,6 +176,4 @@ public class UserServiceImpl implements UserService {
         }
         return userModel;
     }
-
-        private static Integer MATCH_Apply_NORMAL=1;
 }

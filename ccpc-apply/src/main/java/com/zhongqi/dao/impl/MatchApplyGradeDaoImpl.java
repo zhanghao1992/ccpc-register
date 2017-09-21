@@ -18,39 +18,39 @@ import java.util.Map;
  * Created by ningcs on 2017/9/13.
  */
 @Repository
-public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
+public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
     public List<MatchApplyGrade> getMatchApplyGradeList(Integer page, Integer page_size, String idNumber,
-                                                        Integer type,String matchTime) {
-        Map<String,Object>  params =new HashedMap();
+                                                        Integer type, String matchTime) {
+        Map<String, Object> params = new HashedMap();
 
-        String sql ="select * from MatchApplyGrade where matchType=:matchType ";
-        params.put("matchType",type);
+        String sql = "select * from MatchApplyGrade where matchType = :matchType ";
+        params.put("matchType", type);
 
-        if(matchTime!=null && !"".equals(matchTime.trim())){
-            sql=sql+"  and matchTime=:matchTime";
-            params.put("matchTime",matchTime);
+        if (matchTime != null && !"".equals(matchTime.trim())) {
+            sql = sql + "  and matchTime = :matchTime";
+            params.put("matchTime", matchTime);
         }
-        if(idNumber!=null && !"".equals(idNumber.trim())){
-            sql=sql+" and identityCardNumber=:idNumber";
-            params.put("idNumber",idNumber);
+        if (idNumber != null && !"".equals(idNumber.trim())) {
+            sql = sql + " and identityCardNumber = :idNumber";
+            params.put("idNumber", idNumber);
         }
-        sql=sql+" order by goldenRank asc";
+        sql = sql + " order by goldenRank asc";
         if (page != null && page_size != null && page != 0 && page_size != 0) {
             sql = sql + " limit :row , :page_size ";
             Integer row = (page - 1) * page_size;
             params.put("row", row);
             params.put("page_size", page_size);
         }
-        List<MatchApplyGrade> matchApplyGradeList =null;
+        List<MatchApplyGrade> matchApplyGradeList = null;
         try {
-            matchApplyGradeList=  jdbcTemplate.query(sql,params,new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
+            matchApplyGradeList = jdbcTemplate.query(sql, params, new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -59,36 +59,36 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
 
     @Override
     public Integer getMatchApplyGradeListCount(String idNumber, Integer type, String matchTime) {
-        Map<String,Object>  params =new HashedMap();
-        String sql ="select count(*) from MatchApplyGrade where matchType=:matchType ";
-        params.put("matchType",type);
-        if(matchTime!=null && !"".equals(matchTime.trim())){
-            sql=sql+"  and matchTime=:matchTime";
-            params.put("matchTime",matchTime);
+        Map<String, Object> params = new HashedMap();
+        String sql = "select count(*) from MatchApplyGrade where matchType = :matchType ";
+        params.put("matchType", type);
+        if (matchTime != null && !"".equals(matchTime.trim())) {
+            sql = sql + "  and matchTime = :matchTime";
+            params.put("matchTime", matchTime);
         }
-        if(idNumber!=null && !"".equals(idNumber.trim())){
-            sql=sql+" and identityCardNumber=:idNumber";
-            params.put("idNumber",idNumber);
+        if (idNumber != null && !"".equals(idNumber.trim())) {
+            sql = sql + " and identityCardNumber = :idNumber";
+            params.put("idNumber", idNumber);
         }
-        Integer total=0;
+        Integer total = 0;
         try {
-            total=  jdbcTemplate.queryForObject(sql,params,Integer.class);
-        }catch (Exception e){
+            total = jdbcTemplate.queryForObject(sql, params, Integer.class);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return total;
     }
 
     @Override
-    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchType(String idNumber,Integer type) {
-        Map<String,Object>  params =new HashedMap();
-        String sql ="select * from MatchApplyGrade where matchType=:matchType and identityCardNumber=:idNumber";
-        params.put("matchType",type);
-        params.put("idNumber",idNumber);
-        MatchApplyGrade  matchApplyGrade=null;
+    public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchType(String idNumber, Integer type) {
+        Map<String, Object> params = new HashedMap();
+        String sql = "select * from MatchApplyGrade where matchType=:matchType and identityCardNumber=:idNumber";
+        params.put("matchType", type);
+        params.put("idNumber", idNumber);
+        MatchApplyGrade matchApplyGrade = null;
         try {
-            matchApplyGrade= jdbcTemplate.queryForObject(sql,params,new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
-        }catch (Exception e){
+            matchApplyGrade = jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return matchApplyGrade;
@@ -96,43 +96,43 @@ public class MatchApplyGradeDaoImpl implements MatchApplyGradeDao{
 
     @Override
     public void addMatchApplyGrade(String identityCardNumber, String playerName, BigDecimal goldenPoint,
-                                   BigDecimal silverPoint, BigDecimal heartPoint,Integer goldenRank,
+                                   BigDecimal silverPoint, BigDecimal heartPoint, Integer goldenRank,
                                    String matchTime, Integer matchType,
                                    double bonus) {
 
-        Map<String,Object>  params =new HashedMap();
-        String sql ="insert into MatchApplyGrade( identityCardNumber,playerName, goldenPoint,silverPoint," +
+        Map<String, Object> params = new HashedMap();
+        String sql = "insert into MatchApplyGrade( identityCardNumber,playerName, goldenPoint,silverPoint," +
                 "heartPoint,goldenRank,matchTime,matchType,bonus,createDatetime)" +
                 "values (:identityCardNumber,:playerName,:goldenPoint,:silverPoint,:heartPoint," +
                 ":goldenRank,:matchTime,:matchType,:bonus,:createDatetime)";
-        params.put("identityCardNumber",identityCardNumber);
-        params.put("playerName",playerName);
-        params.put("goldenPoint",goldenPoint);
-        params.put("silverPoint",silverPoint);
-        params.put("heartPoint",heartPoint);
-        params.put("goldenRank",goldenRank);
-        params.put("matchTime",matchTime);
-        params.put("matchType",matchType);
-        params.put("bonus",bonus);
-        params.put("createDatetime",new Date());
-        jdbcTemplate.update(sql,params);
+        params.put("identityCardNumber", identityCardNumber);
+        params.put("playerName", playerName);
+        params.put("goldenPoint", goldenPoint);
+        params.put("silverPoint", silverPoint);
+        params.put("heartPoint", heartPoint);
+        params.put("goldenRank", goldenRank);
+        params.put("matchTime", matchTime);
+        params.put("matchType", matchType);
+        params.put("bonus", bonus);
+        params.put("createDatetime", new Date());
+        jdbcTemplate.update(sql, params);
 
     }
 
     @Override
     public MatchApplyGrade getMatchApplyGradeByIdNumberAndMatchTypeAndMatchTime(String idNumber, Integer type, String matchTime) {
-        Map<String,Object>  params =new HashedMap();
-        String sql ="select * from MatchApplyGrade where identityCardNumber=:idNumber and matchType=:matchType ";
-        if (type== MatchApplyGradeConstant.MATCH_HALF_FINAL &&matchTime !=null && !"".equals(matchTime) ){
-            sql=sql+" and matchTime=:matchTime";
-            params.put("matchTime",matchTime);
+        Map<String, Object> params = new HashedMap();
+        String sql = "select * from MatchApplyGrade where identityCardNumber = :idNumber and matchType = :matchType ";
+        if (type == MatchApplyGradeConstant.MATCH_HALF_FINAL && matchTime != null && !"".equals(matchTime)) {
+            sql = sql + " and matchTime = :matchTime";
+            params.put("matchTime", matchTime);
         }
-        params.put("matchType",type);
-        params.put("idNumber",idNumber);
-        MatchApplyGrade  matchApplyGrade=null;
+        params.put("matchType", type);
+        params.put("idNumber", idNumber);
+        MatchApplyGrade matchApplyGrade = null;
         try {
-            matchApplyGrade= jdbcTemplate.queryForObject(sql,params,new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
-        }catch (Exception e){
+            matchApplyGrade = jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<MatchApplyGrade>(MatchApplyGrade.class));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return matchApplyGrade;
