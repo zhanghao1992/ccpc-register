@@ -3,9 +3,11 @@ package com.zhongqi.service.impl;
 import com.google.gson.Gson;
 import com.zhongqi.dto.ResponsePersonRatingRankCollection;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
+import com.zhongqi.service.MasterPointApiService;
 import com.zhongqi.service.MasterPointQueryService;
 import com.zhongqi.util.HttpRequestUtils;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +22,25 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
     @Value("${get_master_point_ip}")
     private String url;
 
+    @Autowired
+    private MasterPointApiService masterPointApiService;
+
 
     @Override
     public ResponseRatingForQueryInfo findMasterPointsRank(String idNumber) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.element("idNumber", idNumber);
+
         Long time = new Date().getTime();
-        String params = "";
+        //String params = "";
         ResponseRatingForQueryInfo responseRatingForQueryInfo = null;
-        params = "?" + "player_id_number=" + idNumber + "&timestamp=" + time;
-        JSONObject result = HttpRequestUtils.httpGetJsonObject(url + "/rating/by_identity_number.do" + params);
+        //params = "?" + "player_id_number=" + idNumber + "&timestamp=" + time;
+        //JSONObject result = HttpRequestUtils.httpGetJsonObject(url + "/rating/by_identity_number.do" + params);
+
+        String timestamp = String.valueOf(time);
+
+        String response = masterPointApiService.queryPersonRatingHandle(idNumber,timestamp);
+
+        JSONObject result = JSONObject.fromObject(response);
+
         if (result != null && result.size() != 0) {
             String ranking = result.get("ranking").toString();
             String level_name = result.get("level_name").toString();
@@ -43,13 +54,4 @@ public class MasterPointQueryServiceImpl implements MasterPointQueryService {
         return responseRatingForQueryInfo;
     }
 
-    @Override
-    public ResponsePersonRatingRankCollection getPersonRatingRankInfo(Integer page, Integer page_size) {
-        String params = "";
-        params = "?" + "page=" + page + "&&page_size=" + page_size;
-        String str = HttpRequestUtils.httpGet(url + "/rating/rank/list.do" + params);
-        Gson gson = new Gson();
-        ResponsePersonRatingRankCollection responsePersonRatingRankCollection = gson.fromJson(str, ResponsePersonRatingRankCollection.class);
-        return responsePersonRatingRankCollection;
-    }
 }
