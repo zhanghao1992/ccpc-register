@@ -5,6 +5,7 @@ import net.sf.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -444,17 +445,18 @@ public class BaseUtils {
     public static String getStarIdNumber(String idNumber) {
         String starIdNumber = "";
         if (idNumber != null) {
-            starIdNumber = idNumber.substring(0, 6)+"********"+idNumber.substring(14,18);
+            starIdNumber = idNumber.substring(0, 6) + "********" + idNumber.substring(14, 18);
         }
         return starIdNumber;
     }
+
     /**
      * 从26为字母中获得一个十位随机数（纯字母）
      * ok
      */
     public static String getTenRandomLetter() {
         String word = "abcdefghijklmnopqrstuvwxyz";
-        String tmp="";
+        String tmp = "";
 
         for (int i = 0; i < 10; i++) {
             Random random = new Random();
@@ -471,7 +473,7 @@ public class BaseUtils {
      */
     public static String getTenRandomLetterAndNumber() {
         String word = "0123456789abcdefghijklmnopqrstuvwxyz";
-        String tmp="";
+        String tmp = "";
 
         for (int i = 0; i < 10; i++) {
             Random random = new Random();
@@ -484,11 +486,12 @@ public class BaseUtils {
 
     /**
      * 以逗号截取数字字符串获得number
+     *
      * @param str
      */
-    public static List<Integer> getListNumberByStr(String str){
-        List<Integer> list =new ArrayList<>();
-        if(str!=null && !"".equals(str.trim())) {
+    public static List<Integer> getListNumberByStr(String str) {
+        List<Integer> list = new ArrayList<>();
+        if (str != null && !"".equals(str.trim())) {
             str = str.trim();
             String[] ss = str.split(",");
 
@@ -503,6 +506,7 @@ public class BaseUtils {
 
     /**
      * 根据生日计算当前年龄
+     *
      * @param birthDay
      * @return
      */
@@ -529,7 +533,7 @@ public class BaseUtils {
         if (monthNow <= monthBirth) {
             if (monthNow == monthBirth) {
                 if (dayOfMonthNow < dayOfMonthBirth) age--;
-            }else{
+            } else {
                 age--;
             }
         }
@@ -538,26 +542,28 @@ public class BaseUtils {
 
     /**
      * 通过身份证号获取年龄
+     *
      * @return
      */
-    public static Integer   getAgeByIdNumber(String idNumber){
-        String birthday="";
-        String date ="";
-        Integer  age=0;
+    public static Integer getAgeByIdNumber(String idNumber) {
+        String birthday = "";
+        String date = "";
+        Integer age = 0;
         if (idNumber != null && !"".equals(idNumber.trim())) {
             birthday = idNumber.substring(6, 10);
             date = BaseUtils.formatDateToStrYear(new Date());
-            age =Integer.parseInt(date)-Integer.parseInt(birthday);
+            age = Integer.parseInt(date) - Integer.parseInt(birthday);
         }
         return age;
     }
 
     /**
      * 通过身份证号获取性别
+     *
      * @return
      */
-    public static String getSexNameByIdNumber(String idNumber){
-        String sexName="";
+    public static String getSexNameByIdNumber(String idNumber) {
+        String sexName = "";
         if (idNumber != null && !"".equals(idNumber.trim())) {
             String sex = idNumber.substring(16, 17);
             if (Integer.parseInt(sex) % 2 == 0) {
@@ -573,21 +579,19 @@ public class BaseUtils {
 
     /**
      * 获取json对象
+     *
      * @param jsonFile
      * @return
      * @ningcs
-     *
      */
-    public static JSONObject getFileJson(String jsonFile){
+    public static JSONObject getFileJson(String jsonFile) {
         JSONArray jsonArray = JSONArray.fromObject(jsonFile);
-        JSONObject jsonObject=null;
+        JSONObject jsonObject = null;
         for (int i = 0; i < jsonArray.size(); i++) {
             jsonObject = jsonArray.getJSONObject(i);
         }
         return jsonObject;
     }
-
-
 
 
     public static void main(String[] args) {
@@ -597,29 +601,29 @@ public class BaseUtils {
         boolean bl_email = isEmail("songrf@1.2");
         System.out.println("bl_email = " + bl_email);
 
-        System.out.println("Math.random() = "+Math.random()*26);
+        System.out.println("Math.random() = " + Math.random() * 26);
 
         Random random = new Random();
         Integer ran = random.nextInt(26);
-        System.out.println("ran"+ran);
+        System.out.println("ran" + ran);
     }
 
 
     /**
      * 替换所有中文年月日为-
      * 2016年5月30日2016-5-30
+     *
      * @param dateStr
      * @return
      * @ningcs
-     *
      */
     public static Date getReplaceAllDate(String dateStr) {
-        String dates ="";
-        Date date1 =null;
-        if (dateStr!=null && !"".equals(dateStr.trim())){
+        String dates = "";
+        Date date1 = null;
+        if (dateStr != null && !"".equals(dateStr.trim())) {
             dates = dateStr.replaceAll("[\\u4e00-\\u9fa5]+", "-");
-            dates = dates.substring(0,dates.length() - 1);
-            date1= BaseUtils.formatStrToDateDay(dates);
+            dates = dates.substring(0, dates.length() - 1);
+            date1 = BaseUtils.formatStrToDateDay(dates);
         }
         System.out.println(dates);
         return date1;
@@ -629,7 +633,6 @@ public class BaseUtils {
      * 将字符串去重并将字符串重新合并
      *
      * @ningcs
-     *
      */
     public static String getRemoveSame(String str) {
         List<String> list = new ArrayList<>();
@@ -639,18 +642,18 @@ public class BaseUtils {
             if (ss != null) {
                 for (int i = 0; i < ss.length; i++) {
                     list.add(ss[i]);
-                    }
+                }
             }
         }
-        HashSet<String > hs = new HashSet<String>(list);
+        HashSet<String> hs = new HashSet<String>(list);
         List<String> list1 = new ArrayList<>();
-        for (String string :hs){
+        for (String string : hs) {
             list1.add(string);
         }
-        String str1 ="";
-        if (!list1.isEmpty()){
-            for (String strs :list1){
-                str1 =str1+strs+"/";
+        String str1 = "";
+        if (!list1.isEmpty()) {
+            for (String strs : list1) {
+                str1 = str1 + strs + "/";
             }
         }
         return str1;
@@ -659,38 +662,112 @@ public class BaseUtils {
     /**
      * 传入的时间与当前时间比较
      * 当前时间早于 传入时间 true
-     *  当前时间晚于 传入时间 false
-     * @ningcs
+     * 当前时间晚于 传入时间 false
      *
+     * @ningcs
      */
     public static Boolean compareCurrentTime(String dateStr) {
-        Boolean checkResult=false;
-        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd");
-        Date date =new Date();
-        String date1 =dateFormater.format(date);
-        date = BaseUtils.formatStrToDateDay(date1);
-        Date date2 =BaseUtils.formatStrToDateDay(dateStr);
-        //2017-7-4 早于2017-9-30
-        if (date.before(date2)){
-            checkResult =true;
+        Boolean checkResult = false;
+
+        try {
+            SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            Date now = new Date();
+
+            Date applyStart = dateFormater.parse(dateStr + " 12:30:00");
+
+            //2017-7-4 早于2017-9-30
+            if (now.before(applyStart)) {
+                checkResult = true;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return checkResult;
 
     }
 
-//    /**
-//     * 循环取出100条数据
-//     * @ningcs
-//     *
-//     */
-//    public static List getHundredList(List list){
-//        int k = 0;
-//        for(int i = 0;i<list.size();i+=100){
-//            List  newlist = list.subList(i,i+99);
-//            k++;
-//        }
-//        return  newlist;
-//    }
+    /**
+     * 身份证号加密
+     *
+     * @ningcs 加密后4113********21*
+     */
+    public static String encryptIdNumber(String idNumber) {
+        String regex = "(\\w{4})(\\w+)(\\w{3})";
+        idNumber = idNumber.replaceAll(regex, "$1****$3");
+        idNumber = idNumber.substring(0, idNumber.length() - 1) + "*";
+        return idNumber;
+    }
+
+    /**
+     * 姓名加密(只保留姓氏)
+     *
+     * @ningcs
+     */
+    public static String encryptRealName(String realName) {
+        //保留姓氏
+        char str2 = realName.charAt(0);
+        //截取名字
+        String str1 = realName.substring(1);
+        //用正则表达式替换(包括汉字，数字，大小写字母)
+        str1 = str1.replaceAll("[^x00-xff]|\\w", "*");
+        //输出替换后的名字
+        realName = str2 + str1;
+        return realName;
+    }
+
+
+    /**
+     * 四舍五入得两位小数
+     *
+     * @ningcs
+     */
+    public static String getTwoDecimal(Double decimal) {
+        String decimals = "";
+        DecimalFormat df = new DecimalFormat("#.00");
+        if (decimal != null && (decimal > 0.0001) || (decimal < -0.0001)) {
+            decimals = df.format(decimal);
+            return decimals;
+        }
+        return decimals;
+    }
+
+    /**
+     * 字符串转换Double
+     * 四舍五入得两位小数
+     *
+     * @ningcs
+     */
+    public static Double getTwoDecimalDouble(String decimal) {
+        String decimalStr = "";
+        Double decimals = 0.0;
+        decimals = Double.parseDouble(decimal);
+        DecimalFormat df = new DecimalFormat("#.00");
+        if (decimals != null && (decimals > 0.0001) || (decimals < -0.0001)) {
+            decimalStr = df.format(decimals);
+            decimals = Double.parseDouble(decimalStr);
+            return decimals;
+        }
+        return decimals;
+    }
+
+    /**
+     * 跨域请求
+     * 返回形式
+     *
+     * @param result
+     * @return
+     */
+    public static String callBack(ResponseResult result, String callback) {
+        String callBacks = "";
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        callBacks = callback + "(" + jsonObject + ")";
+        return callBacks;
+
+    }
+
 
 
 }

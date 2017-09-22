@@ -12,14 +12,14 @@ public class RelevanceUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "userId",nullable = false)
+    @Column(name = "userId", nullable = false)
     private Integer userId;
 
 
-    @Column(name = "userIdCode",nullable = false)
+    @Column(name = "userIdCode", nullable = false)
     private String userIdCode;
 
     @Column(name = "createDate")

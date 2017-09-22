@@ -12,13 +12,13 @@ public class CpSource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "cpId",nullable = true)
+    @Column(name = "cpId", nullable = true)
     private String cpId;
 
-    @Column(name = "cpIdCode",nullable = true)
+    @Column(name = "cpIdCode", nullable = true)
     private String cpIdCode;
 
 

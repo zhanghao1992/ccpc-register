@@ -1,6 +1,5 @@
 package com.zhongqi.dao;
 
-import com.zhongqi.entity.MatchApplySku;
 import com.zhongqi.entity.MatchPlace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MatchPlaceJpaDao extends JpaRepository<MatchPlace,Integer> {
-    public MatchPlace findById(Integer id);
+    public MatchPlace findByMatchPlaceId(Integer matchPlaceId);
 }

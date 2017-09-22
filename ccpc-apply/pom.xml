@@ -5,7 +5,7 @@
 
 	<groupId>com.zhongqi</groupId>
 	<artifactId>ccpc-apply</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>ccpc-apply</name>
@@ -69,7 +69,19 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>patchca</groupId>
+			<artifactId>patchca</artifactId>
+			<version>1.0</version>
+			<!--<scope>system</scope>-->
+			<!--<systemPath>${libs.path}/../libs/patchca-0.5.0.jar</systemPath>-->
+		</dependency>
 
+		<dependency>
+			<groupId>com.taobao.api</groupId>
+			<artifactId>taobao-sdk-java-auto</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 
 			<!--fastjson list 与json互相转换-->
@@ -111,17 +123,7 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.6.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>core</artifactId>
-			<version>3.1.0</version>
-		</dependency>
 
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>javase</artifactId>
-			<version>3.0.0</version>
-		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
