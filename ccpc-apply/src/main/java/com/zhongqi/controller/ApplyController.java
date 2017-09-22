@@ -1,5 +1,6 @@
 package com.zhongqi.controller;
 
+import com.zhongqi.dto.GlobalParameters;
 import com.zhongqi.dto.ResponseRatingForQueryInfo;
 import com.zhongqi.entity.CpSource;
 import com.zhongqi.entity.MatchApply;
@@ -14,7 +15,6 @@ import com.zhongqi.util.ResponseResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by songrenfei on 2017/7/3.
@@ -64,7 +63,7 @@ public class ApplyController extends BaseController {
      * 发送图形验证码
      */
     @ApiOperation(value = "0、发送图形验证码", notes = "0、发送图形验证码")
-    @RequestMapping(value = "/createCaptcha", method = {RequestMethod.POST})
+    @RequestMapping(value = "/createCaptcha", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult createCaptcha(HttpServletRequest request, HttpServletResponse response) {
         return fileService.createCaptcha();
     }
@@ -77,7 +76,7 @@ public class ApplyController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", paramType = "query", value = "手机号", required = true, dataType = "String")
     })
-    @RequestMapping(value = "/sendMobileCode", method = {RequestMethod.POST})
+    @RequestMapping(value = "/sendMobileCode", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult sendMobileCode(String mobile, HttpServletRequest request, HttpServletResponse response) {
         Integer userId = 0;
         return smsService.sendMobileCode(userId, mobile);
@@ -87,7 +86,7 @@ public class ApplyController extends BaseController {
      * 获取报名时间列表
      */
     @ApiOperation(value = "2、获取报名时间列表", notes = "2、获取报名时间列表")
-    @RequestMapping(value = "/getMatchApplyDayList", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getMatchApplyDayList", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getMatchApplyDayList() {
         return new ResponseResult(ResponseResult.SUCCESS, "success", matchApplyService.getMatchApplyDayList());
     }
@@ -99,7 +98,7 @@ public class ApplyController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "matchDayId", paramType = "query", value = "时间id", required = true, dataType = "Integer", defaultValue = "1"),
     })
-    @RequestMapping(value = "/getMatchApplySKU", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getMatchApplySKU", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getMatchApplySKU(Integer matchDayId) {
         return new ResponseResult(ResponseResult.SUCCESS, "success", matchApplyService.findByMatchDayId(matchDayId));
     }
@@ -114,7 +113,7 @@ public class ApplyController extends BaseController {
             @ApiImplicitParam(name = "matchPlaceId", paramType = "query", value = "报名地点ID", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "idNumber", paramType = "query", value = "身份证号", required = true, dataType = "String"),
     })
-    @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST})
+    @RequestMapping(value = "/applyMatch", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult applyMatch(HttpServletRequest request,
                                      String cpId,
                                      Integer matchDayId,
@@ -127,6 +126,8 @@ public class ApplyController extends BaseController {
         CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
         if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
+        }else{
+            GlobalParameters.CPID = cpSource.getCpId();
         }
         if (BaseUtils.compareCurrentTime(cutOffDate)) {
             return ResponseResult.errorResult("报名尚未开启");
@@ -155,8 +156,8 @@ public class ApplyController extends BaseController {
             if (matchApply != null) {
                 return ResponseResult.errorResult("该用户已报名");
             } else {
-                try{
-                    MatchAddresssDayDetail matchAddresssDayDetail = matchApplyService.doMatchApply(cpId,idNumber,matchDayId,matchPlaceId);
+                try {
+                    MatchAddresssDayDetail matchAddresssDayDetail = matchApplyService.doMatchApply(cpId, idNumber, matchDayId, matchPlaceId);
 
                     UserModel userModel = userService.getCurrentUser(idNumber);
 
@@ -165,7 +166,7 @@ public class ApplyController extends BaseController {
                     }
 
                     return ResponseResult.successResult("报名成功");
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -186,7 +187,7 @@ public class ApplyController extends BaseController {
             @ApiImplicitParam(name = "mobile", paramType = "query", value = "手机号", required = true, dataType = "String", defaultValue = "18310456275"),
             @ApiImplicitParam(name = "checkCode", paramType = "query", value = "手机验证码", required = true, dataType = "String", defaultValue = "2323"),
     })
-    @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getCurrentUserInfo", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getCurrentUserInfo(HttpServletRequest request,
                                              String cpId,
                                              String realName, String idNumber, String mobile, String checkCode) {
@@ -198,6 +199,8 @@ public class ApplyController extends BaseController {
         CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
         if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
+        }else{
+            GlobalParameters.CPID = cpSource.getCpId();
         }
 
         matchApplyService.AddCpHotCount(cpId);
@@ -240,7 +243,7 @@ public class ApplyController extends BaseController {
             @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商id", required = true, dataType = "String", defaultValue = "e44ab68b1c7bb15fc7e014103"),
             @ApiImplicitParam(name = "idNumber", paramType = "query", value = "身份证号", required = true, dataType = "String", defaultValue = "310108196312261637"),
     })
-    @RequestMapping(value = "/getCurrentUserMatchApply", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getCurrentUserMatchApply", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getCurrentUserMatchApply(HttpServletRequest request, String cpId, String idNumber) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
         if (cpId == null || "".equals(cpId.trim())) {
@@ -249,6 +252,8 @@ public class ApplyController extends BaseController {
         CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
         if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
+        }else{
+            GlobalParameters.CPID = cpSource.getCpId();
         }
 
         matchApplyService.AddCpHotCount(cpId);
@@ -270,7 +275,7 @@ public class ApplyController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商标识id", required = true, dataType = "String"),
     })
-    @RequestMapping(value = "/addCpSource", method = {RequestMethod.POST})
+    @RequestMapping(value = "/addCpSource", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult addCpSource(HttpServletRequest request, String cpId) {
         ResponseResult result = ResponseResult.successResult("参数校验成功");
         if (cpId == null || "".equals(cpId.trim())) {
@@ -288,7 +293,7 @@ public class ApplyController extends BaseController {
             @ApiImplicitParam(name = "cpId", paramType = "query", value = "厂商id", required = true, dataType = "String", defaultValue = "464c8983f7828ef92883d52"),
             @ApiImplicitParam(name = "userIdCode", paramType = "query", value = "用户ID", required = true, dataType = "String", defaultValue = "6244c1aa2eefca4f86cbf31"),
     })
-    @RequestMapping(value = "/getRelevanceUserId", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getRelevanceUserId", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getRelevanceUserId(HttpServletRequest request, String cpId, String userIdCode) {
         RelevanceUser relevanceUser = matchApplyService.findByUserIdCode(userIdCode);
         Integer userId = 0;
@@ -298,6 +303,8 @@ public class ApplyController extends BaseController {
         CpSource cpSource = matchApplyService.findByCpIdCode(cpId);
         if (cpSource == null) {
             return ResponseResult.errorResult("厂商不合法");
+        } else {
+            GlobalParameters.CPID = cpSource.getCpId();
         }
 
         matchApplyService.AddCpHotCount(cpId);
@@ -316,7 +323,7 @@ public class ApplyController extends BaseController {
     // true 查询资格
     // false 开始报名
     @ApiOperation(value = "10、获取服务器时间", notes = "10、获取服务器时间")
-    @RequestMapping(value = "/getCurrentTime", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getCurrentTime", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseResult getCurrentTime() {
 
         Date now = new Date();
