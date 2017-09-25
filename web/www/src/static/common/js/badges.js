@@ -143,9 +143,9 @@ var cpList = [
     }
 ];
 
-function __uri(src) {
-    return src;
-}
+// function __uri(src) {
+//     return src;
+// }
 
 //徽章图片
 function getBadgeImg(imgEle, levelCode) {

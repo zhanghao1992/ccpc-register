@@ -62,14 +62,14 @@ router.get('/errorCp', function (req, res, next) {
     res.render('pages/errorCp');
 });
 
-//模拟厂商接口页面
-router.get('/simulationCp', function (req, res, next) {
-    res.render('pages/simulationCp');
-});
-
-router.get('/demo', function (req, res, next) {
-    res.render('pages/demo');
-});
+// //模拟厂商接口页面
+// router.get('/simulationCp', function (req, res, next) {
+//     res.render('pages/simulationCp');
+// });
+//
+// router.get('/demo', function (req, res, next) {
+//     res.render('pages/demo');
+// });
 
 //手机验证码接口
 router.get('/api/sendMobileCode', function (req, res, next) {
