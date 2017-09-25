@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<!--<meta name="sharecontent" data-msg-img="/static/common/images/share_logo.png" data-msg-title="你的标题"-->
+<!--data-msg-content="你的简介" data-msg-callBack="" data-line-img="/static/common/images/share_logo.png" data-line-title="你的标题" data-line-callBack=""/>-->
+
+<!–QQ强制竖屏–>
+<meta name="x5-orientation" content="portrait">
+<meta name="x5-fullscreen" content="true"/>
+<!–uc强制竖屏–>
+<meta name="screen-orientation" content="portrait">
+<!--<meta http-equiv="pragma" content="no-cache">-->
+<!--<meta http-equiv="cache-control" content="no-cache">-->
+<meta http-equiv="expires" content="0">
+<meta name="format-detection" content="telephone=no, email=no"/>
+<meta name="apple-mobile-web-app-title" content="ccpc">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<meta content="yes" name=" apple-mobile-web-app-capable">
+<meta content="black" name=" apple-mobile-web-app-status-bar-style">
+
+
+{% block baseTitle %}
+<title>ccpc报名</title>
+{% endblock %}
+
+
+<link rel="stylesheet" href="/static/common/css/reset_e8e2ad5.css">
+<link rel="stylesheet" href="/static/common/css/common_afb9751.css">
+
+<!--移动端-->
+<script src="/static/common/js/zepto_a55b2bd.js"></script>
+<script src="/static/common/js/fx_ace0603.js"></script>
+<script src="/static/common/js/set-rem_0bb416b.js"></script>
+<script src="/static/common/js/iscroll_3278477.js"></script>
+<script src="/static/common/js/fastclick_a0fc6c2.js"></script>
+
+<!--pc端-->
+<!--<script src="/static/common/js/jquery-1.9.1.min.js"></script>-->
+<!--<script src="/static/common/js/html5shiv.js"></script>-->
+<script src="/static/common/js/util_6387b8a.js"></script>
+<!--<script src="/static/common/js/dialog.js"></script>-->
+<!--<script src="/static/common/js/dialogPackage.js"></script>-->
+<!--<script src="/static/common/js/json2.js"></script>-->
+<!--<script src="/static/common/js/jquery.placeholder.js"></script>-->
+<!--<script src="/static/common/js/moment.js"></script>-->
+
+<!--棋手徽章配置文件-->
+<script src="/static/common/js/badges_a95d1b5.js"></script>
+
+<!--STYLE_PLACEHOLDER-->
+<!--SCRIPT_PLACEHOLDER-->
+{% block basestylescript %}{% endblock %}
+</head>
+<body class="yahei">
+
+<div style="margin:0 auto;display: none;">
+    <img src="/static/common/images/top_bg_d79f79d.png" alt="">
+</div>
+
+{% block basecontent %}
+
+{% block content %}{% endblock %}
+
+
+{% endblock %}
+<!--<script>$(function(){ $('input, textarea').placeholder();})</script>-->
+
+
+<script>
+//tap点透处理（现版本没发现此bug）
+$(function() {
+   FastClick.attach(document.body);
+});
+document.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+}, false);
+
+window.onload = function () {
+    window.addEventListener("orientationchange", function () {
+        window.location.reload();
+    }, false);
+}
+</script>
+
+</body>
+</html>

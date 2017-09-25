@@ -1,0 +1,446 @@
+{% extends '../layout/base.html' %}
+
+{% block basestylescript %}
+{% include '../layout/template.html' %}
+{% include '../layout/list.html' %}
+{% include '../layout/toast.html' %}
+<link rel="stylesheet" href="/static/common/css/fillInfo_333a1c9.css">
+{% endblock %}
+
+{% block content %}
+
+<div id="wrapper">
+    <section class="fillInfo-wrap">
+        <div class="fillInfo-wrap-top">
+            <span id="back" class="back">返回</span>
+            <div class="prompt">
+                <h3 class="clearfix">
+                    <span class="address-icon"></span>
+                    选择参赛时间、地点
+                    <img class="fr" src="/static/common/images/ccpc_logo_117125a.png" alt="">
+                </h3>
+                <p>
+                    温馨提示：请慎重选择参赛时间、地点、如果要修改请打联系电话 010-87559363且最多一次机会
+                </p>
+            </div>
+        </div>
+        <div class="fillInfo-wrap-bottom">
+            <div class="check-box">
+                <h3 class="clearfix">
+                    <span class="date-icon"></span>
+                    参赛时间
+                </h3>
+                <ul id="dayList" class="clearfix"></ul>
+            </div>
+            <div class="check-box">
+                <h3 class="clearfix">
+                    <span class="address-icon"></span>
+                    参赛地点
+                </h3>
+                <ul id="addressList" class="clearfix"></ul>
+            </div>
+
+            <a id="submit" class="submit" href="javascript:void (0)">提交</a>
+        </div>
+    </section>
+
+    <div id="agreement-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="agreement-close"></span>
+            <h3>CCPC锦标赛报名协议</h3>
+            <div class="text">
+                <p> 禄禄二级牌手大师分排名2200名禄禄二级牌手大
+                    师分排名2200名禄禄二级牌手大师分排名2200
+                    2200名禄禄二级牌手大师分排名2200名禄禄二级
+                    牌手大师分排名2200名禄禄二级牌手大师分排名
+                    2200名禄禄二级牌手大师分排名2200名禄禄二级
+                    牌手大师分排名2200名禄禄二级牌手大师分排名
+                    2200名禄禄二级牌手大师分排名2200名
+                </p>
+            </div>
+            <a id="agree" class="submit" href="javascript:void (0)">同意报名协议</a>
+        </div>
+    </div>
+
+    <div id="info-alert" class="my-alert">
+        <div id="my-alert-content" class="my-alert-content">
+            <span id="info-close" class="my-alert-close"></span>
+            <h3>
+                <img src="/static/common/images/info_alert_title_f9c2c76.png" alt="">
+            </h3>
+            <div>
+                <div class="info-alert-top clearfix">
+                    <img id="badge" class="fl" src="/static/common/images/touxiang_4664457.png" alt="">
+                    <ul class="fl">
+                        <li>{{userInfo.realName}}</li>
+                        <li>{{userInfo.levelName}}</li>
+                        <li>大师分排名：{{userInfo.masterPointRank}}名</li>
+                    </ul>
+                </div>
+                <div class="info-alert-bott">
+                    <ul>
+                        <li class="clearfix"><span></span><p></p></li>
+                        <li class="clearfix"><span></span><p></p></li>
+                        <li class="clearfix"><span></span><p>详细地址：<em class="copy"></em></p></li>
+                    </ul>
+                </div>
+            </div>
+            <nav class="btns clearfix">
+                <a href="javascript:void(0);" id="recheck">重选</a>
+                <a href="javascript:void(0);" id="confirm">确定</a>
+            </nav>
+        </div>
+    </div>
+
+    <div id="back-alert" class="my-alert">
+        <div class="my-alert-content">
+            <span id="back-close" class="my-alert-close"></span>
+            <p>确定退出？</p>
+            <nav class="btns clearfix">
+                <a href="javascript:void(0);" id="yes">是</a>
+                <a href="javascript:void(0);" id="no">否</a>
+            </nav>
+        </div>
+    </div>
+
+</div>
+
+{% if !userInfo %}
+<script>
+window.location.href = 'index?cpId=' + util.getQueryString('cpId');
+</script>
+{% endif %}
+
+<script>
+getBadgeImg('#badge', '{{userInfo.levelCode}}');
+//返回退出
+$('#back').tap(function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
+    $('#back-alert').show();
+    $('#yes').tap(function () {
+        $('#back-alert').hide();
+        $.ajax({
+            url: '/api/backOut',
+            type: 'GET',
+            data: $('#signUp-form').serialize(),
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+                if (json.code == 0) {
+                    window.location.href = '/index?cpId=' + util.getQueryString('cpId');
+                } else {
+                    $('.fillInfo-wrap').toast({
+                        content: json.msg,
+                        duration: 1000
+                    });
+                    return false;
+                }
+            },
+            error: function () {
+                $('.fillInfo-wrap').toast({
+                    content: '出错',
+                    duration: 1000
+                });
+                return false;
+            }
+        });
+    });
+    $('#no').tap(function () {
+        $('#back-alert').hide();
+        loaded();
+    });
+    $('#back-close').tap(function () {
+        loaded();
+    });
+    return false;
+});
+
+var dayLiist, addressList, dayInfo, addrssInfo, dayId, matchPlaceId;
+//获取时间列表
+var matchDayId = 0;
+$.ajax({
+    url: '/api/getMatchApplyDayList',
+    type: 'GET',
+    data: {},
+    dataType: 'json',
+    cache: false,
+    success: function (json) {
+        if (json.code == 0) {
+            dayLiist = json.response.list;
+            $('#dayList').html(baidu.template('dayListTmpl', {data: json}));
+
+            $('#dayList').find('li').each(function (k,v) {
+                if($(v).data('id') === json.response.listCount){
+                    $(v).addClass('active');
+                    matchDayId = $(v).data('id');
+                }
+            });
+            $.ajax({
+                url: '/api/getMatchApplySKU',
+                type: 'GET',
+                data: {
+                    matchDayId: matchDayId
+                },
+                dataType: 'json',
+                cache: false,
+                success: function (json) {
+                    addressList = json.response.list;
+                    if (json.code == 0) {
+                        $('#addressList').html(baidu.template('addressListTmpl', {data: json}));
+                        $('.check-box').eq(1).find('li').eq(json.response.listCount).addClass('active');
+                        loaded();
+                    } else {
+                        $('.fillInfo-wrap').toast({
+                            content: json.msg,
+                            duration: 1000
+                        });
+                        return false;
+                    }
+                },
+                error: function () {
+                    $('.fillInfo-wrap').toast({
+                        content: '出错',
+                        duration: 1000
+                    });
+                    return false;
+                }
+            });
+        } else {
+            $('.fillInfo-wrap').toast({
+                content: json.msg,
+                duration: 1000
+            });
+            return false;
+        }
+    },
+    error: function () {
+        $('.fillInfo-wrap').toast({
+            content: '出错',
+            duration: 1000
+        });
+        return false;
+    }
+});
+
+//时间选择切换
+$('.check-box').eq(0).delegate('li', 'tap', function () {
+    var _this = this;
+    if ($(this).hasClass('disabled')) {
+        return false;
+    } else {
+        $(this).parent('ul').find('li').each(function (index, ele) {
+            if ($(ele).hasClass('active')) {
+                $(ele).removeClass('active');
+            }
+        })
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+
+            //获取地点列表
+            $.ajax({
+                url: '/api/getMatchApplySKU',
+                type: 'GET',
+                data: {
+                    matchDayId: $(_this).data('id')
+                },
+                dataType: 'json',
+                cache: false,
+                success: function (json) {
+                    if (json.code == 0) {
+                        $('#addressList').html(baidu.template('addressListTmpl', {data: json}));
+                        $('.check-box').eq(1).find('li').eq(json.response.listCount).addClass('active');
+                    } else {
+                        $('.fillInfo-wrap').toast({
+                            content: json.msg,
+                            duration: 1000
+                        });
+                        return false;
+                    }
+                },
+                error: function () {
+                    $('.fillInfo-wrap').toast({
+                        content: '出错',
+                        duration: 1000
+                    });
+                    return false;
+                }
+            });
+
+        }
+    }
+    return false;
+});
+
+//地点选择
+$('.check-box').eq(1).delegate('li', 'tap', function () {
+    if ($(this).hasClass('disabled')) {
+        return false;
+    } else {
+        $(this).parent('ul').find('li').each(function (index, ele) {
+            if ($(ele).hasClass('active')) {
+                $(ele).removeClass('active');
+            }
+        })
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+        }
+    }
+    return false;
+});
+
+//点击提交
+$('.fillInfo-wrap-bottom').delegate('#submit', 'tap', function () {
+    if (myScroll) {
+        myScroll.destroy();
+        myScroll = null;
+    }
+    $('#agreement-alert').show();
+
+    $('#dayList').find('li').each(function (k, v) {
+        if ($(v).hasClass('active')) {
+            dayId = $(v).data('id');
+        }
+    });
+    $('#addressList').find('li').each(function (k, v) {
+        if ($(v).hasClass('active')) {
+            matchPlaceId = $(v).data('id');
+        }
+    });
+    $.each(dayLiist, function (k, v) {
+        if (v.id == dayId) {
+            dayInfo = v;
+        }
+    });
+    $.each(addressList, function (k, v) {
+        if (v.matchPlaceId == matchPlaceId) {
+            addrssInfo = v;
+        }
+    });
+
+    $('.info-alert-bott li').eq(0).find('p').html('参赛时间：' + dayInfo.dayInfDetail || '待定');
+    $('.info-alert-bott li').eq(1).find('p').html('参赛地点：' + addrssInfo.place || '待定');
+    $('.info-alert-bott li').find('.copy').html((function () {
+        return !addrssInfo.placeDetail ? '待定' : addrssInfo.placeDetail;
+    })());
+});
+
+//关闭协议弹窗
+$('#agreement-close').tap(function () {
+    $('#agreement-alert').hide();
+    loaded();
+});
+
+//同意协议
+$('#agree').tap(function () {
+    $('#agreement-alert').hide();
+    $('#info-alert').show();
+});
+
+$('#info-close').tap(function () {
+    loaded();
+    $('#info-alert').hide();
+});
+//重新填写报名信息
+$('#recheck').tap(function () {
+    loaded();
+    $('#info-alert').hide();
+});
+
+//点击确定
+$('#confirm').tap(function () {
+    var _this = this;
+    if ($(_this).hasClass('disabled')) {
+        return false;
+    }
+    $(_this).addClass('disabled');
+    $.ajax({
+        url: '/api/applyMatch',
+        type: 'GET',
+        data: {
+            cpId: util.getQueryString('cpId'),
+            matchDayId: dayId,
+            matchPlaceId: matchPlaceId,
+            idNumber: util.getQueryString('idNumber')
+        },
+        dataType: 'json',
+        cache: false,
+        success: function (json) {
+            $(_this).removeClass('disabled');
+            if (json.code == 0) {
+                window.location.href = 'signUpSuccess?cpId=' + util.getQueryString('cpId') + '&idNumber=' + util.getQueryString('idNumber');
+            } else {
+                $('#my-alert-content').toast({
+                    content: json.msg,
+                    duration: 1000
+                });
+                return false;
+            }
+        },
+        error: function () {
+            $('#my-alert-content').toast({
+                content: '出错',
+                duration: 1000
+            });
+            $(_this).removeClass('disabled');
+            return false;
+        }
+    });
+
+});
+
+var myScroll;
+
+function loaded() {
+    myScroll = new IScroll('#wrapper',{
+        preventDefault: false,
+        bounce: false
+    });
+}
+</script>
+
+
+<script id="addressListTmpl" type="text/html">
+<% $.each(data.response.list, function(k, v){ %>
+<% if(v.remainPlayers !== 0){ %>
+<li class="" data-id="<%=v.matchPlaceId%>">
+    <span></span>
+    <p><%=v.place%>(剩<%=v.remainPlayers%>个名额)</p>
+</li>
+<% }else{ %>
+<li class="disabled" data-id="<%=v.matchPlaceId%>">
+    <span></span>
+    <p><%=v.place%>(已报满)</p>
+</li>
+<% } %>
+<% }); %>
+
+</script>
+
+
+<script id="dayListTmpl" type="text/html">
+<% $.each(data.response.list, function(k, v){ %>
+
+<% if(!v.checkPeople){ %>
+<li class="" data-id="<%=v.id%>">
+    <span></span>
+    <p><%=v.dayInfo%></p>
+</li>
+<% }else{ %>
+<li class="disabled" data-id="<%=v.id%>">
+    <span></span>
+    <p><%=v.dayInfo%></p>
+</li>
+<% } %>
+
+<% }); %>
+
+</script>
+
+{% endblock %}
