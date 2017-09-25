@@ -13,7 +13,7 @@ public interface UserService {
     /**
      * 获取当前用户信息
      */
-    public UserModel getCurrentUserInfo(String realName, String idNumber, String mobile);
+    public UserModel getCurrentUserInfo(String realName, String idNumber, String mobile,Boolean cutOffStatus);
 
     /**
      * 获取当前用户信息
@@ -34,4 +34,7 @@ public interface UserService {
 
     //通过userId获取用户信息
     public User findByUserId(Integer userId);
+
+    //手机号不能重复
+    public User findByMobile(String mobile);
 }
