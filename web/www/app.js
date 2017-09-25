@@ -34,8 +34,8 @@ app.set('view engine', 'html');
 // app.use(log4js.connectLogger(logger, {level: 'auto', format: ':method :url'}));
 
 app.use(session({//todo 参数含义
-    secret: '12345',
-    name: 'chess_member',
+    secret: 'asd897238498374ksajdasd4fhfasjkgh',
+    name: 'ccpc_apply_web',
     resave: true,//刷新过期时间,
     rolling: true,//刷新过期时间,
     saveUninitialized: true,

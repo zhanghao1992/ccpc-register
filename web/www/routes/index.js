@@ -80,6 +80,9 @@ router.get('/api/sendMobileCode', function (req, res, next) {
 router.post('/api/getQualification', function (req, res, next) {
     var captchaResult = captcha.check(req, req.body.captcha);
     if (captchaResult.code != 0) {
+        console.log('00000000000')
+        console.log(req.body.captcha)
+        console.log(captchaResult)
         res.send(JSON.stringify(captchaResult));
     } else {
     vService.request(req, res, {path: '/apply/getCurrentUserInfo'}, function (s) {
