@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
         User user = null;
         UserModel userModel = null;
         user = userJpaDao.findByIdNumber(idNumber);
-        if (user==null){
-            if (  !cutOffStatus ) {
+        if (user == null) {
+            if (!cutOffStatus) {
                 this.addUser(realName, idNumber, mobile);
-            }else{
+            } else {
                 this.addUser(realName, idNumber, null);
             }
         }
-        if (user!=null && !cutOffStatus){
+        if (user != null && !cutOffStatus) {
             this.updateUser(idNumber, mobile, user.getId());
         }
         user = userJpaDao.findByIdNumber(idNumber);
