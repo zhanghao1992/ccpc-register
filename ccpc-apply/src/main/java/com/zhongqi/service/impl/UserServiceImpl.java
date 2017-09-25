@@ -43,13 +43,18 @@ public class UserServiceImpl implements UserService {
     private RatingPersonLeverDetailJpaDao ratingPersonLeverDetailJpaDao;
 
     @Override
-    public UserModel getCurrentUserInfo(String realName, String idNumber, String mobile) {
+    public UserModel getCurrentUserInfo(String realName, String idNumber, String mobile,Boolean cutOffStatus) {
         User user = null;
         UserModel userModel = null;
         user = userJpaDao.findByIdNumber(idNumber);
         if (user == null) {
-            this.addUser(realName, idNumber, mobile);
-        } else {
+            if (!cutOffStatus) {
+                this.addUser(realName, idNumber, mobile);
+            } else {
+                this.addUser(realName, idNumber, null);
+            }
+        }
+        if (user != null && !cutOffStatus) {
             this.updateUser(idNumber, mobile, user.getId());
         }
         user = userJpaDao.findByIdNumber(idNumber);
@@ -175,5 +180,10 @@ public class UserServiceImpl implements UserService {
             }
         }
         return userModel;
+    }
+
+    @Override
+    public User findByMobile(String mobile) {
+        return userJpaDao.findByMobile(mobile);
     }
 }

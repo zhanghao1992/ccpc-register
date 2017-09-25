@@ -212,7 +212,19 @@ public class ApplyController extends BaseController {
                 return result;
             }
         }
+        Date now = new Date();
+        Date cutOff = BaseUtils.formatStrToDate(cutOffDate + " 12:30:00");
 
+        // true 查询资格
+        // false 开始报名
+        Boolean cutOffStatus = true;
+        if (cutOff.before(now)) {
+            cutOffStatus = false;
+            User user = userService.findByMobile(mobile);
+            if (user != null) {
+                return ResponseResult.errorResult("手机号已存在");
+            }
+        }
         UserModel userModel = null;
         userModel = userService.getCurrentUser(idNumber);
         if (userModel == null) {
@@ -231,7 +243,7 @@ public class ApplyController extends BaseController {
                 return ResponseResult.errorResult("姓名和身份证号不匹配");
             }
         }
-        userModel = userService.getCurrentUserInfo(realName, idNumber, mobile);
+        userModel = userService.getCurrentUserInfo(realName, idNumber, mobile,cutOffStatus);
         return new ResponseResult(ResponseResult.SUCCESS, "获取当前信息成功", userModel);
     }
 
