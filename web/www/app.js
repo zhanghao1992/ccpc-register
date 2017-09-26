@@ -1,5 +1,6 @@
 var express = require('express');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var path = require('path');
 var swig = require('swig');
 
@@ -41,7 +42,12 @@ app.use(session({//todo 参数含义
     saveUninitialized: true,
     cookie: {
         maxAge: 1000 * 60 * 30
-    }
+    },
+    store: new RedisStore({
+        host: '10.9.38.250',
+        port: '16700',
+        pass: 'zcdDxfCTq3dO4lK1Ucmy'
+    })
 }));
 
 if (config.release) {

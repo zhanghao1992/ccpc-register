@@ -34,7 +34,7 @@ var cpList = [
     {
         index: 7,
         cpName: '在线途游',
-        cpId: '344a218f47dcb9489cce69135'
+        cpId: '1244dcb577b471777e613e111'
     },
     {
         index: 8,
@@ -50,6 +50,11 @@ var cpList = [
         index: 10,
         cpName: '北京大国小鲜文化传媒有限公司',
         cpId: 'a04dc191dd72187b707158137'
+    },
+    {
+        index: 11,
+        cpName: '天津中棋惟业体育发展有限公司',
+        cpId: 'e943cc98cc4c7b66708f2d107'
     }
 ];
 

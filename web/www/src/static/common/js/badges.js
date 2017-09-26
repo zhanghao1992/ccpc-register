@@ -140,6 +140,12 @@ var cpList = [
         cpName: '北京大国小鲜文化传媒有限公司',
         QRsrc: __uri('/static/common/images/QRcodes/dgxx.png'),
         cpId: 'a04dc191dd72187b707158137'
+    },
+    {
+        index: 11,
+        cpName: '天津中棋惟业体育发展有限公司',
+        QRsrc: __uri('/static/common/images/QRcodes/zq.png'),
+        cpId: 'e943cc98cc4c7b66708f2d107'
     }
 ];
 
